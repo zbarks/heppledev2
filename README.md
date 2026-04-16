@@ -1,6 +1,6 @@
 # Hepple Spirits — Brand Site
 
-Static marketing site for Hepple Spirits Company. Single-page app with hash-based routing, scroll-scrubbed hero video, and a multi-page structure ready for content expansion.
+Static marketing site for Hepple Spirits Company.
 
 **Designed by [Barker Digital](https://barkerdigital.co.uk)**
 
@@ -8,32 +8,49 @@ Static marketing site for Hepple Spirits Company. Single-page app with hash-base
 
 ## Stack
 
-- Pure static HTML / CSS / JS — no framework, no build step
-- Scroll-scrubbed H.264 video intro with WebM fallback + poster frame
-- Hash-based router (`/`, `#/story`, `#/estate`, `#/cocktails`, `#/visit`, `#/shop`)
-- Google Fonts: Manrope, Cormorant Garamond, Caveat
+Pure HTML / CSS / JS — no framework, no build step, no npm install at deploy time.
+
+- Self-hosted Proxima Nova (OTF) — brand typography, non-negotiable
+- Scroll-scrubbed H.264/WebM hero video (monotonic — forward-only, no rewind)
+- Hash router: `/`, `#/story`, `#/estate`, `#/cocktails`, `#/visit`, `#/shop`, `#/shop/:slug`
+- 818-style product carousels (prev/next buttons with scroll-snap)
+- Process stepper on Our Story (numbered 1-5, animated transitions)
+- Animated number counters (IntersectionObserver + easeOutExpo)
+- Fake shop with localStorage cart, product detail pages, qty stepper, add-to-cart toast
 
 ## Structure
 
 ```
 .
-├── index.html                 # Single-page shell, all routes
-├── styles.css                 # Brand tokens + all section styles
-├── app.js                     # Router, scroll scrub, drawer
-├── vercel.json                # Caching + security headers
-├── package.json               # Dev/serve scripts
+├── index.html
+├── styles.css
+├── app.js
+├── vercel.json
+├── package.json
+├── README.md
 ├── .gitignore
 └── assets/
-    ├── hero.mp4               # Intro video (H.264 1080p, ~1.6MB)
-    ├── hero.webm              # Intro video (VP9 fallback, ~1.2MB)
-    ├── hero-poster.jpg        # Poster frame
-    ├── gin-box.jpg            # Wild Juniper Gin packaging render
-    └── scenes/
-        ├── moor.svg           # Estate landscape illustration
-        ├── cocktail.svg       # Moorland Spritz scene
-        ├── diary-lovage.svg   # Diary card — harvesting
-        ├── diary-secret.svg   # Diary card — bar moment
-        └── diary-company.svg  # Diary card — fireside
+    ├── hero.mp4                            # 1.6MB intro video
+    ├── hero.webm                           # 1.2MB fallback
+    ├── hero-poster.jpg
+    ├── brand/
+    │   ├── hepple-logotype-blue.png        # Real Hepple logo, transparent BG
+    │   └── hepple-logotype-blue-web.png
+    ├── fonts/
+    │   ├── ProximaNova-Regular.otf
+    │   ├── ProximaNova-Semibold.otf
+    │   ├── Proxima_Nova_Bold.otf
+    │   ├── Proxima_Nova_Black.otf
+    │   ├── Proxima_Nova_Extrabold.otf
+    │   └── Proxima_Nova_Thin.otf
+    └── products/
+        ├── hepple-gin.jpg
+        ├── douglas-fir.jpg
+        ├── wheat-vodka.jpg
+        ├── aquavit.jpg
+        ├── negroni.jpg
+        ├── lineup.jpg                       # Three-bottle family shot
+        └── gin-giftbox.jpg                  # Pink gift box
 ```
 
 ## Run locally
@@ -43,59 +60,45 @@ npx serve .
 # → http://localhost:3000
 ```
 
-Or any other static server (`python3 -m http.server`, Live Server, etc.).
-
 ## Deploy to Vercel
 
-### Option A — Git + Vercel dashboard (recommended)
-
 1. `git init && git add . && git commit -m "init"`
-2. Push to GitHub / GitLab / Bitbucket
-3. On [vercel.com](https://vercel.com) → **Add New → Project** → import the repo
-4. Framework preset: **Other** (Vercel auto-detects static)
-5. Deploy. Done.
+2. Push to GitHub
+3. [vercel.com](https://vercel.com) → Add New → Project → import
+4. Framework preset: **Other** (already configured via `vercel.json`)
+5. Deploy
 
-### Option B — Vercel CLI
+`vercel.json` sets `buildCommand: null` and `outputDirectory: "."` — no build step, repo root is served directly.
 
-```bash
-npm i -g vercel
-vercel
-```
+## Behaviour notes
 
-No environment variables, no build step — Vercel serves the files as-is.
+- **Hepple logo** in nav/footer always takes you back to `/` and replays the intro video, even if you've already seen it this session.
+- **Intro scroll** is monotonic — scrolling up does NOT rewind the video. Once the headline text has faded in, it stays.
+- **Session memory** — on second-visit-within-same-tab home visits (not via the logo), the intro is skipped.
+- **Cart** persists in `localStorage` under `hepple:cart`. Clear it with `localStorage.removeItem('hepple:cart')`.
 
-## Notes on assets
+## Copy
 
-- **Product bottle images** (Wild Juniper Gin, Douglas Fir Vodka, Moorland Vodka) are currently loaded from Hepple's own Shopify CDN (`hepplespirits.com/cdn/shop/files/...`). These URLs are stable and public. To host them locally instead, drop your own PNGs into `/assets/products/` and update the three `<img src>` values in `index.html` inside `.range__grid`.
-- **Lifestyle imagery** in the Estate, Cocktail, and Diary sections uses bespoke SVG illustrations in `/assets/scenes/`. Swap them for real photography by replacing the files (same paths) or by editing the CSS `background-image` rules for `.estate__img`, `.cocktail__img`, and the three `.diary__imgbg` elements.
-- **Intro video** is at `/assets/hero.mp4`. Replace with a new MP4 at the same path; match the encoding settings with FFmpeg:
-  ```bash
-  ffmpeg -i input.mp4 -vf "scale=1920:-2" -c:v libx264 -preset slow -crf 23 \
-    -pix_fmt yuv420p -movflags +faststart -an hero.mp4
-  ```
-- **Fonts**: Google-hosted free substitutes for the brand guide's Proxima Nova (→ Manrope) and Coquette Lemonade Script (→ Caveat). For production, swap in the licensed webfonts via `@font-face` in `styles.css`.
+All body copy is Latin (Lorem Ipsum) placeholder. Structural UI text (buttons, nav, "Shop", "Add to cart", etc.) stays in English because it's UI, not copy.
+
+Real lines preserved from the brand deck: "Come in.", "We're making drinks.", "A very good drink in a very good place."
 
 ## Brand tokens
 
-All colours and type scale are defined as CSS custom properties at the top of `styles.css`:
+```css
+--hepple-blue:     #003087;   /* PMS 287C  */
+--hepple-ink:      #1b1a2e;   /* PMS 5255C */
+--juniper-pink:    #EC008C;
+--doug-fir-green:  #007A53;   /* PMS 341C */
+--moorland-teal:   #0a6b80;
+--ground:          #EDE8E0;   /* PMS 11-4201 TCX */
+```
 
-- `--hepple-blue` `#003087` (PMS 287C) — primary / wordmark
-- `--hepple-ink` `#1b1a2e` (PMS 5255C) — body copy
-- `--juniper-pink` `#EC008C` — Wild Juniper Gin accent
-- `--doug-fir-green` `#007A53` (PMS 341C) — Douglas Fir accent
-- `--moorland-teal` `#0a6b80` — Moorland Vodka accent
-- `--ground` `#EDE8E0` (PMS 11-4201 TCX) — label / page ground
-
-Sourced from `HEPPLE_BRAND_COLOUR_SYSTEM.pdf`.
-
-## Routes
-
-The home page (`/`) shows the scroll-locked intro on first visit, then the full homepage. Other routes show a designed "Not yet configured by Barker Digital" placeholder — ready to be filled in with real content.
-
-On return visits within the same browser session, the intro is skipped (stored in `sessionStorage`). Clear `hepple:seenIntro` to see it again.
+All defined at the top of `styles.css` — brand compliance is one-file wide.
 
 ## Accessibility
 
-- Respects `prefers-reduced-motion` — skips the video scrub entirely
-- Semantic HTML, keyboard-navigable
-- All decorative images have empty or descriptive `aria-label`s on their containers
+- Respects `prefers-reduced-motion` (video scrub disabled, transitions snap)
+- Semantic HTML, keyboard-navigable carousels and stepper
+- Logo and cart have `aria-label`s
+- Focusable qty stepper with numeric input fallback

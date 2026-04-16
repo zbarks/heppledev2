@@ -4,10 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Hepple — A Taste of Wild Luxury</title>
-<meta name="description" content="Distilled spirits from the Hepple Estate in Northumberland. Elegant, drink-led, quietly luxurious." />
+<meta name="description" content="Hepple Spirits — distilled in Northumberland. Elegant, drink-led, quietly luxurious." />
 <meta name="theme-color" content="#EDE8E0" />
 
-<!-- Social -->
 <meta property="og:title" content="Hepple — A Taste of Wild Luxury" />
 <meta property="og:description" content="Distilled spirits from the Hepple Estate, Northumberland." />
 <meta property="og:image" content="/assets/hero-poster.jpg" />
@@ -15,42 +14,21 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23003087'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='64' font-weight='800' fill='%23EDE8E0' letter-spacing='-2'%3EH%3C/text%3E%3C/svg%3E" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet" />
-
-<!-- Preload hero assets (home-route only; browser will parse quickly) -->
 <link rel="preload" as="video" href="/assets/hero.mp4" type="video/mp4" />
 <link rel="preload" as="image" href="/assets/hero-poster.jpg" />
+<link rel="preload" as="font" href="/assets/fonts/ProximaNova-Regular.otf" type="font/otf" crossorigin />
+<link rel="preload" as="font" href="/assets/fonts/Proxima_Nova_Bold.otf"    type="font/otf" crossorigin />
 
 <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
 
 <!-- ============================================================
-     WORDMARK SYMBOL — reused everywhere via <use>
-     ============================================================ -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <symbol id="hepple-wordmark" viewBox="0 0 460 74">
-      <g fill="currentColor">
-        <path d="M0 4 h16 v26 h28 V4 h16 v66 h-16 V42 H16 v28 H0 z"/>
-        <path d="M74 4 h54 v12 H90 v14 h32 v12 H90 v16 h40 v12 H74 z"/>
-        <path d="M142 4 h30 q14 0 20 7 q8 8 8 17 q0 10 -8 18 q-6 7 -20 7 h-14 v17 h-16 z M158 16 v24 h12 q8 0 11 -3 q4 -4 4 -9 q0 -6 -4 -9 q-3 -3 -11 -3 z"/>
-        <path d="M210 4 h30 q14 0 20 7 q8 8 8 17 q0 10 -8 18 q-6 7 -20 7 h-14 v17 h-16 z M226 16 v24 h12 q8 0 11 -3 q4 -4 4 -9 q0 -6 -4 -9 q-3 -3 -11 -3 z"/>
-        <path d="M278 4 h16 v54 h36 v12 h-52 z"/>
-        <path d="M340 4 h54 v12 h-38 v14 h32 v12 h-32 v16 h40 v12 h-56 z"/>
-      </g>
-    </symbol>
-  </defs>
-</svg>
-
-<!-- ============================================================
-     NAV
+     NAV — reveals once intro completes
      ============================================================ -->
 <nav class="nav" id="nav" aria-label="Primary">
-  <a href="#/" class="nav__brand" data-route="/" aria-label="Hepple — home">
-    <span class="wordmark" aria-hidden="true"><svg><use href="#hepple-wordmark"/></svg></span>
+  <a href="#/" class="nav__brand" data-route="/" data-brand aria-label="Hepple — home">
+    <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" />
   </a>
 
   <ul class="nav__links">
@@ -61,15 +39,24 @@
     <li><a href="#/shop"      data-route="/shop">Shop</a></li>
   </ul>
 
-  <a href="#/shop" class="nav__cta" data-route="/shop">Shop</a>
+  <div class="nav__right">
+    <a href="#/shop" class="nav__cta" data-route="/shop">Shop</a>
+    <button class="nav__cart" id="cartBtn" aria-label="Open cart">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/>
+        <path d="M9 7V5a3 3 0 0 1 6 0v2"/>
+      </svg>
+      <span class="nav__cart-count" id="cartCount">0</span>
+    </button>
+  </div>
 
   <button class="nav__menu-btn" id="menuBtn" aria-label="Open menu">
-    <span></span> Menu
+    <span></span>
   </button>
 </nav>
 
 <aside class="drawer" id="drawer" aria-hidden="true">
-  <button class="drawer__close" id="drawerClose" aria-label="Close menu">Close</button>
+  <button class="drawer__close" id="drawerClose" aria-label="Close menu">Close ✕</button>
   <a href="#/"          data-route="/">Home</a>
   <a href="#/story"     data-route="/story">Our Story</a>
   <a href="#/estate"    data-route="/estate">The Estate</a>
@@ -78,8 +65,28 @@
   <a href="#/shop"      data-route="/shop">Shop</a>
 </aside>
 
+<!-- Cart panel -->
+<aside class="cart-panel" id="cartPanel" aria-hidden="true">
+  <div class="cart-panel__head">
+    <h3>Your Cart</h3>
+    <button class="cart-panel__close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-panel__body" id="cartBody">
+    <p class="cart-panel__empty">Lorem ipsum dolor sit amet.</p>
+  </div>
+  <div class="cart-panel__foot" id="cartFoot" hidden>
+    <div class="cart-panel__total">
+      <span>Subtotal</span>
+      <strong id="cartTotal">£0.00</strong>
+    </div>
+    <button class="cart-panel__checkout">Checkout</button>
+    <p class="cart-panel__note">Lorem ipsum tax &amp; shipping at checkout.</p>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
 <!-- ============================================================
-     INTRO — scroll-scrubbed hero video
+     INTRO — scroll-locked video (home only)
      ============================================================ -->
 <section class="intro" id="intro" aria-label="Welcome">
   <div class="intro__stage">
@@ -96,7 +103,7 @@
     <div class="intro__vignette"></div>
 
     <div class="intro__overlay">
-      <div class="intro__top">HEPPLE SPIRITS &nbsp;·&nbsp; NORTHUMBERLAND</div>
+      <div class="intro__top">HEPPLE SPIRITUS &nbsp;·&nbsp; NORTHUMBRIA</div>
 
       <div class="intro__center">
         <p class="intro__eyebrow">Come in.</p>
@@ -112,7 +119,7 @@
 </section>
 
 <!-- ============================================================
-     MAIN CONTENT (revealed after intro)
+     MAIN — all pages
      ============================================================ -->
 <main class="content" id="content">
 
@@ -123,114 +130,173 @@
       <div class="wrap">
         <div class="welcome__grid">
           <div>
-            <p class="welcome__eyebrow">Welcome to the Hepple Estate.</p>
+            <p class="welcome__eyebrow">Salve.</p>
             <h2 class="welcome__headline">A very good drink in a very good <em>place.</em></h2>
           </div>
           <div>
             <p class="welcome__lede">
-              We distil spirits in the remote Northumbrian hills — quietly,
-              carefully, and with a great deal of attention to what's growing outside.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Sed non risus suspendisse lectus tortor, dignissim sit amet, adipiscing nec.
             </p>
             <div class="welcome__meta">
-              <span>Est. <strong>2014</strong></span>
-              <span>Northumberland <strong>National Park</strong></span>
+              <span>Est. <strong>MMXIV</strong></span>
+              <span>Parcus Nationalis <strong>Northumbria</strong></span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="estate">
-      <div class="wrap">
-        <div class="estate__grid">
-          <div class="estate__img" role="img" aria-label="The Hepple Estate — Northumbrian moorland"></div>
-          <div class="estate__copy">
-            <div class="estate__label">The Estate</div>
-            <h2>Four thousand acres of wild, quiet <em>country.</em></h2>
-            <p>
-              Ancient juniper. Douglas fir. Water filtered through peat and limestone
-              before it ever reaches our stills. Everything that goes into a bottle
-              of Hepple begins here — and most of it doesn't travel very far.
-            </p>
-            <p>
-              <em>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</em>
-              Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed.
-            </p>
-            <a href="#/estate" class="estate__link" data-route="/estate">Explore the estate →</a>
-          </div>
-        </div>
+    <!-- 818-style Hero strip: full-bleed editorial -->
+    <section class="hero-strip">
+      <div class="hero-strip__img">
+        <img src="/assets/products/lineup.jpg" alt="Hepple range" loading="lazy" />
+      </div>
+      <div class="hero-strip__copy">
+        <p class="hero-strip__eyebrow">A wildly modern classic.</p>
+        <a href="#/shop" data-route="/shop" class="btn btn--outline-dark">Find Hepple Spirits</a>
       </div>
     </section>
 
-    <section class="range">
+    <!-- Range — 818-style carousel -->
+    <section class="range" id="range">
       <div class="wrap">
         <div class="range__head">
-          <p class="welcome__eyebrow">The Range</p>
-          <h2>Three spirits, <em>one place.</em></h2>
+          <div>
+            <p class="welcome__eyebrow">Our Spirits</p>
+            <h2>Explore the <em>range.</em></h2>
+          </div>
+          <a href="#/shop" data-route="/shop" class="range__seeall">See all →</a>
         </div>
 
-        <div class="range__grid">
+        <div class="carousel" data-carousel>
+          <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <div class="carousel__track" data-carousel-track>
 
-          <a href="#/shop" data-route="/shop" class="sku sku--gin">
-            <span class="sku__tag">Wild Juniper</span>
-            <div class="sku__bottle">
-              <img src="https://hepplespirits.com/cdn/shop/files/Untitleddesign.png?v=1741180795&width=800"
-                   alt="Hepple Wild Juniper Gin 70cl bottle"
-                   loading="lazy" width="260" height="520" />
-            </div>
-            <p class="sku__flavour">Wild Juniper Gin</p>
-            <p class="sku__origin">Distilled in Northumberland · 70cl · 45% ABV</p>
-            <div class="sku__cta">
-              <span class="price">£39.95</span>
-              <span class="buy">Shop →</span>
-            </div>
-          </a>
+            <a href="#/shop/hepple-gin" data-route="/shop/hepple-gin" class="product-card product-card--gin">
+              <div class="product-card__img">
+                <img src="/assets/products/hepple-gin.jpg" alt="Hepple Gin" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Hepple Gin</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
 
-          <a href="#/shop" data-route="/shop" class="sku sku--fir">
-            <span class="sku__tag">Douglas Fir</span>
-            <div class="sku__bottle">
-              <img src="https://hepplespirits.com/cdn/shop/files/DouglasFir.png?v=1741101027&width=800"
-                   alt="Hepple Douglas Fir Vodka bottle"
-                   loading="lazy" width="260" height="520" />
-            </div>
-            <p class="sku__flavour">Douglas Fir Vodka</p>
-            <p class="sku__origin">Distilled in Northumberland · 70cl · 40% ABV</p>
-            <div class="sku__cta">
-              <span class="price">£39.95</span>
-              <span class="buy">Shop →</span>
-            </div>
-          </a>
+            <a href="#/shop/douglas-fir" data-route="/shop/douglas-fir" class="product-card product-card--fir">
+              <div class="product-card__img">
+                <img src="/assets/products/douglas-fir.jpg" alt="Hepple Douglas Fir Flavoured Vodka" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Douglas Fir Vodka</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
 
-          <a href="#/shop" data-route="/shop" class="sku sku--vodka">
-            <span class="sku__tag">Moorland</span>
-            <div class="sku__bottle">
-              <img src="https://hepplespirits.com/cdn/shop/files/WheatVodka.png?v=1741174689&width=800"
-                   alt="Hepple Moorland Vodka bottle"
-                   loading="lazy" width="260" height="520" />
-            </div>
-            <p class="sku__flavour">Moorland Vodka</p>
-            <p class="sku__origin">Distilled in Northumberland · 70cl · 40% ABV</p>
-            <div class="sku__cta">
-              <span class="price">£34.95</span>
-              <span class="buy">Shop →</span>
-            </div>
-          </a>
+            <a href="#/shop/wheat-vodka" data-route="/shop/wheat-vodka" class="product-card product-card--wheat">
+              <div class="product-card__img">
+                <img src="/assets/products/wheat-vodka.jpg" alt="Hepple Wheat Vodka" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Wheat Vodka</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
 
+            <a href="#/shop/aquavit" data-route="/shop/aquavit" class="product-card product-card--aqua">
+              <div class="product-card__img">
+                <img src="/assets/products/aquavit.jpg" alt="Hepple Aquavit" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Aquavit</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#/shop/negroni" data-route="/shop/negroni" class="product-card product-card--negroni">
+              <div class="product-card__img">
+                <img src="/assets/products/negroni.jpg" alt="Hepple Juniper Aged Negroni" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Juniper Aged Negroni</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#/shop/gift-box" data-route="/shop/gift-box" class="product-card product-card--gift">
+              <div class="product-card__img product-card__img--gift">
+                <img src="/assets/products/gin-giftbox.jpg" alt="Hepple Gin Gift Box" loading="lazy" />
+              </div>
+              <div class="product-card__body">
+                <h3>Gin Gift Box</h3>
+                <div class="product-card__actions">
+                  <span class="btn btn--tiny">Buy Now</span>
+                  <span class="product-card__about">About</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Packaging feature (uses the uploaded pink gift box) -->
+    <section class="packaging">
+      <div class="wrap">
+        <div class="packaging__grid">
+          <div class="packaging__img">
+            <img src="/assets/products/gin-giftbox.jpg" alt="Hepple Gin Gift Box packaging" loading="lazy" />
+          </div>
+          <div class="packaging__copy">
+            <p class="welcome__eyebrow">Novus vultus.</p>
+            <h2>A little <em>louder</em>, a lot more Hepple.</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam
+              sit amet quam vehicula elementum sed sit amet dui.
+            </p>
+            <p>
+              Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec
+              sollicitudin molestie malesuada.
+            </p>
+            <a href="#/shop/gift-box" data-route="/shop/gift-box" class="btn btn--outline-dark">View Gift Box</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cocktail of the moment -->
     <section class="cocktail">
       <div class="wrap">
         <div class="cocktail__grid">
-          <div class="cocktail__img" role="img" aria-label="The Moorland Spritz"></div>
+          <div class="cocktail__img"></div>
           <div>
-            <p class="cocktail__eyebrow">Right here, right now.</p>
-            <h2 class="cocktail__title">The <em>Moorland</em> Spritz</h2>
+            <p class="cocktail__eyebrow">Hic et nunc.</p>
+            <h2 class="cocktail__title">The <em>Wild</em> Martini</h2>
             <p class="cocktail__recipe">
               <strong>Method</strong>
-              50ml Moorland Vodka · 25ml Lillet · 10ml elderflower.<br>
-              Stir with ice. Strain into a chilled glass. Finish with fresh elderflowers.
+              50ml Hepple Gin · 10ml dry vermouth · lemon twist.<br>
+              Stir with ice. Strain into a chilled glass. Garnish with a wide peel of lemon.
             </p>
             <a href="#/cocktails" class="cocktail__link" data-route="/cocktails">See all cocktails →</a>
           </div>
@@ -238,97 +304,229 @@
       </div>
     </section>
 
-    <section class="packaging">
+    <!-- Numbers section — animated counters (818-style) -->
+    <section class="stats" id="stats">
       <div class="wrap">
-        <div class="packaging__grid">
-          <div class="packaging__img" role="img" aria-label="Hepple Wild Juniper Gin packaging"></div>
-          <div class="packaging__copy">
-            <p class="welcome__eyebrow" style="color:var(--juniper-pink);">The new look.</p>
-            <h2>A little <em>louder</em>, a lot more Hepple.</h2>
-            <p>
-              Our updated packaging system leans into cooler tones and confident colour —
-              pink for the gin, green for Douglas Fir, blue for Moorland.
-              Metallic foils, coloured neck bands, and the same Hepple wordmark across the range.
-            </p>
-            <p>
-              <em>Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</em>
-              Donec sollicitudin molestie malesuada. Nulla porttitor accumsan tincidunt.
-            </p>
+        <div class="stats__grid">
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="4000" data-count-format="comma">0</div>
+            <div class="stat__label">acres of wild Northumbria</div>
+          </div>
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="600" data-count-format="comma">0</div>
+            <div class="stat__label">juniper saplings planted</div>
+          </div>
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="5" data-count-suffix="×">0</div>
+            <div class="stat__label">longer to distil than tradition</div>
+          </div>
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="40" data-count-suffix="°C">0</div>
+            <div class="stat__label">vacuum distillation floor</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="diary">
+    <!-- Estate CTA -->
+    <section class="estate-cta">
       <div class="wrap">
-        <div class="diary__head">
-          <p class="welcome__eyebrow">From the estate.</p>
-          <h2>A <em>drinks diary.</em></h2>
+        <div class="estate-cta__grid">
+          <div class="estate-cta__img">
+            <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="The Hepple Estate" loading="lazy" />
+          </div>
+          <div class="estate-cta__copy">
+            <p class="welcome__eyebrow">The Estate.</p>
+            <h2>Four thousand acres of wild, quiet <em>country.</em></h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam
+              sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi,
+              pretium ut lacinia in.
+            </p>
+            <a href="#/estate" data-route="/estate" class="btn btn--outline-dark">Explore the estate</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit CTA -->
+    <section class="visit">
+      <p class="visit__eyebrow">Come and see us.</p>
+      <h2>Visit the <em>distillery.</em></h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <a href="#/visit" class="visit__cta" data-route="/visit">Plan your visit</a>
+    </section>
+
+  </div><!-- /home -->
+
+
+  <!-- =================== OUR STORY =================== -->
+  <div class="page" data-page="/story">
+
+    <!-- Hero -->
+    <section class="story-hero">
+      <div class="story-hero__img">
+        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=2000" alt="" loading="lazy" />
+      </div>
+      <div class="story-hero__title">
+        <h1>Our <em>Story</em></h1>
+      </div>
+    </section>
+
+    <section class="story-intro">
+      <div class="wrap">
+        <p class="welcome__eyebrow">De nobis.</p>
+        <p class="story-intro__lede">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+          Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+          Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue,
+          euismod non, mi.
+        </p>
+      </div>
+    </section>
+
+    <!-- Numbers -->
+    <section class="stats" id="statsStory">
+      <div class="wrap">
+        <div class="stats__grid">
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="4000" data-count-format="comma">0</div>
+            <div class="stat__label">acres of wild Northumbria</div>
+          </div>
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="2014">0</div>
+            <div class="stat__label">the year we started</div>
+          </div>
+          <div class="stat" data-stat>
+            <div class="stat__number" data-count-to="3" data-count-suffix="">0</div>
+            <div class="stat__label">distillation techniques, one bottle</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process steps carousel — 818-style -->
+    <section class="process">
+      <div class="wrap">
+        <div class="process__head">
+          <p class="welcome__eyebrow">Our Process</p>
+          <h2>From moor to <em>bottle.</em></h2>
         </div>
 
-        <div class="diary__grid">
-          <article class="diary__card diary__card--wide">
-            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-lovage.svg')" role="img" aria-label="Cutting lovage"></div>
-            <div class="diary__body">
-              <div class="meta">The Estate · April</div>
-              <p>Cutting lovage this morning. It's good as it is.</p>
+        <div class="process__viewer" data-process>
+
+          <div class="process__steps" data-process-track>
+            <!-- Step 1 -->
+            <article class="process__step is-active" data-step="1">
+              <div class="process__img">
+                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">01</span>
+                <h3>Sourcing wild botanicals</h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
+                  ac diam sit amet quam vehicula elementum sed sit amet dui.
+                </p>
+              </div>
+            </article>
+            <!-- Step 2 -->
+            <article class="process__step" data-step="2">
+              <div class="process__img">
+                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=1400" alt="" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">02</span>
+                <h3>Traditional one-shot distillation</h3>
+                <p>
+                  Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
+                  Donec sollicitudin molestie malesuada.
+                </p>
+              </div>
+            </article>
+            <!-- Step 3 -->
+            <article class="process__step" data-step="3">
+              <div class="process__img">
+                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_423.jpg?v=1662457006&width=1400" alt="" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">03</span>
+                <h3>Glass vacuum distillation</h3>
+                <p>
+                  Nulla porttitor accumsan tincidunt. Proin eget tortor risus.
+                  Donec rutrum congue leo eget malesuada.
+                </p>
+              </div>
+            </article>
+            <!-- Step 4 -->
+            <article class="process__step" data-step="4">
+              <div class="process__img">
+                <img src="https://hepplespirits.com/cdn/shop/files/Screenshot_2024-11-14_at_11.05.27.png?v=1731582345&width=1400" alt="" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">04</span>
+                <h3>Supercritical extraction</h3>
+                <p>
+                  Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                  posuere cubilia. Donec velit neque, auctor sit amet aliquam.
+                </p>
+              </div>
+            </article>
+            <!-- Step 5 -->
+            <article class="process__step" data-step="5">
+              <div class="process__img">
+                <img src="https://hepplespirits.com/cdn/shop/files/Screenshot_2024-11-14_at_11.10.48.png?v=1731582660&width=1400" alt="" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">05</span>
+                <h3>Blending, bottling, shipping</h3>
+                <p>
+                  Vivamus suscipit tortor eget felis porttitor volutpat. Cras ultricies
+                  ligula sed magna dictum porta.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <div class="process__nav">
+            <button class="process__btn" data-process-prev aria-label="Previous step">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+              Prev
+            </button>
+            <div class="process__dots" data-process-dots>
+              <button class="process__dot is-active" data-dot="1" aria-label="Step 1"><span>01</span> Sourcing</button>
+              <button class="process__dot" data-dot="2" aria-label="Step 2"><span>02</span> Traditional</button>
+              <button class="process__dot" data-dot="3" aria-label="Step 3"><span>03</span> Vacuum</button>
+              <button class="process__dot" data-dot="4" aria-label="Step 4"><span>04</span> Supercritical</button>
+              <button class="process__dot" data-dot="5" aria-label="Step 5"><span>05</span> Blending</button>
             </div>
-          </article>
-          <article class="diary__card">
-            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-secret.svg')" role="img" aria-label="Our little secret"></div>
-            <div class="diary__body">
-              <div class="meta">At the bar</div>
-              <p>Our little secret.</p>
-            </div>
-          </article>
-          <article class="diary__card diary__card--tall">
-            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-company.svg')" role="img" aria-label="Good company wherever you find it"></div>
-            <div class="diary__body">
-              <div class="meta">Cocktails</div>
-              <p>Good company, wherever you find it.</p>
-            </div>
-          </article>
+            <button class="process__btn" data-process-next aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="visit">
-      <p class="visit__eyebrow">Come and see us.</p>
+      <p class="visit__eyebrow">Ad nos veni.</p>
       <h2>Visit the <em>distillery.</em></h2>
-      <p>Tours, tastings, and a very good drink at the end of it. On the edge of Northumberland National Park.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <a href="#/visit" class="visit__cta" data-route="/visit">Plan your visit</a>
     </section>
-
   </div>
 
-  <!-- =================== OUR STORY =================== -->
-  <div class="page" data-page="/story">
-    <section class="placeholder">
-      <div class="placeholder__inner">
-        <p class="placeholder__kicker">Our Story</p>
-        <h1>The <em>Hepple</em> story.</h1>
-        <div class="placeholder__status">Not yet configured by Barker Digital</div>
-        <p class="placeholder__latin">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam
-          sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi,
-          pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.
-        </p>
-        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
-      </div>
-    </section>
-  </div>
-
-  <!-- =================== THE ESTATE =================== -->
+  <!-- =================== ESTATE =================== -->
   <div class="page" data-page="/estate">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">The Estate</p>
+        <p class="placeholder__kicker">De agris.</p>
         <h1>Four thousand <em>wild</em> acres.</h1>
         <div class="placeholder__status">Not yet configured by Barker Digital</div>
         <p class="placeholder__latin">
-          Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-          accumsan tincidunt. Proin eget tortor risus. Donec rutrum congue leo eget malesuada.
-          Pellentesque in ipsum id orci porta dapibus.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
         </p>
         <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
       </div>
@@ -339,49 +537,81 @@
   <div class="page" data-page="/cocktails">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">Cocktails</p>
+        <p class="placeholder__kicker">Potiones.</p>
         <h1>Cold glass. <em>Good company.</em></h1>
         <div class="placeholder__status">Not yet configured by Barker Digital</div>
         <p class="placeholder__latin">
           Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
           Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
-          Sed porttitor lectus nibh. Nulla quis lorem ut libero malesuada feugiat.
         </p>
         <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
       </div>
     </section>
   </div>
 
-  <!-- =================== VISIT US =================== -->
+  <!-- =================== VISIT =================== -->
   <div class="page" data-page="/visit">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">Visit Us</p>
+        <p class="placeholder__kicker">Visita nos.</p>
         <h1>The <em>distillery.</em></h1>
         <div class="placeholder__status">Not yet configured by Barker Digital</div>
         <p class="placeholder__latin">
-          Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan
-          tincidunt. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh.
-          Donec rutrum congue leo eget malesuada.
+          Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor
+          accumsan tincidunt. Cras ultricies ligula sed magna dictum porta.
         </p>
         <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
       </div>
     </section>
   </div>
 
-  <!-- =================== SHOP =================== -->
+  <!-- =================== SHOP (index) — fully configured =================== -->
   <div class="page" data-page="/shop">
-    <section class="placeholder">
-      <div class="placeholder__inner">
-        <p class="placeholder__kicker">Shop</p>
+    <section class="shop-hero">
+      <div class="wrap">
+        <p class="welcome__eyebrow">Shop.</p>
         <h1>More Hepple, <em>less fuss.</em></h1>
-        <div class="placeholder__status">Not yet configured by Barker Digital</div>
-        <p class="placeholder__latin">
-          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-          cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper
-          sit amet ligula. Vivamus magna justo, lacinia eget consectetur sed.
+        <p class="shop-hero__lede">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Free UK delivery over £45.
         </p>
-        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+
+    <section class="shop-grid-sec">
+      <div class="wrap">
+        <div class="shop-grid" id="shopGrid">
+          <!-- Products rendered by JS from product catalogue -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SHOP / PRODUCT DETAIL =================== -->
+  <div class="page" data-page="/shop/*">
+    <section class="product-detail" id="productDetail">
+      <!-- Rendered by JS -->
+    </section>
+
+    <!-- Related / carousel footer -->
+    <section class="range range--related">
+      <div class="wrap">
+        <div class="range__head">
+          <div>
+            <p class="welcome__eyebrow">You might like</p>
+            <h2>More from the <em>range.</em></h2>
+          </div>
+        </div>
+        <div class="carousel" data-carousel>
+          <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <div class="carousel__track" data-carousel-track id="relatedTrack">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -390,8 +620,8 @@
   <footer>
     <div class="footer__grid">
       <div class="footer__brand">
-        <span class="wordmark" aria-hidden="true"><svg><use href="#hepple-wordmark"/></svg></span>
-        <p>Distilled spirits from the Hepple Estate, on the eastern edge of Northumberland National Park. Made for good company, wherever you find it.</p>
+        <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" class="footer__logo" />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Northumberland, England.</p>
       </div>
       <div class="footer__col">
         <h4>Explore</h4>
@@ -402,11 +632,12 @@
         </ul>
       </div>
       <div class="footer__col">
-        <h4>Visit &amp; Shop</h4>
+        <h4>Shop</h4>
         <ul>
-          <li><a href="#/visit" data-route="/visit">Visit Us</a></li>
-          <li><a href="#/shop"  data-route="/shop">Shop</a></li>
-          <li><a href="#/shop"  data-route="/shop">Gift Boxes</a></li>
+          <li><a href="#/shop/hepple-gin"  data-route="/shop/hepple-gin">Hepple Gin</a></li>
+          <li><a href="#/shop/douglas-fir" data-route="/shop/douglas-fir">Douglas Fir</a></li>
+          <li><a href="#/shop/gift-box"    data-route="/shop/gift-box">Gift Box</a></li>
+          <li><a href="#/shop"             data-route="/shop">All products</a></li>
         </ul>
       </div>
       <div class="footer__col">
