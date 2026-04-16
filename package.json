@@ -4,9 +4,7 @@
   "private": true,
   "description": "Hepple Spirits Company — new brand site. Designed by Barker Digital.",
   "scripts": {
-    "dev": "npx --yes serve . -p 3000",
-    "build": "echo 'No build step — static site.' && exit 0",
-    "start": "npx --yes serve ."
+    "dev": "npx --yes serve . -p 3000"
   },
   "author": "Barker Digital",
   "license": "UNLICENSED"
