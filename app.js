@@ -1,12 +1,12 @@
 /* ==========================================================
-   HEPPLE — application script
-   - Hash router (/ /story /estate /cocktails /visit /shop /shop/:slug)
-   - Monotonic forward-only scroll-scrubbed intro video (desktop smooth)
-   - Product catalogue + fake cart
-   - Product carousels (prev/next)
-   - Process stepper (Our Story)
-   - Animated number counters (IntersectionObserver)
-   - Clicking the Hepple logo always returns to `/` and replays the intro
+   HEPPLE — app.js
+   - Age gate (first visit)
+   - Hash router (home, story, estate, cocktails, visit, shop, shop/:slug)
+   - Monotonic, smooth scroll-scrubbed video
+   - 3-product catalogue: Wild Juniper Gin, Douglas Fir Vodka, Moorland Vodka
+   - Gift box = add-on on Wild Juniper Gin, NOT a standalone product
+   - Product detail image carousel (bottle + gift box for Wild Juniper)
+   - Fake cart (localStorage), process stepper, number counters
    ========================================================== */
 (() => {
   'use strict';
@@ -19,68 +19,90 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   // =============================================
-  // PRODUCT CATALOGUE
+  // AGE GATE
+  // =============================================
+  (function initAgeGate(){
+    const gate = $('#ageGate');
+    if (!gate) return;
+    const passed = localStorage.getItem('hepple:ageOk') === '1';
+    if (passed){
+      gate.classList.add('is-hidden');
+      gate.remove();
+      document.body.classList.remove('age-gated');
+      return;
+    }
+    document.body.classList.add('age-gated');
+
+    $('#ageGateYes')?.addEventListener('click', () => {
+      localStorage.setItem('hepple:ageOk', '1');
+      gate.classList.add('is-hidden');
+      document.body.classList.remove('age-gated');
+      setTimeout(() => gate.remove(), 700);
+    });
+
+    $('#ageGateNo')?.addEventListener('click', () => {
+      const panel = gate.querySelector('.age-gate__panel');
+      if (panel){
+        panel.innerHTML = `
+          <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" class="age-gate__logo" />
+          <p class="age-gate__eyebrow">Come back soon.</p>
+          <h1 class="age-gate__title">YOU MUST BE 18 OR OVER<br>TO ENTER THIS SITE</h1>
+          <p class="age-gate__body">WE LOOK FORWARD TO WELCOMING YOU WHEN YOU'RE OF LEGAL DRINKING AGE.</p>
+        `;
+      }
+    });
+  })();
+
+  // =============================================
+  // PRODUCT CATALOGUE — only 3 SKUs
   // =============================================
   const PRODUCTS = [
     {
-      slug: 'hepple-gin',
-      name: 'Hepple Gin',
-      tagline: 'A Wildly Modern Classic',
-      price: 39.95,
-      meta: { size: '70cl', abv: '45%', origin: 'Northumbria' },
-      image: '/assets/products/hepple-gin.jpg',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.'
+      slug:   'hepple-wild-juniper-gin',
+      name:   'HEPPLE WILD JUNIPER GIN',
+      short:  'Wild Juniper Gin',
+      kicker: 'In pursuit of deliciousness.',
+      price:  39.95,
+      meta:   { size:'70CL', abv:'45%', origin:'NORTHUMBERLAND' },
+      images: [
+        '/assets/products/hepple-gin.jpg',
+        '/assets/products/gin-giftbox.jpg'
+      ],
+      giftBoxAvailable: true,
+      desc: "A RICH, JUNIPER-FORWARD GIN DISTILLED THREE WAYS FROM BOTANICALS GROWN ON OUR ESTATE. FRESH, COMPLEX, AND UNASHAMEDLY MODERN — THE ONE WE'D BRING TO EVERY MARTINI, EVERY TIME."
     },
     {
-      slug: 'douglas-fir',
-      name: 'Douglas Fir Vodka',
-      tagline: 'Flavoured Vodka',
-      price: 39.95,
-      meta: { size: '70cl', abv: '40%', origin: 'Northumbria' },
-      image: '/assets/products/douglas-fir.jpg',
-      desc: 'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Nulla porttitor accumsan tincidunt. Proin eget tortor risus. Donec rutrum congue leo eget malesuada.'
+      slug:   'hepple-douglas-fir-vodka',
+      name:   'HEPPLE DOUGLAS FIR VODKA',
+      short:  'Douglas Fir Vodka',
+      kicker: 'Forest in a glass.',
+      price:  39.95,
+      meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
+      images: [
+        '/assets/products/douglas-fir.jpg'
+      ],
+      giftBoxAvailable: false,
+      desc: "ZESTY, TROPICAL, UNMISTAKABLY PINE. HAND-HARVESTED DOUGLAS FIR NEEDLES DISTILLED IN A GLASS VACUUM TO KEEP EVERY BRIGHT, RESINOUS NOTE INTACT. AN INGREDIENT-LED FLAVOURED VODKA."
     },
     {
-      slug: 'wheat-vodka',
-      name: 'Wheat Vodka',
-      tagline: 'Clean & Modern',
-      price: 34.95,
-      meta: { size: '70cl', abv: '40%', origin: 'Northumbria' },
-      image: '/assets/products/wheat-vodka.jpg',
-      desc: 'Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor accumsan tincidunt. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Pellentesque in ipsum id orci porta dapibus.'
-    },
-    {
-      slug: 'aquavit',
-      name: 'Hepple Aquavit',
-      tagline: 'Northumbrian Nordic',
-      price: 39.95,
-      meta: { size: '70cl', abv: '40%', origin: 'Northumbria' },
-      image: '/assets/products/aquavit.jpg',
-      desc: 'Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan tincidunt. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Donec rutrum congue leo eget malesuada.'
-    },
-    {
-      slug: 'negroni',
-      name: 'Juniper Aged Negroni',
-      tagline: 'Bottled & Barrel-Aged',
-      price: 32.50,
-      meta: { size: '50cl', abv: '24%', origin: 'Northumbria' },
-      image: '/assets/products/negroni.jpg',
-      desc: 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia. Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Vivamus magna justo, lacinia eget consectetur sed.'
-    },
-    {
-      slug: 'gift-box',
-      name: 'Hepple Gin Gift Box',
-      tagline: 'The Ultimate Hepple Gift',
-      price: 62.99,
-      meta: { size: '50cl + glassware', abv: '45%', origin: 'Northumbria' },
-      image: '/assets/products/gin-giftbox.jpg',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Features a 50cl bottle, two etched cocktail glasses with juniper design, and a selection of cocktail cards. Aliquam erat volutpat. Sed porttitor lectus nibh.'
+      slug:   'hepple-moorland-vodka',
+      name:   'HEPPLE MOORLAND VODKA',
+      short:  'Moorland Vodka',
+      kicker: 'Pure, clean, Northumbrian.',
+      price:  34.95,
+      meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
+      images: [
+        '/assets/products/wheat-vodka.jpg'
+      ],
+      giftBoxAvailable: false,
+      desc: "DISTILLED FROM ENGLISH WHEAT AND CUT WITH THE CLEANEST WATER IN ENGLAND — FILTERED THROUGH PEAT, SANDSTONE AND LIMESTONE BENEATH THE MOOR. A VODKA THAT TASTES OF THE PLACE IT'S MADE."
     }
   ];
   const productBySlug = Object.fromEntries(PRODUCTS.map(p => [p.slug, p]));
+  const GIFT_BOX_PRICE = 8.00;
 
   // =============================================
-  // CART STATE (persisted in localStorage)
+  // CART
   // =============================================
   const CART_KEY = 'hepple:cart';
   let cart = (() => {
@@ -89,17 +111,18 @@
   })();
   const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
-  function addToCart(slug, qty=1){
-    const existing = cart.find(i => i.slug === slug);
+  function addToCart(slug, qty=1, giftBox=false){
+    const key = slug + (giftBox ? ':gift' : '');
+    const existing = cart.find(i => i.key === key);
     if (existing) existing.qty += qty;
-    else cart.push({ slug, qty });
+    else cart.push({ key, slug, qty, giftBox });
     saveCart();
     renderCart();
-    showToast(`Added to cart`);
+    showToast('ADDED TO CART');
     bumpCart();
   }
-  function removeFromCart(slug){
-    cart = cart.filter(i => i.slug !== slug);
+  function removeFromCart(key){
+    cart = cart.filter(i => i.key !== key);
     saveCart();
     renderCart();
   }
@@ -107,7 +130,9 @@
   function cartTotal(){
     return cart.reduce((s, i) => {
       const p = productBySlug[i.slug];
-      return s + (p ? p.price * i.qty : 0);
+      if (!p) return s;
+      const unit = p.price + (i.giftBox ? GIFT_BOX_PRICE : 0);
+      return s + unit * i.qty;
     }, 0);
   }
 
@@ -120,35 +145,38 @@
 
     if (countEl) countEl.textContent = count;
     if (btn) btn.classList.toggle('has-items', count > 0);
+    if (!body) return;
 
     if (count === 0){
-      body.innerHTML = `<p class="cart-panel__empty">Your cart is empty — <em>still room for a bottle</em>.</p>`;
-      foot.hidden = true;
+      body.innerHTML = `<p class="cart-panel__empty">YOUR CART IS EMPTY</p>`;
+      if (foot) foot.hidden = true;
       return;
     }
 
     body.innerHTML = cart.map(i => {
       const p = productBySlug[i.slug];
       if (!p) return '';
+      const unit = p.price + (i.giftBox ? GIFT_BOX_PRICE : 0);
       return `
         <div class="cart-item">
-          <div class="cart-item__img"><img src="${p.image}" alt="${p.name}" /></div>
+          <div class="cart-item__img"><img src="${p.images[0]}" alt="${p.name}" /></div>
           <div class="cart-item__info">
-            <h4>${p.name}</h4>
-            <div class="qty">Qty ${i.qty} · £${p.price.toFixed(2)} ea</div>
-            <button class="cart-item__remove" data-remove="${p.slug}">Remove</button>
+            <h4>${p.name}${i.giftBox ? ' + GIFT BOX' : ''}</h4>
+            <div class="qty">QTY ${i.qty} · £${unit.toFixed(2)} EA</div>
+            <button class="cart-item__remove" data-remove="${i.key}">REMOVE</button>
           </div>
-          <div class="cart-item__price">£${(p.price * i.qty).toFixed(2)}</div>
+          <div class="cart-item__price">£${(unit * i.qty).toFixed(2)}</div>
         </div>
       `;
     }).join('');
-    foot.hidden = false;
-    $('#cartTotal').textContent = `£${cartTotal().toFixed(2)}`;
+    if (foot) foot.hidden = false;
+    const totalEl = $('#cartTotal');
+    if (totalEl) totalEl.textContent = `£${cartTotal().toFixed(2)}`;
   }
 
   function bumpCart(){
     const btn = $('#cartBtn');
-    if (!btn) return;
+    if (!btn || !btn.animate) return;
     btn.animate([
       { transform:'scale(1)' },
       { transform:'scale(1.2)' },
@@ -183,7 +211,6 @@
   }
 
   function matchPage(route){
-    // exact match or "/shop/:slug" wildcard
     const pages = $$('.page');
     let matched = pages.find(p => p.dataset.page === route);
     if (matched) return matched;
@@ -198,7 +225,6 @@
     const page = matchPage(route);
     if (page) page.classList.add('is-active');
 
-    // Active nav link
     $$('[data-route]').forEach(a => {
       const r = a.getAttribute('data-route');
       let active = r === route;
@@ -206,20 +232,19 @@
       a.classList.toggle('is-active', active);
     });
 
-    // If on /shop, render grid
     if (route === '/shop') renderShopGrid();
-    // If product detail
     if (/^\/shop\/[\w-]+$/.test(route)){
       const slug = route.split('/')[2];
       renderProductDetail(slug);
     }
+    if (route === '/') renderHomeRange();
   }
 
   function showIntroOrNot(route, forceIntro=false){
     const onHome = route === '/';
     if (onHome){
-      const hasSeenIntro = sessionStorage.getItem('hepple:seenIntro') === '1';
-      if (hasSeenIntro && !forceIntro){
+      const hasSeen = sessionStorage.getItem('hepple:seenIntro') === '1';
+      if (hasSeen && !forceIntro){
         intro.style.display = 'none';
         content.classList.add('is-visible');
         nav.classList.add('is-visible');
@@ -227,16 +252,13 @@
         intro.style.display = '';
         content.classList.remove('is-visible');
         nav.classList.remove('is-visible');
-        // reset intro state
         intro.classList.remove('is-ready', 'is-complete');
         introComplete = false;
-        currentScrollProgress = 0;
-        maxScrollProgress = 0;
+        maxProgress = 0;
         targetTime = 0;
         currentTime = 0;
-        if (video){
-          try { video.currentTime = 0; } catch(_){}
-        }
+        lastWriteTime = 0;
+        if (video){ try { video.currentTime = 0; } catch(_){} }
         window.scrollTo(0, 0);
       }
     } else {
@@ -253,9 +275,7 @@
     showIntroOrNot(r, forceIntro);
   }
 
-  // Click interception
   document.addEventListener('click', (e) => {
-    // Cart remove buttons
     const removeBtn = e.target.closest('[data-remove]');
     if (removeBtn){
       e.preventDefault();
@@ -263,24 +283,23 @@
       return;
     }
 
-    // Add to cart
     const addBtn = e.target.closest('[data-add-to-cart]');
     if (addBtn){
       e.preventDefault();
       const slug = addBtn.dataset.addToCart;
       const qtyInput = $('#pdQty');
       const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value || '1', 10)) : 1;
-      addToCart(slug, qty);
+      const giftBox = $('#pdGift')?.checked || false;
+      addToCart(slug, qty, giftBox);
       addBtn.classList.add('is-added');
-      addBtn.textContent = 'Added ✓';
+      addBtn.textContent = 'ADDED ✓';
       setTimeout(() => {
         addBtn.classList.remove('is-added');
-        addBtn.textContent = 'Add to cart';
+        addBtn.textContent = 'ADD TO CART';
       }, 1800);
       return;
     }
 
-    // Qty stepper
     const stepBtn = e.target.closest('[data-qty]');
     if (stepBtn){
       e.preventDefault();
@@ -293,7 +312,14 @@
       return;
     }
 
-    // Route links
+    const giftToggle = e.target.closest('[data-gift-toggle]');
+    if (giftToggle){
+      e.preventDefault();
+      const cb = $('#pdGift');
+      if (cb){ cb.checked = !cb.checked; giftToggle.classList.toggle('is-checked', cb.checked); }
+      return;
+    }
+
     const a = e.target.closest('[data-route]');
     if (!a) return;
     const target = a.getAttribute('data-route');
@@ -301,21 +327,13 @@
     e.preventDefault();
     closeDrawers();
 
-    // If clicking the brand logo, always return home AND replay intro
     const isBrand = a.hasAttribute('data-brand');
-    if (isBrand){
-      sessionStorage.removeItem('hepple:seenIntro');
-    }
+    if (isBrand) sessionStorage.removeItem('hepple:seenIntro');
 
     if (location.hash === '#' + target){
-      // Already there — re-fire state (for brand clicks to re-trigger intro)
       route(isBrand);
     } else {
-      // When navigating via brand, also force intro on arrival
-      if (isBrand){
-        // Setting flag the router will check
-        window._hepple_forceIntro = true;
-      }
+      if (isBrand) window._hepple_forceIntro = true;
       location.hash = '#' + target;
     }
   });
@@ -333,14 +351,22 @@
   }
 
   // =============================================
-  // VIDEO SCROLL SCRUB — monotonic, smooth
+  // VIDEO SCROLL SCRUB — smooth, monotonic
+  // KEY FIX: throttle currentTime writes. The previous version
+  // wrote every rAF which thrashes the decoder. Here we only
+  // write when delta exceeds one frame interval (~33ms).
   // =============================================
-  let videoDuration    = 5.2;
-  let targetTime       = 0;
-  let currentTime      = 0;
-  let introComplete    = false;
-  let currentScrollProgress = 0;
-  let maxScrollProgress     = 0; // monotonic — never decreases during a session
+  let videoDuration = 5.2;
+  let targetTime    = 0;
+  let currentTime   = 0;
+  let lastWriteTime = 0;
+  let introComplete = false;
+  let maxProgress   = 0;
+  let latestScrollY = 0;
+
+  const FRAME_TIME  = 1/30;          // hero is 30fps
+  const WRITE_THRESHOLD = FRAME_TIME; // only seek if >1 frame away
+  const LERP        = 0.14;           // higher = snappier, still smooth
 
   if (video){
     video.addEventListener('loadedmetadata', () => {
@@ -349,6 +375,7 @@
       }
     });
 
+    // Prime the decoder on first interaction (unlocks mobile)
     const primeVideo = async () => {
       try { await video.play(); video.pause(); video.currentTime = 0; }
       catch(_){}
@@ -357,24 +384,31 @@
     else video.addEventListener('loadedmetadata', primeVideo, { once:true });
   }
 
-  // Smoothing loop — low lerp = smoother; high = tighter-to-scroll
-  // Desktop: 0.09; Mobile: 0.18 (feels snappier on touch)
-  const isTouch = matchMedia('(pointer: coarse)').matches;
-  const LERP = isTouch ? 0.18 : 0.09;
+  // Single rAF loop that does everything
+  function tick(){
+    // Compute target from scroll position
+    computeScrollProgress();
 
-  function animate(){
-    currentTime += (targetTime - currentTime) * LERP;
-    if (Math.abs(targetTime - currentTime) < 0.003) currentTime = targetTime;
+    // Lerp currentTime toward target
+    const diff = targetTime - currentTime;
+    if (Math.abs(diff) > 0.0005){
+      currentTime += diff * LERP;
+    } else {
+      currentTime = targetTime;
+    }
 
+    // Write to video only if delta is meaningful (>1 frame)
     if (video && video.readyState >= 2 && isFinite(currentTime)){
-      if (Math.abs(video.currentTime - currentTime) > 0.025){
-        try { video.currentTime = currentTime; } catch(_){}
+      if (Math.abs(currentTime - lastWriteTime) > WRITE_THRESHOLD){
+        try { video.currentTime = currentTime; lastWriteTime = currentTime; }
+        catch(_){}
       }
     }
-    requestAnimationFrame(animate);
+
+    requestAnimationFrame(tick);
   }
 
-  function onScroll(){
+  function computeScrollProgress(){
     if (getRoute() !== '/' || !intro || intro.style.display === 'none') return;
 
     const rect       = intro.getBoundingClientRect();
@@ -382,21 +416,16 @@
     const viewport   = window.innerHeight;
     const scrollable = Math.max(1, introH - viewport);
     const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
-    const rawProgress = scrolled / scrollable;
+    const raw        = scrolled / scrollable;
 
-    // MONOTONIC — only allow progress to increase, never decrease mid-session
-    if (rawProgress > maxScrollProgress){
-      maxScrollProgress = rawProgress;
-    }
-    currentScrollProgress = maxScrollProgress;
+    // Monotonic — never decrease
+    if (raw > maxProgress) maxProgress = raw;
 
-    // Map progress → video time (forward only)
-    targetTime = Math.max(0, Math.min(videoDuration * currentScrollProgress, videoDuration - 0.05));
+    targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
 
-    // Reveal states — based on monotonic max
-    if (currentScrollProgress > 0.08) intro.classList.add('is-ready');
+    if (maxProgress > 0.08) intro.classList.add('is-ready');
 
-    if (currentScrollProgress >= 0.95 && !introComplete){
+    if (maxProgress >= 0.94 && !introComplete){
       introComplete = true;
       intro.classList.add('is-complete');
       nav.classList.add('is-visible');
@@ -405,21 +434,8 @@
     }
   }
 
-  let scrollScheduled = false;
-  window.addEventListener('scroll', () => {
-    if (!scrollScheduled){
-      scrollScheduled = true;
-      requestAnimationFrame(() => {
-        onScroll();
-        scrollScheduled = false;
-      });
-    }
-  }, { passive: true });
-
-  window.addEventListener('resize', onScroll, { passive: true });
-
   // =============================================
-  // DRAWER + CART
+  // DRAWERS
   // =============================================
   $('#menuBtn')?.addEventListener('click', () => {
     $('#drawer').classList.add('is-open');
@@ -434,7 +450,7 @@
   $('#overlay')?.addEventListener('click', closeDrawers);
 
   // =============================================
-  // CAROUSELS (prev/next scrolling)
+  // CAROUSELS (home + related)
   // =============================================
   function initCarousel(root){
     const track = root.querySelector('[data-carousel-track]');
@@ -443,15 +459,15 @@
     if (!track) return;
 
     const step = () => {
-      const firstCard = track.children[0];
-      if (!firstCard) return 320;
-      const rect = firstCard.getBoundingClientRect();
+      const first = track.children[0];
+      if (!first) return 320;
+      const rect = first.getBoundingClientRect();
       const style = getComputedStyle(track);
       const gap = parseFloat(style.columnGap || style.gap || 16);
       return rect.width + gap;
     };
 
-    const updateDisabled = () => {
+    const update = () => {
       const atStart = track.scrollLeft < 4;
       const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
       if (prev) prev.disabled = atStart;
@@ -460,14 +476,21 @@
 
     prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior:'smooth' }));
     next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior:'smooth' }));
-    track.addEventListener('scroll', updateDisabled, { passive:true });
-    window.addEventListener('resize', updateDisabled);
-    setTimeout(updateDisabled, 200);
+    track.addEventListener('scroll', update, { passive:true });
+    window.addEventListener('resize', update);
+    setTimeout(update, 200);
   }
-  $$('[data-carousel]').forEach(initCarousel);
+  // Init existing ones + re-init after renders via re-query
+  function initAllCarousels(){
+    $$('[data-carousel]').forEach(c => {
+      if (c._cinit) return;
+      c._cinit = true;
+      initCarousel(c);
+    });
+  }
 
   // =============================================
-  // PROCESS STEPPER (Story page)
+  // PROCESS STEPPER
   // =============================================
   function initProcess(){
     const root = $('[data-process]');
@@ -494,39 +517,31 @@
     prev?.addEventListener('click', () => goTo(idx - 1));
     next?.addEventListener('click', () => goTo(idx + 1));
     dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
-
     goTo(0);
   }
 
   // =============================================
-  // NUMBER COUNTERS (IntersectionObserver)
+  // NUMBER COUNTERS — Our Story only
   // =============================================
   function animateNumber(el){
     const target = parseFloat(el.dataset.countTo || '0');
     const format = el.dataset.countFormat || '';
     const suffix = el.dataset.countSuffix || '';
-    const duration = 1600; // ms
+    const duration = 1800;
     const start = performance.now();
-    const startVal = 0;
 
     function easeOutExpo(t){ return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
 
-    function tick(now){
+    function frame(now){
       const elapsed = now - start;
       const t = Math.min(1, elapsed / duration);
       const e = easeOutExpo(t);
-      const current = Math.round(startVal + (target - startVal) * e);
-      let out = current.toString();
-      if (format === 'comma') out = current.toLocaleString('en-GB');
-      el.textContent = out + suffix;
-      if (t < 1) requestAnimationFrame(tick);
-      else {
-        let final = target.toString();
-        if (format === 'comma') final = target.toLocaleString('en-GB');
-        el.textContent = final + suffix;
-      }
+      const current = Math.round(target * e);
+      el.textContent = (format === 'comma' ? current.toLocaleString('en-GB') : current.toString()) + suffix;
+      if (t < 1) requestAnimationFrame(frame);
+      else el.textContent = (format === 'comma' ? target.toLocaleString('en-GB') : target.toString()) + suffix;
     }
-    requestAnimationFrame(tick);
+    requestAnimationFrame(frame);
   }
 
   function initCounters(){
@@ -549,7 +564,32 @@
   }
 
   // =============================================
-  // SHOP RENDERING
+  // HOME RANGE RENDER
+  // =============================================
+  function renderHomeRange(){
+    const track = $('#homeRangeTrack');
+    if (!track || track._rendered) return;
+    track._rendered = true;
+    track.innerHTML = PRODUCTS.map(p => `
+      <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="product-card">
+        <div class="product-card__img">
+          <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3>${p.name}</h3>
+          <div class="product-card__price">£${p.price.toFixed(2)}</div>
+          <div class="product-card__actions">
+            <span class="btn btn--tiny">BUY NOW</span>
+            <span class="product-card__about">ABOUT</span>
+          </div>
+        </div>
+      </a>
+    `).join('');
+    initAllCarousels();
+  }
+
+  // =============================================
+  // SHOP GRID RENDER
   // =============================================
   function renderShopGrid(){
     const grid = $('#shopGrid');
@@ -557,83 +597,162 @@
     grid.innerHTML = PRODUCTS.map(p => `
       <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="shop-card">
         <div class="shop-card__img">
-          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+          <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
         </div>
         <h3>${p.name}</h3>
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
         <div class="shop-card__price">£${p.price.toFixed(2)}</div>
         <div class="shop-card__actions">
-          <span class="btn btn--tiny">View</span>
+          <span class="btn btn--tiny">VIEW</span>
         </div>
       </a>
     `).join('');
   }
 
+  // =============================================
+  // PRODUCT DETAIL — bottle + gift box carousel, add-on checkbox
+  // =============================================
   function renderProductDetail(slug){
     const root = $('#productDetail');
     const p = productBySlug[slug];
-    if (!root || !p){
-      if (root) root.innerHTML = `<div class="wrap"><p style="padding:6rem 0;text-align:center;">Product not found. <a href="#/shop" data-route="/shop" style="border-bottom:1px solid;">Back to shop</a>.</p></div>`;
+    if (!root) return;
+    if (!p){
+      root.innerHTML = `<div class="wrap" style="padding:6rem 0; text-align:center;">
+        <p>PRODUCT NOT FOUND.</p>
+        <a href="#/shop" data-route="/shop" style="border-bottom:1px solid; font-weight:700; letter-spacing:.2em; font-size:.7rem;">BACK TO SHOP →</a>
+      </div>`;
       return;
     }
+
+    // Build gallery slides: always bottle first, gift box second IF available
+    const galleryImgs = [p.images[0]];
+    if (p.giftBoxAvailable){
+      galleryImgs.push('/assets/products/gin-giftbox.jpg');
+    }
+
+    const slidesHtml = galleryImgs.map((src, i) =>
+      `<div class="pd-gallery__slide ${i === 0 ? 'is-active' : ''}" data-slide="${i}">
+        <img src="${src}" alt="${p.name} ${i === 0 ? 'bottle' : 'gift box'}" />
+      </div>`
+    ).join('');
+
+    const dotsHtml = galleryImgs.length > 1 ? galleryImgs.map((_, i) =>
+      `<button class="pd-gallery__dot ${i === 0 ? 'is-active' : ''}" data-goto-slide="${i}" aria-label="Image ${i+1}"></button>`
+    ).join('') : '';
+
+    const arrowsHtml = galleryImgs.length > 1 ? `
+      <button class="pd-gallery__btn pd-gallery__btn--prev" data-pd-prev aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="pd-gallery__btn pd-gallery__btn--next" data-pd-next aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+      </button>` : '';
+
+    const giftAddonHtml = p.giftBoxAvailable ? `
+      <label class="gift-addon" data-gift-toggle>
+        <input id="pdGift" type="checkbox" />
+        <span class="gift-addon__check"></span>
+        <div class="gift-addon__body">
+          <span class="gift-addon__title">ADD THE GIFT BOX</span>
+          <span class="gift-addon__sub">A HANDSOME BOX FOR THE BOTTLE</span>
+        </div>
+        <span class="gift-addon__price">+£${GIFT_BOX_PRICE.toFixed(2)}</span>
+      </label>
+    ` : '';
+
     root.innerHTML = `
       <div class="product-detail__grid">
-        <div class="product-detail__img">
-          <img src="${p.image}" alt="${p.name}" />
+        <div class="pd-gallery" data-pd-gallery>
+          <div class="pd-gallery__stage">
+            ${slidesHtml}
+            ${arrowsHtml}
+            ${dotsHtml ? `<div class="pd-gallery__dots">${dotsHtml}</div>` : ''}
+          </div>
         </div>
         <div class="product-detail__body">
           <div class="product-detail__crumbs">
-            <a href="#/shop" data-route="/shop">Shop</a> / ${p.name}
+            <a href="#/shop" data-route="/shop">SHOP</a> / ${p.short.toUpperCase()}
           </div>
+          <p class="product-detail__kicker">${p.kicker}</p>
           <h1 class="product-detail__title">${p.name}</h1>
           <div class="product-detail__price">£${p.price.toFixed(2)}</div>
           <p class="product-detail__desc">${p.desc}</p>
           <div class="product-detail__meta">
-            <div><strong>${p.meta.size}</strong>Size</div>
+            <div><strong>${p.meta.size}</strong>SIZE</div>
             <div><strong>${p.meta.abv}</strong>ABV</div>
-            <div><strong>${p.meta.origin}</strong>Origin</div>
+            <div><strong>${p.meta.origin}</strong>ORIGIN</div>
           </div>
+          ${giftAddonHtml}
           <div class="product-detail__qty">
-            <label for="pdQty">Qty</label>
+            <label for="pdQty">QTY</label>
             <div class="qty-stepper">
               <button type="button" data-qty="-" aria-label="Decrease">−</button>
               <input id="pdQty" type="number" value="1" min="1" />
               <button type="button" data-qty="+" aria-label="Increase">+</button>
             </div>
           </div>
-          <button class="product-detail__add" data-add-to-cart="${p.slug}">Add to cart</button>
+          <button class="product-detail__add" data-add-to-cart="${p.slug}">ADD TO CART</button>
         </div>
       </div>
     `;
 
-    // Populate related carousel
+    // Wire product image gallery
+    initProductGallery();
+
+    // Related
     const track = $('#relatedTrack');
     if (track){
       const related = PRODUCTS.filter(x => x.slug !== slug);
       track.innerHTML = related.map(rp => `
         <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
           <div class="product-card__img">
-            <img src="${rp.image}" alt="${rp.name}" loading="lazy" />
+            <img src="${rp.images[0]}" alt="${rp.name}" loading="lazy" />
           </div>
           <div class="product-card__body">
             <h3>${rp.name}</h3>
+            <div class="product-card__price">£${rp.price.toFixed(2)}</div>
             <div class="product-card__actions">
-              <span class="btn btn--tiny">Buy Now</span>
-              <span class="product-card__about">About</span>
+              <span class="btn btn--tiny">BUY NOW</span>
+              <span class="product-card__about">ABOUT</span>
             </div>
           </div>
         </a>
       `).join('');
+      track._rendered = false;
+      track.closest('[data-carousel]')._cinit = false;
+      initAllCarousels();
     }
+  }
+
+  function initProductGallery(){
+    const g = $('[data-pd-gallery]');
+    if (!g) return;
+    const slides = $$('.pd-gallery__slide', g);
+    if (slides.length < 2) return;
+    const dots   = $$('[data-goto-slide]', g);
+    const prev   = $('[data-pd-prev]', g);
+    const next   = $('[data-pd-next]', g);
+    let idx = 0;
+
+    function goTo(i){
+      idx = (i + slides.length) % slides.length;
+      slides.forEach((s, si) => s.classList.toggle('is-active', si === idx));
+      dots.forEach((d, di) => d.classList.toggle('is-active', di === idx));
+    }
+
+    prev?.addEventListener('click', () => goTo(idx - 1));
+    next?.addEventListener('click', () => goTo(idx + 1));
+    dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
   }
 
   // =============================================
   // BOOT
   // =============================================
   renderCart();
-  animate();
+  requestAnimationFrame(tick);
   route();
-  onScroll();
+  computeScrollProgress();
   initProcess();
   initCounters();
+  initAllCarousels();
 })();
