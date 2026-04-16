@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Hepple — A Taste of Wild Luxury</title>
+<meta name="description" content="Distilled spirits from the Hepple Estate in Northumberland. Elegant, drink-led, quietly luxurious." />
+<meta name="theme-color" content="#EDE8E0" />
+
+<!-- Social -->
+<meta property="og:title" content="Hepple — A Taste of Wild Luxury" />
+<meta property="og:description" content="Distilled spirits from the Hepple Estate, Northumberland." />
+<meta property="og:image" content="/assets/hero-poster.jpg" />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23003087'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='64' font-weight='800' fill='%23EDE8E0' letter-spacing='-2'%3EH%3C/text%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<!-- Preload hero assets (home-route only; browser will parse quickly) -->
+<link rel="preload" as="video" href="/assets/hero.mp4" type="video/mp4" />
+<link rel="preload" as="image" href="/assets/hero-poster.jpg" />
+
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     WORDMARK SYMBOL — reused everywhere via <use>
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hepple-wordmark" viewBox="0 0 460 74">
+      <g fill="currentColor">
+        <path d="M0 4 h16 v26 h28 V4 h16 v66 h-16 V42 H16 v28 H0 z"/>
+        <path d="M74 4 h54 v12 H90 v14 h32 v12 H90 v16 h40 v12 H74 z"/>
+        <path d="M142 4 h30 q14 0 20 7 q8 8 8 17 q0 10 -8 18 q-6 7 -20 7 h-14 v17 h-16 z M158 16 v24 h12 q8 0 11 -3 q4 -4 4 -9 q0 -6 -4 -9 q-3 -3 -11 -3 z"/>
+        <path d="M210 4 h30 q14 0 20 7 q8 8 8 17 q0 10 -8 18 q-6 7 -20 7 h-14 v17 h-16 z M226 16 v24 h12 q8 0 11 -3 q4 -4 4 -9 q0 -6 -4 -9 q-3 -3 -11 -3 z"/>
+        <path d="M278 4 h16 v54 h36 v12 h-52 z"/>
+        <path d="M340 4 h54 v12 h-38 v14 h32 v12 h-32 v16 h40 v12 h-56 z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="nav" id="nav" aria-label="Primary">
+  <a href="#/" class="nav__brand" data-route="/" aria-label="Hepple — home">
+    <span class="wordmark" aria-hidden="true"><svg><use href="#hepple-wordmark"/></svg></span>
+  </a>
+
+  <ul class="nav__links">
+    <li><a href="#/story"     data-route="/story">Our Story</a></li>
+    <li><a href="#/estate"    data-route="/estate">The Estate</a></li>
+    <li><a href="#/cocktails" data-route="/cocktails">Cocktails</a></li>
+    <li><a href="#/visit"     data-route="/visit">Visit Us</a></li>
+    <li><a href="#/shop"      data-route="/shop">Shop</a></li>
+  </ul>
+
+  <a href="#/shop" class="nav__cta" data-route="/shop">Shop</a>
+
+  <button class="nav__menu-btn" id="menuBtn" aria-label="Open menu">
+    <span></span> Menu
+  </button>
+</nav>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer__close" id="drawerClose" aria-label="Close menu">Close</button>
+  <a href="#/"          data-route="/">Home</a>
+  <a href="#/story"     data-route="/story">Our Story</a>
+  <a href="#/estate"    data-route="/estate">The Estate</a>
+  <a href="#/cocktails" data-route="/cocktails">Cocktails</a>
+  <a href="#/visit"     data-route="/visit">Visit Us</a>
+  <a href="#/shop"      data-route="/shop">Shop</a>
+</aside>
+
+<!-- ============================================================
+     INTRO — scroll-scrubbed hero video
+     ============================================================ -->
+<section class="intro" id="intro" aria-label="Welcome">
+  <div class="intro__stage">
+    <video
+      class="intro__video"
+      id="heroVideo"
+      playsinline
+      muted
+      preload="auto"
+      poster="/assets/hero-poster.jpg">
+      <source src="/assets/hero.mp4" type="video/mp4" />
+      <source src="/assets/hero.webm" type="video/webm" />
+    </video>
+    <div class="intro__vignette"></div>
+
+    <div class="intro__overlay">
+      <div class="intro__top">HEPPLE SPIRITS &nbsp;·&nbsp; NORTHUMBERLAND</div>
+
+      <div class="intro__center">
+        <p class="intro__eyebrow">Come in.</p>
+        <h1 class="intro__headline">We're <em>making drinks.</em></h1>
+      </div>
+
+      <div class="intro__hint">
+        <span>Scroll</span>
+        <span class="intro__hint-line"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MAIN CONTENT (revealed after intro)
+     ============================================================ -->
+<main class="content" id="content">
+
+  <!-- =================== HOME =================== -->
+  <div class="page is-active" data-page="/">
+
+    <section class="welcome">
+      <div class="wrap">
+        <div class="welcome__grid">
+          <div>
+            <p class="welcome__eyebrow">Welcome to the Hepple Estate.</p>
+            <h2 class="welcome__headline">A very good drink in a very good <em>place.</em></h2>
+          </div>
+          <div>
+            <p class="welcome__lede">
+              We distil spirits in the remote Northumbrian hills — quietly,
+              carefully, and with a great deal of attention to what's growing outside.
+            </p>
+            <div class="welcome__meta">
+              <span>Est. <strong>2014</strong></span>
+              <span>Northumberland <strong>National Park</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="estate">
+      <div class="wrap">
+        <div class="estate__grid">
+          <div class="estate__img" role="img" aria-label="The Hepple Estate — Northumbrian moorland"></div>
+          <div class="estate__copy">
+            <div class="estate__label">The Estate</div>
+            <h2>Four thousand acres of wild, quiet <em>country.</em></h2>
+            <p>
+              Ancient juniper. Douglas fir. Water filtered through peat and limestone
+              before it ever reaches our stills. Everything that goes into a bottle
+              of Hepple begins here — and most of it doesn't travel very far.
+            </p>
+            <p>
+              <em>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</em>
+              Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed.
+            </p>
+            <a href="#/estate" class="estate__link" data-route="/estate">Explore the estate →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="range">
+      <div class="wrap">
+        <div class="range__head">
+          <p class="welcome__eyebrow">The Range</p>
+          <h2>Three spirits, <em>one place.</em></h2>
+        </div>
+
+        <div class="range__grid">
+
+          <a href="#/shop" data-route="/shop" class="sku sku--gin">
+            <span class="sku__tag">Wild Juniper</span>
+            <div class="sku__bottle">
+              <img src="https://hepplespirits.com/cdn/shop/files/Untitleddesign.png?v=1741180795&width=800"
+                   alt="Hepple Wild Juniper Gin 70cl bottle"
+                   loading="lazy" width="260" height="520" />
+            </div>
+            <p class="sku__flavour">Wild Juniper Gin</p>
+            <p class="sku__origin">Distilled in Northumberland · 70cl · 45% ABV</p>
+            <div class="sku__cta">
+              <span class="price">£39.95</span>
+              <span class="buy">Shop →</span>
+            </div>
+          </a>
+
+          <a href="#/shop" data-route="/shop" class="sku sku--fir">
+            <span class="sku__tag">Douglas Fir</span>
+            <div class="sku__bottle">
+              <img src="https://hepplespirits.com/cdn/shop/files/DouglasFir.png?v=1741101027&width=800"
+                   alt="Hepple Douglas Fir Vodka bottle"
+                   loading="lazy" width="260" height="520" />
+            </div>
+            <p class="sku__flavour">Douglas Fir Vodka</p>
+            <p class="sku__origin">Distilled in Northumberland · 70cl · 40% ABV</p>
+            <div class="sku__cta">
+              <span class="price">£39.95</span>
+              <span class="buy">Shop →</span>
+            </div>
+          </a>
+
+          <a href="#/shop" data-route="/shop" class="sku sku--vodka">
+            <span class="sku__tag">Moorland</span>
+            <div class="sku__bottle">
+              <img src="https://hepplespirits.com/cdn/shop/files/WheatVodka.png?v=1741174689&width=800"
+                   alt="Hepple Moorland Vodka bottle"
+                   loading="lazy" width="260" height="520" />
+            </div>
+            <p class="sku__flavour">Moorland Vodka</p>
+            <p class="sku__origin">Distilled in Northumberland · 70cl · 40% ABV</p>
+            <div class="sku__cta">
+              <span class="price">£34.95</span>
+              <span class="buy">Shop →</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="cocktail">
+      <div class="wrap">
+        <div class="cocktail__grid">
+          <div class="cocktail__img" role="img" aria-label="The Moorland Spritz"></div>
+          <div>
+            <p class="cocktail__eyebrow">Right here, right now.</p>
+            <h2 class="cocktail__title">The <em>Moorland</em> Spritz</h2>
+            <p class="cocktail__recipe">
+              <strong>Method</strong>
+              50ml Moorland Vodka · 25ml Lillet · 10ml elderflower.<br>
+              Stir with ice. Strain into a chilled glass. Finish with fresh elderflowers.
+            </p>
+            <a href="#/cocktails" class="cocktail__link" data-route="/cocktails">See all cocktails →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="packaging">
+      <div class="wrap">
+        <div class="packaging__grid">
+          <div class="packaging__img" role="img" aria-label="Hepple Wild Juniper Gin packaging"></div>
+          <div class="packaging__copy">
+            <p class="welcome__eyebrow" style="color:var(--juniper-pink);">The new look.</p>
+            <h2>A little <em>louder</em>, a lot more Hepple.</h2>
+            <p>
+              Our updated packaging system leans into cooler tones and confident colour —
+              pink for the gin, green for Douglas Fir, blue for Moorland.
+              Metallic foils, coloured neck bands, and the same Hepple wordmark across the range.
+            </p>
+            <p>
+              <em>Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</em>
+              Donec sollicitudin molestie malesuada. Nulla porttitor accumsan tincidunt.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="diary">
+      <div class="wrap">
+        <div class="diary__head">
+          <p class="welcome__eyebrow">From the estate.</p>
+          <h2>A <em>drinks diary.</em></h2>
+        </div>
+
+        <div class="diary__grid">
+          <article class="diary__card diary__card--wide">
+            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-lovage.svg')" role="img" aria-label="Cutting lovage"></div>
+            <div class="diary__body">
+              <div class="meta">The Estate · April</div>
+              <p>Cutting lovage this morning. It's good as it is.</p>
+            </div>
+          </article>
+          <article class="diary__card">
+            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-secret.svg')" role="img" aria-label="Our little secret"></div>
+            <div class="diary__body">
+              <div class="meta">At the bar</div>
+              <p>Our little secret.</p>
+            </div>
+          </article>
+          <article class="diary__card diary__card--tall">
+            <div class="diary__imgbg" style="background-image:url('/assets/scenes/diary-company.svg')" role="img" aria-label="Good company wherever you find it"></div>
+            <div class="diary__body">
+              <div class="meta">Cocktails</div>
+              <p>Good company, wherever you find it.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit">
+      <p class="visit__eyebrow">Come and see us.</p>
+      <h2>Visit the <em>distillery.</em></h2>
+      <p>Tours, tastings, and a very good drink at the end of it. On the edge of Northumberland National Park.</p>
+      <a href="#/visit" class="visit__cta" data-route="/visit">Plan your visit</a>
+    </section>
+
+  </div>
+
+  <!-- =================== OUR STORY =================== -->
+  <div class="page" data-page="/story">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <p class="placeholder__kicker">Our Story</p>
+        <h1>The <em>Hepple</em> story.</h1>
+        <div class="placeholder__status">Not yet configured by Barker Digital</div>
+        <p class="placeholder__latin">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam
+          sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi,
+          pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== THE ESTATE =================== -->
+  <div class="page" data-page="/estate">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <p class="placeholder__kicker">The Estate</p>
+        <h1>Four thousand <em>wild</em> acres.</h1>
+        <div class="placeholder__status">Not yet configured by Barker Digital</div>
+        <p class="placeholder__latin">
+          Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
+          accumsan tincidunt. Proin eget tortor risus. Donec rutrum congue leo eget malesuada.
+          Pellentesque in ipsum id orci porta dapibus.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== COCKTAILS =================== -->
+  <div class="page" data-page="/cocktails">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <p class="placeholder__kicker">Cocktails</p>
+        <h1>Cold glass. <em>Good company.</em></h1>
+        <div class="placeholder__status">Not yet configured by Barker Digital</div>
+        <p class="placeholder__latin">
+          Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
+          Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+          Sed porttitor lectus nibh. Nulla quis lorem ut libero malesuada feugiat.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== VISIT US =================== -->
+  <div class="page" data-page="/visit">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <p class="placeholder__kicker">Visit Us</p>
+        <h1>The <em>distillery.</em></h1>
+        <div class="placeholder__status">Not yet configured by Barker Digital</div>
+        <p class="placeholder__latin">
+          Vivamus suscipit tortor eget felis porttitor volutpat. Nulla porttitor accumsan
+          tincidunt. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh.
+          Donec rutrum congue leo eget malesuada.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== SHOP =================== -->
+  <div class="page" data-page="/shop">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <p class="placeholder__kicker">Shop</p>
+        <h1>More Hepple, <em>less fuss.</em></h1>
+        <div class="placeholder__status">Not yet configured by Barker Digital</div>
+        <p class="placeholder__latin">
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+          cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper
+          sit amet ligula. Vivamus magna justo, lacinia eget consectetur sed.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← Back home</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================== FOOTER =================== -->
+  <footer>
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="wordmark" aria-hidden="true"><svg><use href="#hepple-wordmark"/></svg></span>
+        <p>Distilled spirits from the Hepple Estate, on the eastern edge of Northumberland National Park. Made for good company, wherever you find it.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#/story"     data-route="/story">Our Story</a></li>
+          <li><a href="#/estate"    data-route="/estate">The Estate</a></li>
+          <li><a href="#/cocktails" data-route="/cocktails">Cocktails</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Visit &amp; Shop</h4>
+        <ul>
+          <li><a href="#/visit" data-route="/visit">Visit Us</a></li>
+          <li><a href="#/shop"  data-route="/shop">Shop</a></li>
+          <li><a href="#/shop"  data-route="/shop">Gift Boxes</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <ul>
+          <li>The Old Coach House</li>
+          <li>Hepple Whitefield, Morpeth</li>
+          <li>Northumberland NE65 7LN</li>
+          <li><a href="mailto:hello@hepplespirits.com">hello@hepplespirits.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <div>© <span id="year"></span> Hepple Spirits Company · Please drink responsibly</div>
+      <div class="footer__barker">
+        Designed by <a href="https://barkerdigital.co.uk" target="_blank" rel="noopener">Barker Digital</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="/app.js" defer></script>
+</body>
+</html>

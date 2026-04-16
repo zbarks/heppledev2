@@ -1,0 +1,13 @@
+{
+  "name": "hepple",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hepple Spirits Company — new brand site. Designed by Barker Digital.",
+  "scripts": {
+    "dev": "npx --yes serve . -p 3000",
+    "build": "echo 'No build step — static site.' && exit 0",
+    "start": "npx --yes serve ."
+  },
+  "author": "Barker Digital",
+  "license": "UNLICENSED"
+}

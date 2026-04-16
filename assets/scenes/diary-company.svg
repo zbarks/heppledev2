@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Good company wherever you find it — fireside on the moors">
+  <defs>
+    <linearGradient id="skyG" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c5cfc1"/>
+      <stop offset="50%" stop-color="#a8b3a1"/>
+      <stop offset="100%" stop-color="#8a9585"/>
+    </linearGradient>
+    <linearGradient id="hillG1" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#6b7860"/>
+      <stop offset="100%" stop-color="#4a5541"/>
+    </linearGradient>
+    <linearGradient id="hillG2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3f4a34"/>
+      <stop offset="100%" stop-color="#253019"/>
+    </linearGradient>
+    <radialGradient id="fireG" cx=".5" cy=".5" r=".5">
+      <stop offset="0%" stop-color="#ffefbc"/>
+      <stop offset="30%" stop-color="#f6a947"/>
+      <stop offset="70%" stop-color="#d24a1a"/>
+      <stop offset="100%" stop-color="#6a1a08"/>
+    </radialGradient>
+    <filter id="grainG">
+      <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="2" seed="11"/>
+      <feColorMatrix values="0 0 0 0 .2  0 0 0 0 .2  0 0 0 0 .2  0 0 0 .09 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+    <filter id="blurG"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+
+  <rect width="800" height="1000" fill="url(#skyG)"/>
+
+  <!-- Hills rolling -->
+  <path d="M0 460 Q150 430 320 450 T620 450 T800 440 L800 620 L0 620 Z" fill="url(#hillG1)" opacity=".9"/>
+  <path d="M0 560 Q200 520 400 550 T800 540 L800 740 L0 740 Z" fill="url(#hillG2)"/>
+
+  <!-- Foreground -->
+  <path d="M0 690 L800 680 L800 1000 L0 1000 Z" fill="#1c2017"/>
+
+  <!-- Fire pit / brazier -->
+  <!-- Bowl -->
+  <ellipse cx="400" cy="780" rx="115" ry="22" fill="#1a1a1a"/>
+  <path d="M290 782 Q290 830 310 850 L490 850 Q510 830 510 782 Z" fill="#121212"/>
+  <ellipse cx="400" cy="782" rx="115" ry="18" fill="#2a2a2a"/>
+
+  <!-- Embers / logs -->
+  <ellipse cx="400" cy="776" rx="95" ry="10" fill="#3b1e10"/>
+  <!-- Glow -->
+  <ellipse cx="400" cy="770" rx="90" ry="30" fill="url(#fireG)" filter="url(#blurG)"/>
+  <ellipse cx="400" cy="755" rx="60" ry="38" fill="rgba(255,200,100,.5)" filter="url(#blurG)"/>
+  <!-- Smoke -->
+  <path d="M380 730 Q360 680 390 630 Q420 600 400 560 Q380 530 410 500"
+        stroke="rgba(220,220,210,.35)" stroke-width="18" fill="none" stroke-linecap="round" filter="url(#blurG)"/>
+  <path d="M420 735 Q450 690 430 640 Q410 610 440 570"
+        stroke="rgba(220,220,210,.22)" stroke-width="14" fill="none" stroke-linecap="round" filter="url(#blurG)"/>
+
+  <!-- Two hands holding glasses (abstracted) -->
+  <!-- Left hand / arm / glass -->
+  <g>
+    <path d="M40 900 Q140 780 220 760 L260 830 Q200 870 130 960 Z" fill="#4c5c5e"/>
+    <!-- Wrist -->
+    <ellipse cx="240" cy="790" rx="28" ry="14" fill="#e2c8a8"/>
+    <!-- Glass (white wine / coupe) -->
+    <g transform="translate(265 730)">
+      <path d="M0 0 Q-2 45 25 55 Q52 45 50 0 Z" fill="rgba(240,238,220,.85)" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+      <ellipse cx="25" cy="6" rx="22" ry="4" fill="#ddd6b2" opacity=".85"/>
+      <!-- lemon twist -->
+      <path d="M12 4 Q15 10 22 6" stroke="#d9b54a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- stem -->
+      <rect x="23" y="55" width="4" height="28" fill="rgba(230,230,220,.6)"/>
+    </g>
+  </g>
+
+  <!-- Right hand / arm / glass -->
+  <g>
+    <path d="M760 900 Q660 780 580 760 L540 830 Q600 870 670 960 Z" fill="#2d3528"/>
+    <ellipse cx="560" cy="790" rx="28" ry="14" fill="#e2c8a8"/>
+    <g transform="translate(510 730)">
+      <path d="M0 0 Q-2 45 25 55 Q52 45 50 0 Z" fill="rgba(240,238,220,.85)" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+      <ellipse cx="25" cy="6" rx="22" ry="4" fill="#ddd6b2" opacity=".85"/>
+      <path d="M12 4 Q15 10 22 6" stroke="#d9b54a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <rect x="23" y="55" width="4" height="28" fill="rgba(230,230,220,.6)"/>
+    </g>
+  </g>
+
+  <!-- Heather tufts foreground -->
+  <g stroke="#2a2e21" stroke-width="1" fill="none" opacity=".7">
+    <path d="M40 980 l3 -30 M90 975 l-2 -28 M150 970 l3 -30 M200 975 l-2 -26 M600 970 l3 -28 M650 975 l-2 -30 M700 970 l3 -26 M750 975 l-2 -28"/>
+  </g>
+
+  <!-- Grain -->
+  <rect width="800" height="1000" fill="white" filter="url(#grainG)" opacity=".35"/>
+
+  <!-- Vignette -->
+  <radialGradient id="vigG" cx=".5" cy=".6" r=".8">
+    <stop offset="55%" stop-color="rgba(0,0,0,0)"/>
+    <stop offset="100%" stop-color="rgba(0,0,0,.5)"/>
+  </radialGradient>
+  <rect width="800" height="1000" fill="url(#vigG)"/>
+</svg>

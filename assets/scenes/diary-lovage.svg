@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cutting lovage this morning">
+  <defs>
+    <linearGradient id="skyM" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#d4d8cb"/>
+      <stop offset="100%" stop-color="#a3ad95"/>
+    </linearGradient>
+    <linearGradient id="foliage" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#5a7040"/>
+      <stop offset="100%" stop-color="#2c3a1c"/>
+    </linearGradient>
+    <linearGradient id="leaf1" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#78913a"/>
+      <stop offset="100%" stop-color="#3b4a18"/>
+    </linearGradient>
+    <linearGradient id="leaf2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#94a853"/>
+      <stop offset="100%" stop-color="#556524"/>
+    </linearGradient>
+    <filter id="grain3">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="2"/>
+      <feColorMatrix values="0 0 0 0 .2  0 0 0 0 .2  0 0 0 0 .2  0 0 0 .1 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="1000" fill="url(#skyM)"/>
+
+  <!-- Background hedgerow / forest -->
+  <path d="M0 400 Q120 360 240 380 T500 370 T800 390 L800 700 L0 700 Z" fill="url(#foliage)" opacity=".85"/>
+
+  <!-- Foreground foliage mass -->
+  <path d="M0 520 L800 540 L800 1000 L0 1000 Z" fill="#3e4d28"/>
+
+  <!-- Individual leaf clusters (abstracted lovage fronds) -->
+  <g>
+    <!-- back layer -->
+    <g fill="url(#leaf1)" opacity=".9">
+      <path d="M80 640 Q90 580 110 600 Q120 625 100 670 Q92 700 80 640 Z"/>
+      <path d="M160 650 Q170 580 195 610 Q205 640 185 680 Q175 700 160 650 Z"/>
+      <path d="M260 660 Q270 580 295 610 Q305 640 285 690 Q275 710 260 660 Z"/>
+      <path d="M370 640 Q380 570 410 600 Q420 635 400 680 Q390 710 370 640 Z"/>
+      <path d="M480 660 Q495 590 515 620 Q525 650 505 690 Q495 710 480 660 Z"/>
+      <path d="M580 650 Q595 580 620 610 Q630 640 610 680 Q600 700 580 650 Z"/>
+      <path d="M680 660 Q695 590 715 620 Q725 650 705 690 Q695 710 680 660 Z"/>
+    </g>
+    <!-- front layer -->
+    <g fill="url(#leaf2)">
+      <path d="M120 720 Q140 620 170 660 Q185 700 160 760 Q140 790 120 720 Z"/>
+      <path d="M220 740 Q240 640 275 680 Q290 720 265 780 Q240 810 220 740 Z"/>
+      <path d="M340 720 Q360 620 395 660 Q410 700 385 760 Q360 790 340 720 Z"/>
+      <path d="M450 740 Q470 640 505 680 Q520 720 495 780 Q470 810 450 740 Z"/>
+      <path d="M560 720 Q580 620 615 660 Q630 700 605 760 Q580 790 560 720 Z"/>
+      <path d="M660 740 Q680 640 715 680 Q730 720 705 780 Q680 810 660 740 Z"/>
+    </g>
+  </g>
+
+  <!-- Stems -->
+  <g stroke="#2b3616" stroke-width="2" fill="none" opacity=".75">
+    <path d="M150 780 Q150 900 140 1000"/>
+    <path d="M260 800 Q260 900 270 1000"/>
+    <path d="M380 780 Q380 900 370 1000"/>
+    <path d="M490 800 Q490 900 500 1000"/>
+    <path d="M600 780 Q600 900 590 1000"/>
+    <path d="M700 800 Q700 900 710 1000"/>
+  </g>
+
+  <!-- Small highlights on some leaves -->
+  <g fill="rgba(240,245,215,.2)">
+    <path d="M130 660 Q140 630 155 640 Q148 675 130 660 Z"/>
+    <path d="M350 660 Q360 630 375 640 Q368 675 350 660 Z"/>
+    <path d="M570 660 Q580 630 595 640 Q588 675 570 660 Z"/>
+  </g>
+
+  <!-- Soft light bloom -->
+  <radialGradient id="morn" cx=".7" cy=".2" r=".6">
+    <stop offset="0%" stop-color="rgba(250,240,205,.22)"/>
+    <stop offset="100%" stop-color="rgba(250,240,205,0)"/>
+  </radialGradient>
+  <rect width="800" height="1000" fill="url(#morn)"/>
+
+  <!-- Grain -->
+  <rect width="800" height="1000" fill="white" filter="url(#grain3)" opacity=".35"/>
+
+  <!-- Vignette -->
+  <radialGradient id="vig3" cx=".5" cy=".5" r=".85">
+    <stop offset="65%" stop-color="rgba(0,0,0,0)"/>
+    <stop offset="100%" stop-color="rgba(0,0,0,.4)"/>
+  </radialGradient>
+  <rect width="800" height="1000" fill="url(#vig3)"/>
+</svg>
