@@ -1,8 +1,9 @@
 /* ==========================================================
    HEPPLE — app.js
    - Pinned scroll-scrub intro (monotonic, text persists)
-   - Embla-style ONE-CARD-CENTRED carousel
-   - 3 products, gift box as Wild Juniper Gin add-on
+   - Embla-style single-card carousel
+   - 3 products, EACH with its own gift box (on product pages only)
+   - £2.50 gift box add-on available on all 3 products
    ========================================================== */
 (() => {
   'use strict';
@@ -13,9 +14,7 @@
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // =============================================
   // AGE GATE
-  // =============================================
   (function initAgeGate(){
     const gate = $('#ageGate');
     if (!gate) return;
@@ -26,14 +25,12 @@
       return;
     }
     document.body.classList.add('age-gated');
-
     $('#ageGateYes')?.addEventListener('click', () => {
       localStorage.setItem('hepple:ageOk', '1');
       gate.classList.add('is-hidden');
       document.body.classList.remove('age-gated');
       setTimeout(() => gate.remove(), 700);
     });
-
     $('#ageGateNo')?.addEventListener('click', () => {
       const panel = gate.querySelector('.age-gate__panel');
       if (panel){
@@ -48,8 +45,12 @@
   })();
 
   // =============================================
-  // PRODUCT CATALOGUE (3 SKUs)
+  // PRODUCT CATALOGUE
+  // Each product has its own giftBoxImage — shown ONLY on product detail page.
+  // Gift box add-on (£2.50) available on ALL products.
   // =============================================
+  const GIFT_BOX_PRICE = 2.50;
+
   const PRODUCTS = [
     {
       slug:   'hepple-wild-juniper-gin',
@@ -58,11 +59,8 @@
       kicker: 'In pursuit of deliciousness.',
       price:  39.95,
       meta:   { size:'70CL', abv:'45%', origin:'NORTHUMBERLAND' },
-      images: [
-        '/assets/products/hepple-gin.jpg',
-        '/assets/products/gin-giftbox.jpg'
-      ],
-      giftBoxAvailable: true,
+      image:  '/assets/products/hepple-gin.jpg',
+      giftBoxImage: '/assets/products/giftbox-wild-juniper-gin.jpg',
       desc: "A RICH, JUNIPER-FORWARD GIN DISTILLED THREE WAYS FROM BOTANICALS GROWN ON OUR ESTATE. FRESH, COMPLEX, AND UNASHAMEDLY MODERN — THE ONE WE'D BRING TO EVERY MARTINI, EVERY TIME."
     },
     {
@@ -72,8 +70,8 @@
       kicker: 'Forest in a glass.',
       price:  39.95,
       meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      images: [ '/assets/products/douglas-fir.jpg' ],
-      giftBoxAvailable: false,
+      image:  '/assets/products/douglas-fir.jpg',
+      giftBoxImage: '/assets/products/giftbox-douglas-fir-vodka.jpg',
       desc: "ZESTY, TROPICAL, UNMISTAKABLY PINE. HAND-HARVESTED DOUGLAS FIR NEEDLES DISTILLED IN A GLASS VACUUM TO KEEP EVERY BRIGHT, RESINOUS NOTE INTACT."
     },
     {
@@ -83,17 +81,14 @@
       kicker: 'Pure, clean, Northumbrian.',
       price:  34.95,
       meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      images: [ '/assets/products/wheat-vodka.jpg' ],
-      giftBoxAvailable: false,
+      image:  '/assets/products/wheat-vodka.jpg',
+      giftBoxImage: '/assets/products/giftbox-moorland-vodka.jpg',
       desc: "DISTILLED FROM ENGLISH WHEAT AND CUT WITH THE CLEANEST WATER IN ENGLAND — FILTERED THROUGH PEAT, SANDSTONE AND LIMESTONE BENEATH THE MOOR."
     }
   ];
   const productBySlug = Object.fromEntries(PRODUCTS.map(p => [p.slug, p]));
-  const GIFT_BOX_PRICE = 8.00;
 
-  // =============================================
   // CART
-  // =============================================
   const CART_KEY = 'hepple:cart';
   let cart = (() => {
     try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
@@ -146,9 +141,10 @@
       const p = productBySlug[i.slug];
       if (!p) return '';
       const unit = p.price + (i.giftBox ? GIFT_BOX_PRICE : 0);
+      const thumb = i.giftBox && p.giftBoxImage ? p.giftBoxImage : p.image;
       return `
         <div class="cart-item">
-          <div class="cart-item__img"><img src="${p.images[0]}" alt="${p.name}" /></div>
+          <div class="cart-item__img"><img src="${thumb}" alt="${p.name}" /></div>
           <div class="cart-item__info">
             <h4>${p.name}${i.giftBox ? ' + GIFT BOX' : ''}</h4>
             <div class="qty">QTY ${i.qty} · £${unit.toFixed(2)} EA</div>
@@ -186,9 +182,7 @@
     t._hideTimer = setTimeout(() => t.classList.remove('is-visible'), 2200);
   }
 
-  // =============================================
   // ROUTER
-  // =============================================
   const intro   = $('#intro');
   const nav     = $('#nav');
   const content = $('#content');
@@ -243,6 +237,7 @@
         targetTime = 0;
         currentTime = 0;
         lastWriteTime = -1;
+        textRevealed = false;
         if (video){ try { video.currentTime = 0; } catch(_){} }
         nav.classList.remove('is-visible');
         window.scrollTo(0, 0);
@@ -297,7 +292,15 @@
     if (giftToggle){
       e.preventDefault();
       const cb = $('#pdGift');
-      if (cb){ cb.checked = !cb.checked; giftToggle.classList.toggle('is-checked', cb.checked); }
+      if (cb){
+        cb.checked = !cb.checked;
+        giftToggle.classList.toggle('is-checked', cb.checked);
+        // Jump gallery to the gift box slide when adding; back to bottle when removing
+        const galleryBtn = cb.checked
+          ? $('[data-pd-next]')
+          : $('[data-pd-prev]');
+        // noop — purely visual preference, leave gallery state to user
+      }
       return;
     }
 
@@ -331,22 +334,7 @@
     $('#overlay')?.classList.remove('is-active');
   }
 
-  // =============================================
-  // SCROLL SCRUB — fixed properly
-  //
-  // Problem with previous versions:
-  //   1. Reading scroll position from scroll events (glitchy, out of sync with rAF)
-  //   2. Writing video.currentTime every frame (decoder thrash)
-  //
-  // Solution:
-  //   1. Single rAF loop reads window.scrollY directly (always in sync)
-  //   2. Only write currentTime when delta > 1 frame (30fps = ~33ms)
-  //   3. maxProgress is monotonic — scrolling up never rewinds video
-  //   4. Once text is revealed, the class stays forever (no opacity reset)
-  //   5. When you scroll back up within intro, video stays at current max
-  //
-  // Also: no scroll-event listener. Pure rAF read pattern.
-  // =============================================
+  // SCROLL SCRUB
   let videoDuration = 5.2;
   let targetTime    = 0;
   let currentTime   = 0;
@@ -355,46 +343,34 @@
   let maxProgress   = 0;
   let textRevealed  = false;
 
-  const LERP            = 0.12;         // tracking speed
-  const WRITE_THRESHOLD = 1/28;         // seek only if > ~35ms
-  const REVEAL_THRESHOLD = 0.10;        // show text at 10% scroll
-  const COMPLETE_THRESHOLD = 0.92;      // mark intro complete at 92%
+  const LERP            = 0.12;
+  const WRITE_THRESHOLD = 1/28;
+  const REVEAL_THRESHOLD = 0.10;
+  const COMPLETE_THRESHOLD = 0.92;
 
   if (video){
     video.addEventListener('loadedmetadata', () => {
-      if (isFinite(video.duration) && video.duration > 0){
-        videoDuration = video.duration;
-      }
+      if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
     });
-
     const prime = async () => {
-      try { await video.play(); video.pause(); video.currentTime = 0; }
-      catch(_){}
+      try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
     };
     if (video.readyState >= 1) prime();
     else video.addEventListener('loadedmetadata', prime, { once:true });
   }
 
-  // Single rAF loop
   function tick(){
     computeScrollProgress();
-
-    // Lerp currentTime → targetTime
     const diff = targetTime - currentTime;
-    if (Math.abs(diff) > 0.001){
-      currentTime += diff * LERP;
-    } else {
-      currentTime = targetTime;
-    }
+    if (Math.abs(diff) > 0.001) currentTime += diff * LERP;
+    else currentTime = targetTime;
 
-    // Write to video only if delta exceeds threshold
     if (video && video.readyState >= 2 && isFinite(currentTime)){
       if (Math.abs(currentTime - lastWriteTime) > WRITE_THRESHOLD){
         try { video.currentTime = currentTime; lastWriteTime = currentTime; }
         catch(_){}
       }
     }
-
     requestAnimationFrame(tick);
   }
 
@@ -408,18 +384,14 @@
     const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
     const raw        = scrolled / scrollable;
 
-    // MONOTONIC — scrolling up keeps progress at max
     if (raw > maxProgress) maxProgress = raw;
-
     targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
 
-    // Reveal text ONCE, keeps forever
     if (!textRevealed && maxProgress >= REVEAL_THRESHOLD){
       textRevealed = true;
       intro.classList.add('is-text-revealed');
     }
 
-    // Mark complete
     if (maxProgress >= COMPLETE_THRESHOLD && !introComplete){
       introComplete = true;
       intro.classList.add('is-complete');
@@ -428,9 +400,7 @@
     }
   }
 
-  // =============================================
   // DRAWERS
-  // =============================================
   $('#menuBtn')?.addEventListener('click', () => {
     $('#drawer').classList.add('is-open');
     $('#overlay').classList.add('is-active');
@@ -443,10 +413,7 @@
   $('#cartClose')?.addEventListener('click', closeDrawers);
   $('#overlay')?.addEventListener('click', closeDrawers);
 
-  // =============================================
-  // EMBLA-STYLE CAROUSEL (vanilla)
-  // Always shows ONE slide centred via flex basis:100%
-  // =============================================
+  // EMBLA
   function initEmbla(root){
     if (!root || root._emblaInit) return;
     root._emblaInit = true;
@@ -463,7 +430,6 @@
 
     let idx = 0;
 
-    // Build dots
     if (dotsEl){
       dotsEl.innerHTML = slides.map((_, i) =>
         `<button class="embla__dot${i === 0 ? ' is-active' : ''}" data-embla-dot="${i}" aria-label="Slide ${i+1}"></button>`
@@ -495,28 +461,15 @@
       if (d) goTo(parseInt(d.dataset.emblaDot, 10));
     });
 
-    // Touch / swipe
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
-    viewport.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-      dragging = true;
-    }, { passive:true });
-    viewport.addEventListener('touchmove', e => {
-      if (!dragging) return;
-      currentX = e.touches[0].clientX;
-    }, { passive:true });
-    viewport.addEventListener('touchend', () => {
+    let startX = 0, currentX = 0, dragging = false;
+    viewport.addEventListener('touchstart', e => { startX = e.touches[0].clientX; dragging = true; }, { passive:true });
+    viewport.addEventListener('touchmove',  e => { if (dragging) currentX = e.touches[0].clientX; }, { passive:true });
+    viewport.addEventListener('touchend',   () => {
       if (!dragging) return;
       dragging = false;
       const delta = currentX - startX;
-      if (Math.abs(delta) > 40){
-        goTo(delta < 0 ? idx + 1 : idx - 1);
-      }
+      if (Math.abs(delta) > 40) goTo(delta < 0 ? idx + 1 : idx - 1);
     });
-
-    // Keyboard
     root.addEventListener('keydown', e => {
       if (e.key === 'ArrowLeft'){ e.preventDefault(); goTo(idx - 1); }
       else if (e.key === 'ArrowRight'){ e.preventDefault(); goTo(idx + 1); }
@@ -524,14 +477,9 @@
 
     goTo(0, false);
   }
+  function initAllEmbla(){ $$('[data-embla]').forEach(initEmbla); }
 
-  function initAllEmbla(){
-    $$('[data-embla]').forEach(initEmbla);
-  }
-
-  // =============================================
-  // PROCESS STEPPER
-  // =============================================
+  // PROCESS
   function initProcess(){
     const root = $('[data-process]');
     if (!root) return;
@@ -553,25 +501,20 @@
       if (prev) prev.disabled = idx === 0;
       if (next) next.disabled = idx === steps.length - 1;
     }
-
     prev?.addEventListener('click', () => goTo(idx - 1));
     next?.addEventListener('click', () => goTo(idx + 1));
     dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
     goTo(0);
   }
 
-  // =============================================
-  // NUMBER COUNTERS
-  // =============================================
+  // COUNTERS
   function animateNumber(el){
     const target = parseFloat(el.dataset.countTo || '0');
     const format = el.dataset.countFormat || '';
     const suffix = el.dataset.countSuffix || '';
     const duration = 1800;
     const start = performance.now();
-
     function easeOutExpo(t){ return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-
     function frame(now){
       const elapsed = now - start;
       const t = Math.min(1, elapsed / duration);
@@ -583,14 +526,10 @@
     }
     requestAnimationFrame(frame);
   }
-
   function initCounters(){
     const nums = $$('.stat__number[data-count-to]');
     if (!nums.length) return;
-    if (!('IntersectionObserver' in window)){
-      nums.forEach(animateNumber);
-      return;
-    }
+    if (!('IntersectionObserver' in window)){ nums.forEach(animateNumber); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !entry.target.dataset.counted){
@@ -603,9 +542,7 @@
     nums.forEach(n => io.observe(n));
   }
 
-  // =============================================
-  // RENDERS
-  // =============================================
+  // HOME RANGE (shows ONLY the 3 bottles, NO gift boxes)
   function renderHomeRange(){
     const track = $('#homeRangeTrack');
     if (!track || track._rendered) return;
@@ -614,7 +551,7 @@
       <div class="embla__slide">
         <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="product-card">
           <div class="product-card__img">
-            <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
+            <img src="${p.image}" alt="${p.name}" loading="lazy" />
           </div>
           <div class="product-card__body">
             <h3>${p.name}</h3>
@@ -630,13 +567,14 @@
     initAllEmbla();
   }
 
+  // SHOP GRID (shows ONLY the 3 bottles, NO gift boxes)
   function renderShopGrid(){
     const grid = $('#shopGrid');
     if (!grid) return;
     grid.innerHTML = PRODUCTS.map(p => `
       <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="shop-card">
         <div class="shop-card__img">
-          <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
         </div>
         <h3>${p.name}</h3>
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
@@ -648,6 +586,7 @@
     `).join('');
   }
 
+  // PRODUCT DETAIL — bottle + gift box in carousel (2 slides), £2.50 add-on
   function renderProductDetail(slug){
     const root = $('#productDetail');
     const p = productBySlug[slug];
@@ -660,44 +599,33 @@
       return;
     }
 
-    const galleryImgs = [p.images[0]];
-    if (p.giftBoxAvailable) galleryImgs.push('/assets/products/gin-giftbox.jpg');
+    // Slides: bottle first, gift box second
+    const galleryImgs = [
+      { src: p.image,        label: `${p.name} bottle` },
+      { src: p.giftBoxImage, label: `${p.name} gift box` }
+    ];
 
-    const slidesHtml = galleryImgs.map((src, i) =>
+    const slidesHtml = galleryImgs.map((img, i) =>
       `<div class="pd-gallery__slide ${i === 0 ? 'is-active' : ''}" data-slide="${i}">
-        <img src="${src}" alt="${p.name} ${i === 0 ? 'bottle' : 'gift box'}" />
+        <img src="${img.src}" alt="${img.label}" />
       </div>`
     ).join('');
-    const dotsHtml = galleryImgs.length > 1 ? galleryImgs.map((_, i) =>
+    const dotsHtml = galleryImgs.map((_, i) =>
       `<button class="pd-gallery__dot ${i === 0 ? 'is-active' : ''}" data-goto-slide="${i}" aria-label="Image ${i+1}"></button>`
-    ).join('') : '';
-    const arrowsHtml = galleryImgs.length > 1 ? `
-      <button class="pd-gallery__btn pd-gallery__btn--prev" data-pd-prev aria-label="Previous image">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
-      </button>
-      <button class="pd-gallery__btn pd-gallery__btn--next" data-pd-next aria-label="Next image">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
-      </button>` : '';
-
-    const giftAddonHtml = p.giftBoxAvailable ? `
-      <label class="gift-addon" data-gift-toggle>
-        <input id="pdGift" type="checkbox" />
-        <span class="gift-addon__check"></span>
-        <div class="gift-addon__body">
-          <span class="gift-addon__title">ADD THE GIFT BOX</span>
-          <span class="gift-addon__sub">A HANDSOME BOX FOR THE BOTTLE</span>
-        </div>
-        <span class="gift-addon__price">+£${GIFT_BOX_PRICE.toFixed(2)}</span>
-      </label>
-    ` : '';
+    ).join('');
 
     root.innerHTML = `
       <div class="product-detail__grid">
         <div class="pd-gallery" data-pd-gallery>
           <div class="pd-gallery__stage">
             ${slidesHtml}
-            ${arrowsHtml}
-            ${dotsHtml ? `<div class="pd-gallery__dots">${dotsHtml}</div>` : ''}
+            <button class="pd-gallery__btn pd-gallery__btn--prev" data-pd-prev aria-label="Previous image">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="pd-gallery__btn pd-gallery__btn--next" data-pd-next aria-label="Next image">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+            <div class="pd-gallery__dots">${dotsHtml}</div>
           </div>
         </div>
         <div class="product-detail__body">
@@ -713,7 +641,15 @@
             <div><strong>${p.meta.abv}</strong>ABV</div>
             <div><strong>${p.meta.origin}</strong>ORIGIN</div>
           </div>
-          ${giftAddonHtml}
+          <label class="gift-addon" data-gift-toggle>
+            <input id="pdGift" type="checkbox" />
+            <span class="gift-addon__check"></span>
+            <div class="gift-addon__body">
+              <span class="gift-addon__title">ADD GIFT BOX</span>
+              <span class="gift-addon__sub">A HANDSOME BOX FOR THE BOTTLE</span>
+            </div>
+            <span class="gift-addon__price">+£${GIFT_BOX_PRICE.toFixed(2)}</span>
+          </label>
           <div class="product-detail__qty">
             <label for="pdQty">QTY</label>
             <div class="qty-stepper">
@@ -729,7 +665,7 @@
 
     initProductGallery();
 
-    // Related carousel
+    // Related carousel — other 2 bottles only
     const track = $('#relatedTrack');
     if (track){
       const related = PRODUCTS.filter(x => x.slug !== slug);
@@ -737,7 +673,7 @@
         <div class="embla__slide">
           <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
             <div class="product-card__img">
-              <img src="${rp.images[0]}" alt="${rp.name}" loading="lazy" />
+              <img src="${rp.image}" alt="${rp.name}" loading="lazy" />
             </div>
             <div class="product-card__body">
               <h3>${rp.name}</h3>
@@ -750,7 +686,6 @@
           </a>
         </div>
       `).join('');
-      // Reset so it re-inits
       const embla = track.closest('[data-embla]');
       if (embla){ embla._emblaInit = false; initEmbla(embla); }
     }
@@ -776,9 +711,7 @@
     dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
   }
 
-  // =============================================
   // BOOT
-  // =============================================
   renderCart();
   requestAnimationFrame(tick);
   route();

@@ -24,9 +24,7 @@
 </head>
 <body>
 
-<!-- ============================================================
-     AGE GATE
-     ============================================================ -->
+<!-- AGE GATE -->
 <div class="age-gate" id="ageGate" role="dialog" aria-labelledby="ageGateTitle">
   <div class="age-gate__panel">
     <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" class="age-gate__logo" />
@@ -44,9 +42,7 @@
   </div>
 </div>
 
-<!-- ============================================================
-     NAV
-     ============================================================ -->
+<!-- NAV -->
 <nav class="nav" id="nav" aria-label="Primary">
   <a href="#/" class="nav__brand" data-route="/" data-brand aria-label="Hepple — home">
     <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" />
@@ -71,9 +67,7 @@
     </button>
   </div>
 
-  <button class="nav__menu-btn" id="menuBtn" aria-label="Open menu">
-    <span></span>
-  </button>
+  <button class="nav__menu-btn" id="menuBtn" aria-label="Open menu"><span></span></button>
 </nav>
 
 <aside class="drawer" id="drawer" aria-hidden="true">
@@ -103,20 +97,11 @@
 </aside>
 <div class="overlay" id="overlay"></div>
 
-<!-- ============================================================
-     INTRO — pinned scroll-scrub with fold-over reveal
-     Text persists from first appearance onward.
-     ============================================================ -->
+<!-- INTRO -->
 <section class="intro" id="intro" aria-label="Welcome">
   <div class="intro__pin">
     <div class="intro__stage">
-      <video
-        class="intro__video"
-        id="heroVideo"
-        playsinline
-        muted
-        preload="auto"
-        poster="/assets/hero-poster.jpg">
+      <video class="intro__video" id="heroVideo" playsinline muted preload="auto" poster="/assets/hero-poster.jpg">
         <source src="/assets/hero.mp4" type="video/mp4" />
         <source src="/assets/hero.webm" type="video/webm" />
       </video>
@@ -136,13 +121,10 @@
   </div>
 </section>
 
-<!-- ============================================================
-     MAIN CONTENT
-     The welcome section folds up from below as intro completes.
-     ============================================================ -->
+<!-- MAIN -->
 <main class="content" id="content">
 
-  <!-- =================== HOME =================== -->
+  <!-- HOME -->
   <div class="page is-active" data-page="/">
 
     <section class="welcome">
@@ -177,7 +159,6 @@
       </div>
     </section>
 
-    <!-- Product carousel — always shows ONE centred card -->
     <section class="range">
       <div class="wrap">
         <div class="range__head">
@@ -191,11 +172,8 @@
 
       <div class="embla" data-embla>
         <div class="embla__viewport" data-embla-viewport>
-          <div class="embla__container" data-embla-container id="homeRangeTrack">
-            <!-- Rendered by JS -->
-          </div>
+          <div class="embla__container" data-embla-container id="homeRangeTrack"></div>
         </div>
-
         <div class="embla__controls">
           <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
@@ -204,6 +182,47 @@
           <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STICKY IMAGE GALLERY — "Journeying through Hepple" -->
+    <section class="sticky-gallery">
+      <div class="sticky-gallery__head">
+        <div class="wrap">
+          <p class="script-accent script-accent--hero">Journeying through Hepple.</p>
+          <h2>A YEAR ON THE <em>ESTATE.</em></h2>
+          <p class="sticky-gallery__lede">
+            FROM THE GARDENS AT HEPPLE WHITEFIELD TO THE WILD MOORS ABOVE.
+            THE PLACE, THE PEOPLE, AND THE PROCESS THAT MAKE HEPPLE WHAT IT IS.
+          </p>
+        </div>
+      </div>
+
+      <div class="sticky-gallery__grid">
+        <!-- Left column scrolls -->
+        <div class="sticky-gallery__col sticky-gallery__col--scroll">
+          <figure><img src="/assets/gallery/klj-hepple-may2022-shot-02-465.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/cdx-00776.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/hepple-070918-0256.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/hepplegin-71-large.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/mg-2869.jpg" alt="" loading="lazy" /></figure>
+        </div>
+
+        <!-- Middle column sticky -->
+        <div class="sticky-gallery__col sticky-gallery__col--sticky">
+          <figure><img src="/assets/gallery/hepple-gin-june22event-120.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/journeying.jpg" alt="" loading="lazy" /></figure>
+        </div>
+
+        <!-- Right column scrolls -->
+        <div class="sticky-gallery__col sticky-gallery__col--scroll">
+          <figure><img src="/assets/gallery/cdx-09959.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/planters-1.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/klj-hepple-may2022-shot-09-468.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/hepplegin-1-2-large.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="/assets/gallery/hepple-070918-1796.jpg" alt="" loading="lazy" /></figure>
         </div>
       </div>
     </section>
@@ -238,7 +257,7 @@
   </div>
 
 
-  <!-- =================== OUR STORY =================== -->
+  <!-- OUR STORY -->
   <div class="page" data-page="/story">
 
     <section class="story-hero">
@@ -296,11 +315,7 @@
               <div class="process__copy">
                 <span class="process__number">01</span>
                 <h3>SOURCING WILD BOTANICALS</h3>
-                <p>
-                  OUR JUNIPER, DOUGLAS FIR AND BOG MYRTLE ARE HARVESTED FROM
-                  THE ESTATE ITSELF — PICKED AT THEIR PRIME AND CARRIED STRAIGHT
-                  TO THE STILL.
-                </p>
+                <p>OUR JUNIPER, DOUGLAS FIR AND BOG MYRTLE ARE HARVESTED FROM THE ESTATE ITSELF — PICKED AT THEIR PRIME AND CARRIED STRAIGHT TO THE STILL.</p>
               </div>
             </article>
             <article class="process__step" data-step="2">
@@ -310,11 +325,7 @@
               <div class="process__copy">
                 <span class="process__number">02</span>
                 <h3>TRADITIONAL ONE-SHOT DISTILLATION</h3>
-                <p>
-                  WE BEGIN WITH A ONE-SHOT LONDON DRY METHOD — A RICH, CREAMY
-                  FOUNDATION THAT MOST DISTILLERIES WOULD CONSIDER THE END OF
-                  THE JOB.
-                </p>
+                <p>WE BEGIN WITH A ONE-SHOT LONDON DRY METHOD — A RICH, CREAMY FOUNDATION THAT MOST DISTILLERIES WOULD CONSIDER THE END OF THE JOB.</p>
               </div>
             </article>
             <article class="process__step" data-step="3">
@@ -324,11 +335,7 @@
               <div class="process__copy">
                 <span class="process__number">03</span>
                 <h3>GLASS VACUUM DISTILLATION</h3>
-                <p>
-                  OUR FRESHEST BOTANICALS GO INTO A GLASS VACUUM STILL AT 40°C —
-                  PRESERVING DELICATE, BRIGHT NOTES THAT HEAT WOULD OTHERWISE
-                  DESTROY.
-                </p>
+                <p>OUR FRESHEST BOTANICALS GO INTO A GLASS VACUUM STILL AT 40°C — PRESERVING DELICATE, BRIGHT NOTES THAT HEAT WOULD OTHERWISE DESTROY.</p>
               </div>
             </article>
             <article class="process__step" data-step="4">
@@ -338,11 +345,7 @@
               <div class="process__copy">
                 <span class="process__number">04</span>
                 <h3>SUPERCRITICAL EXTRACTION</h3>
-                <p>
-                  JUNIPER BERRIES ARE HELD AT SUPERCRITICAL PRESSURE — A LIQUID
-                  AND GAS AT ONCE — TO DRAW OUT THEIR DEEPEST CEDAR AND SANDALWOOD
-                  CHARACTER.
-                </p>
+                <p>JUNIPER BERRIES ARE HELD AT SUPERCRITICAL PRESSURE — A LIQUID AND GAS AT ONCE — TO DRAW OUT THEIR DEEPEST CEDAR AND SANDALWOOD CHARACTER.</p>
               </div>
             </article>
             <article class="process__step" data-step="5">
@@ -352,10 +355,7 @@
               <div class="process__copy">
                 <span class="process__number">05</span>
                 <h3>BLEND, BOTTLE, SHIP</h3>
-                <p>
-                  THREE EXPRESSIONS, BLENDED AND BOTTLED ON THE ESTATE.
-                  READY TO BE POURED — BY YOU, FOR WHOEVER YOU'RE WITH.
-                </p>
+                <p>THREE EXPRESSIONS, BLENDED AND BOTTLED ON THE ESTATE. READY TO BE POURED — BY YOU, FOR WHOEVER YOU'RE WITH.</p>
               </div>
             </article>
           </div>
@@ -389,57 +389,46 @@
     </section>
   </div>
 
-  <!-- =================== ESTATE =================== -->
+  <!-- ESTATE -->
   <div class="page" data-page="/estate">
     <section class="placeholder">
       <div class="placeholder__inner">
         <p class="script-accent script-accent--hero">The Hepple Estate.</p>
         <h1>FOUR THOUSAND <em>WILD</em> ACRES.</h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">
-          THIS PAGE IS BEING WRITTEN. COME BACK SOON FOR THE FULL
-          ESTATE STORY — LANDSCAPE, BOTANICALS, THE WILDING PROGRAMME
-          AND THE JUNIPER TRUST.
-        </p>
+        <p class="placeholder__latin">THIS PAGE IS BEING WRITTEN. COME BACK SOON FOR THE FULL ESTATE STORY — LANDSCAPE, BOTANICALS, THE WILDING PROGRAMME AND THE JUNIPER TRUST.</p>
         <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
       </div>
     </section>
   </div>
 
-  <!-- =================== COCKTAILS =================== -->
+  <!-- COCKTAILS -->
   <div class="page" data-page="/cocktails">
     <section class="placeholder">
       <div class="placeholder__inner">
         <p class="script-accent script-accent--hero">Cold glass. Good company.</p>
         <h1>COCKTAILS.</h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">
-          A LITTLE LIBRARY OF DRINKS IS ON THE WAY — MARTINIS, NEGRONIS,
-          SPRITZES, AND A FEW QUIET SURPRISES WORTH MAKING AT HOME.
-        </p>
+        <p class="placeholder__latin">A LITTLE LIBRARY OF DRINKS IS ON THE WAY — MARTINIS, NEGRONIS, SPRITZES, AND A FEW QUIET SURPRISES WORTH MAKING AT HOME.</p>
         <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
       </div>
     </section>
   </div>
 
-  <!-- =================== VISIT =================== -->
+  <!-- VISIT -->
   <div class="page" data-page="/visit">
     <section class="placeholder">
       <div class="placeholder__inner">
         <p class="script-accent script-accent--hero">Come and see us.</p>
         <h1>VISIT THE <em>DISTILLERY.</em></h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">
-          TOUR BOOKINGS WILL APPEAR HERE SHORTLY. UNTIL THEN,
-          SAY HELLO AT HELLO@HEPPLESPIRITS.COM AND WE'LL POINT YOU
-          IN THE RIGHT DIRECTION.
-        </p>
+        <p class="placeholder__latin">TOUR BOOKINGS WILL APPEAR HERE SHORTLY. UNTIL THEN, SAY HELLO AT HELLO@HEPPLESPIRITS.COM AND WE'LL POINT YOU IN THE RIGHT DIRECTION.</p>
         <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
       </div>
     </section>
   </div>
 
-  <!-- =================== SHOP =================== -->
+  <!-- SHOP -->
   <div class="page" data-page="/shop">
     <section class="shop-hero">
       <div class="wrap">
@@ -459,7 +448,7 @@
     </section>
   </div>
 
-  <!-- =================== PRODUCT DETAIL =================== -->
+  <!-- PRODUCT DETAIL -->
   <div class="page" data-page="/shop/*">
     <section class="product-detail" id="productDetail"></section>
 
@@ -489,7 +478,7 @@
     </section>
   </div>
 
-  <!-- =================== FOOTER =================== -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer__grid">
       <div class="footer__brand">
