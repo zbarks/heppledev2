@@ -1,12 +1,8 @@
 /* ==========================================================
    HEPPLE — app.js
-   - Age gate (first visit)
-   - Hash router (home, story, estate, cocktails, visit, shop, shop/:slug)
-   - Monotonic, smooth scroll-scrubbed video
-   - 3-product catalogue: Wild Juniper Gin, Douglas Fir Vodka, Moorland Vodka
-   - Gift box = add-on on Wild Juniper Gin, NOT a standalone product
-   - Product detail image carousel (bottle + gift box for Wild Juniper)
-   - Fake cart (localStorage), process stepper, number counters
+   - Pinned scroll-scrub intro (monotonic, text persists)
+   - Embla-style ONE-CARD-CENTRED carousel
+   - 3 products, gift box as Wild Juniper Gin add-on
    ========================================================== */
 (() => {
   'use strict';
@@ -14,7 +10,6 @@
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-  // ---------- Year stamp ----------
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -24,8 +19,7 @@
   (function initAgeGate(){
     const gate = $('#ageGate');
     if (!gate) return;
-    const passed = localStorage.getItem('hepple:ageOk') === '1';
-    if (passed){
+    if (localStorage.getItem('hepple:ageOk') === '1'){
       gate.classList.add('is-hidden');
       gate.remove();
       document.body.classList.remove('age-gated');
@@ -54,7 +48,7 @@
   })();
 
   // =============================================
-  // PRODUCT CATALOGUE — only 3 SKUs
+  // PRODUCT CATALOGUE (3 SKUs)
   // =============================================
   const PRODUCTS = [
     {
@@ -78,11 +72,9 @@
       kicker: 'Forest in a glass.',
       price:  39.95,
       meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      images: [
-        '/assets/products/douglas-fir.jpg'
-      ],
+      images: [ '/assets/products/douglas-fir.jpg' ],
       giftBoxAvailable: false,
-      desc: "ZESTY, TROPICAL, UNMISTAKABLY PINE. HAND-HARVESTED DOUGLAS FIR NEEDLES DISTILLED IN A GLASS VACUUM TO KEEP EVERY BRIGHT, RESINOUS NOTE INTACT. AN INGREDIENT-LED FLAVOURED VODKA."
+      desc: "ZESTY, TROPICAL, UNMISTAKABLY PINE. HAND-HARVESTED DOUGLAS FIR NEEDLES DISTILLED IN A GLASS VACUUM TO KEEP EVERY BRIGHT, RESINOUS NOTE INTACT."
     },
     {
       slug:   'hepple-moorland-vodka',
@@ -91,11 +83,9 @@
       kicker: 'Pure, clean, Northumbrian.',
       price:  34.95,
       meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      images: [
-        '/assets/products/wheat-vodka.jpg'
-      ],
+      images: [ '/assets/products/wheat-vodka.jpg' ],
       giftBoxAvailable: false,
-      desc: "DISTILLED FROM ENGLISH WHEAT AND CUT WITH THE CLEANEST WATER IN ENGLAND — FILTERED THROUGH PEAT, SANDSTONE AND LIMESTONE BENEATH THE MOOR. A VODKA THAT TASTES OF THE PLACE IT'S MADE."
+      desc: "DISTILLED FROM ENGLISH WHEAT AND CUT WITH THE CLEANEST WATER IN ENGLAND — FILTERED THROUGH PEAT, SANDSTONE AND LIMESTONE BENEATH THE MOOR."
     }
   ];
   const productBySlug = Object.fromEntries(PRODUCTS.map(p => [p.slug, p]));
@@ -152,7 +142,6 @@
       if (foot) foot.hidden = true;
       return;
     }
-
     body.innerHTML = cart.map(i => {
       const p = productBySlug[i.slug];
       if (!p) return '';
@@ -209,7 +198,6 @@
     const h = location.hash.replace(/^#/, '') || '/';
     return h.startsWith('/') ? h : '/' + h;
   }
-
   function matchPage(route){
     const pages = $$('.page');
     let matched = pages.find(p => p.dataset.page === route);
@@ -219,7 +207,6 @@
     }
     return matched || pages.find(p => p.dataset.page === '/');
   }
-
   function setActivePage(route){
     $$('.page').forEach(p => p.classList.remove('is-active'));
     const page = matchPage(route);
@@ -239,36 +226,33 @@
     }
     if (route === '/') renderHomeRange();
   }
-
   function showIntroOrNot(route, forceIntro=false){
     const onHome = route === '/';
     if (onHome){
       const hasSeen = sessionStorage.getItem('hepple:seenIntro') === '1';
       if (hasSeen && !forceIntro){
-        intro.style.display = 'none';
-        content.classList.add('is-visible');
+        if (intro) intro.style.display = 'none';
         nav.classList.add('is-visible');
       } else {
-        intro.style.display = '';
-        content.classList.remove('is-visible');
-        nav.classList.remove('is-visible');
-        intro.classList.remove('is-ready', 'is-complete');
+        if (intro){
+          intro.style.display = '';
+          intro.classList.remove('is-text-revealed', 'is-complete');
+        }
         introComplete = false;
         maxProgress = 0;
         targetTime = 0;
         currentTime = 0;
-        lastWriteTime = 0;
+        lastWriteTime = -1;
         if (video){ try { video.currentTime = 0; } catch(_){} }
+        nav.classList.remove('is-visible');
         window.scrollTo(0, 0);
       }
     } else {
-      intro.style.display = 'none';
-      content.classList.add('is-visible');
+      if (intro) intro.style.display = 'none';
       nav.classList.add('is-visible');
       window.scrollTo(0, 0);
     }
   }
-
   function route(forceIntro = false){
     const r = getRoute();
     setActivePage(r);
@@ -282,7 +266,6 @@
       removeFromCart(removeBtn.dataset.remove);
       return;
     }
-
     const addBtn = e.target.closest('[data-add-to-cart]');
     if (addBtn){
       e.preventDefault();
@@ -299,7 +282,6 @@
       }, 1800);
       return;
     }
-
     const stepBtn = e.target.closest('[data-qty]');
     if (stepBtn){
       e.preventDefault();
@@ -311,7 +293,6 @@
       input.value = v;
       return;
     }
-
     const giftToggle = e.target.closest('[data-gift-toggle]');
     if (giftToggle){
       e.preventDefault();
@@ -351,22 +332,33 @@
   }
 
   // =============================================
-  // VIDEO SCROLL SCRUB — smooth, monotonic
-  // KEY FIX: throttle currentTime writes. The previous version
-  // wrote every rAF which thrashes the decoder. Here we only
-  // write when delta exceeds one frame interval (~33ms).
+  // SCROLL SCRUB — fixed properly
+  //
+  // Problem with previous versions:
+  //   1. Reading scroll position from scroll events (glitchy, out of sync with rAF)
+  //   2. Writing video.currentTime every frame (decoder thrash)
+  //
+  // Solution:
+  //   1. Single rAF loop reads window.scrollY directly (always in sync)
+  //   2. Only write currentTime when delta > 1 frame (30fps = ~33ms)
+  //   3. maxProgress is monotonic — scrolling up never rewinds video
+  //   4. Once text is revealed, the class stays forever (no opacity reset)
+  //   5. When you scroll back up within intro, video stays at current max
+  //
+  // Also: no scroll-event listener. Pure rAF read pattern.
   // =============================================
   let videoDuration = 5.2;
   let targetTime    = 0;
   let currentTime   = 0;
-  let lastWriteTime = 0;
+  let lastWriteTime = -1;
   let introComplete = false;
   let maxProgress   = 0;
-  let latestScrollY = 0;
+  let textRevealed  = false;
 
-  const FRAME_TIME  = 1/30;          // hero is 30fps
-  const WRITE_THRESHOLD = FRAME_TIME; // only seek if >1 frame away
-  const LERP        = 0.14;           // higher = snappier, still smooth
+  const LERP            = 0.12;         // tracking speed
+  const WRITE_THRESHOLD = 1/28;         // seek only if > ~35ms
+  const REVEAL_THRESHOLD = 0.10;        // show text at 10% scroll
+  const COMPLETE_THRESHOLD = 0.92;      // mark intro complete at 92%
 
   if (video){
     video.addEventListener('loadedmetadata', () => {
@@ -375,29 +367,27 @@
       }
     });
 
-    // Prime the decoder on first interaction (unlocks mobile)
-    const primeVideo = async () => {
+    const prime = async () => {
       try { await video.play(); video.pause(); video.currentTime = 0; }
       catch(_){}
     };
-    if (video.readyState >= 1) primeVideo();
-    else video.addEventListener('loadedmetadata', primeVideo, { once:true });
+    if (video.readyState >= 1) prime();
+    else video.addEventListener('loadedmetadata', prime, { once:true });
   }
 
-  // Single rAF loop that does everything
+  // Single rAF loop
   function tick(){
-    // Compute target from scroll position
     computeScrollProgress();
 
-    // Lerp currentTime toward target
+    // Lerp currentTime → targetTime
     const diff = targetTime - currentTime;
-    if (Math.abs(diff) > 0.0005){
+    if (Math.abs(diff) > 0.001){
       currentTime += diff * LERP;
     } else {
       currentTime = targetTime;
     }
 
-    // Write to video only if delta is meaningful (>1 frame)
+    // Write to video only if delta exceeds threshold
     if (video && video.readyState >= 2 && isFinite(currentTime)){
       if (Math.abs(currentTime - lastWriteTime) > WRITE_THRESHOLD){
         try { video.currentTime = currentTime; lastWriteTime = currentTime; }
@@ -418,18 +408,22 @@
     const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
     const raw        = scrolled / scrollable;
 
-    // Monotonic — never decrease
+    // MONOTONIC — scrolling up keeps progress at max
     if (raw > maxProgress) maxProgress = raw;
 
     targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
 
-    if (maxProgress > 0.08) intro.classList.add('is-ready');
+    // Reveal text ONCE, keeps forever
+    if (!textRevealed && maxProgress >= REVEAL_THRESHOLD){
+      textRevealed = true;
+      intro.classList.add('is-text-revealed');
+    }
 
-    if (maxProgress >= 0.94 && !introComplete){
+    // Mark complete
+    if (maxProgress >= COMPLETE_THRESHOLD && !introComplete){
       introComplete = true;
       intro.classList.add('is-complete');
       nav.classList.add('is-visible');
-      content.classList.add('is-visible');
       sessionStorage.setItem('hepple:seenIntro', '1');
     }
   }
@@ -450,43 +444,89 @@
   $('#overlay')?.addEventListener('click', closeDrawers);
 
   // =============================================
-  // CAROUSELS (home + related)
+  // EMBLA-STYLE CAROUSEL (vanilla)
+  // Always shows ONE slide centred via flex basis:100%
   // =============================================
-  function initCarousel(root){
-    const track = root.querySelector('[data-carousel-track]');
-    const prev  = root.querySelector('[data-carousel-prev]');
-    const next  = root.querySelector('[data-carousel-next]');
-    if (!track) return;
+  function initEmbla(root){
+    if (!root || root._emblaInit) return;
+    root._emblaInit = true;
 
-    const step = () => {
-      const first = track.children[0];
-      if (!first) return 320;
-      const rect = first.getBoundingClientRect();
-      const style = getComputedStyle(track);
-      const gap = parseFloat(style.columnGap || style.gap || 16);
-      return rect.width + gap;
-    };
+    const viewport  = root.querySelector('[data-embla-viewport]');
+    const container = root.querySelector('[data-embla-container]');
+    const prev      = root.querySelector('[data-embla-prev]');
+    const next      = root.querySelector('[data-embla-next]');
+    const dotsEl    = root.querySelector('[data-embla-dots]');
+    if (!viewport || !container) return;
 
-    const update = () => {
-      const atStart = track.scrollLeft < 4;
-      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-      if (prev) prev.disabled = atStart;
-      if (next) next.disabled = atEnd;
-    };
+    const slides = Array.from(container.children);
+    if (!slides.length) return;
 
-    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior:'smooth' }));
-    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior:'smooth' }));
-    track.addEventListener('scroll', update, { passive:true });
-    window.addEventListener('resize', update);
-    setTimeout(update, 200);
-  }
-  // Init existing ones + re-init after renders via re-query
-  function initAllCarousels(){
-    $$('[data-carousel]').forEach(c => {
-      if (c._cinit) return;
-      c._cinit = true;
-      initCarousel(c);
+    let idx = 0;
+
+    // Build dots
+    if (dotsEl){
+      dotsEl.innerHTML = slides.map((_, i) =>
+        `<button class="embla__dot${i === 0 ? ' is-active' : ''}" data-embla-dot="${i}" aria-label="Slide ${i+1}"></button>`
+      ).join('');
+    }
+
+    function goTo(i, smooth=true){
+      idx = (i + slides.length) % slides.length;
+      const x = -idx * 100;
+      container.style.transition = smooth ? 'transform .6s cubic-bezier(.16,1,.3,1)' : 'none';
+      container.style.transform = `translateX(${x}%)`;
+      update();
+    }
+
+    function update(){
+      if (prev) prev.disabled = idx === 0;
+      if (next) next.disabled = idx === slides.length - 1;
+      if (dotsEl){
+        dotsEl.querySelectorAll('[data-embla-dot]').forEach((d, i) => {
+          d.classList.toggle('is-active', i === idx);
+        });
+      }
+    }
+
+    prev?.addEventListener('click', () => goTo(idx - 1));
+    next?.addEventListener('click', () => goTo(idx + 1));
+    dotsEl?.addEventListener('click', e => {
+      const d = e.target.closest('[data-embla-dot]');
+      if (d) goTo(parseInt(d.dataset.emblaDot, 10));
     });
+
+    // Touch / swipe
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+    viewport.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      dragging = true;
+    }, { passive:true });
+    viewport.addEventListener('touchmove', e => {
+      if (!dragging) return;
+      currentX = e.touches[0].clientX;
+    }, { passive:true });
+    viewport.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      const delta = currentX - startX;
+      if (Math.abs(delta) > 40){
+        goTo(delta < 0 ? idx + 1 : idx - 1);
+      }
+    });
+
+    // Keyboard
+    root.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft'){ e.preventDefault(); goTo(idx - 1); }
+      else if (e.key === 'ArrowRight'){ e.preventDefault(); goTo(idx + 1); }
+    });
+
+    goTo(0, false);
+  }
+
+  function initAllEmbla(){
+    $$('[data-embla]').forEach(initEmbla);
   }
 
   // =============================================
@@ -521,7 +561,7 @@
   }
 
   // =============================================
-  // NUMBER COUNTERS — Our Story only
+  // NUMBER COUNTERS
   // =============================================
   function animateNumber(el){
     const target = parseFloat(el.dataset.countTo || '0');
@@ -564,33 +604,32 @@
   }
 
   // =============================================
-  // HOME RANGE RENDER
+  // RENDERS
   // =============================================
   function renderHomeRange(){
     const track = $('#homeRangeTrack');
     if (!track || track._rendered) return;
     track._rendered = true;
     track.innerHTML = PRODUCTS.map(p => `
-      <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="product-card">
-        <div class="product-card__img">
-          <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
-        </div>
-        <div class="product-card__body">
-          <h3>${p.name}</h3>
-          <div class="product-card__price">£${p.price.toFixed(2)}</div>
-          <div class="product-card__actions">
-            <span class="btn btn--tiny">BUY NOW</span>
-            <span class="product-card__about">ABOUT</span>
+      <div class="embla__slide">
+        <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="product-card">
+          <div class="product-card__img">
+            <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
           </div>
-        </div>
-      </a>
+          <div class="product-card__body">
+            <h3>${p.name}</h3>
+            <div class="product-card__price">£${p.price.toFixed(2)}</div>
+            <div class="product-card__actions">
+              <span class="btn btn--tiny">BUY NOW</span>
+              <span class="product-card__about">ABOUT</span>
+            </div>
+          </div>
+        </a>
+      </div>
     `).join('');
-    initAllCarousels();
+    initAllEmbla();
   }
 
-  // =============================================
-  // SHOP GRID RENDER
-  // =============================================
   function renderShopGrid(){
     const grid = $('#shopGrid');
     if (!grid) return;
@@ -609,9 +648,6 @@
     `).join('');
   }
 
-  // =============================================
-  // PRODUCT DETAIL — bottle + gift box carousel, add-on checkbox
-  // =============================================
   function renderProductDetail(slug){
     const root = $('#productDetail');
     const p = productBySlug[slug];
@@ -624,22 +660,17 @@
       return;
     }
 
-    // Build gallery slides: always bottle first, gift box second IF available
     const galleryImgs = [p.images[0]];
-    if (p.giftBoxAvailable){
-      galleryImgs.push('/assets/products/gin-giftbox.jpg');
-    }
+    if (p.giftBoxAvailable) galleryImgs.push('/assets/products/gin-giftbox.jpg');
 
     const slidesHtml = galleryImgs.map((src, i) =>
       `<div class="pd-gallery__slide ${i === 0 ? 'is-active' : ''}" data-slide="${i}">
         <img src="${src}" alt="${p.name} ${i === 0 ? 'bottle' : 'gift box'}" />
       </div>`
     ).join('');
-
     const dotsHtml = galleryImgs.length > 1 ? galleryImgs.map((_, i) =>
       `<button class="pd-gallery__dot ${i === 0 ? 'is-active' : ''}" data-goto-slide="${i}" aria-label="Image ${i+1}"></button>`
     ).join('') : '';
-
     const arrowsHtml = galleryImgs.length > 1 ? `
       <button class="pd-gallery__btn pd-gallery__btn--prev" data-pd-prev aria-label="Previous image">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
@@ -673,7 +704,7 @@
           <div class="product-detail__crumbs">
             <a href="#/shop" data-route="/shop">SHOP</a> / ${p.short.toUpperCase()}
           </div>
-          <p class="product-detail__kicker">${p.kicker}</p>
+          <p class="script-accent">${p.kicker}</p>
           <h1 class="product-detail__title">${p.name}</h1>
           <div class="product-detail__price">£${p.price.toFixed(2)}</div>
           <p class="product-detail__desc">${p.desc}</p>
@@ -696,31 +727,32 @@
       </div>
     `;
 
-    // Wire product image gallery
     initProductGallery();
 
-    // Related
+    // Related carousel
     const track = $('#relatedTrack');
     if (track){
       const related = PRODUCTS.filter(x => x.slug !== slug);
       track.innerHTML = related.map(rp => `
-        <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
-          <div class="product-card__img">
-            <img src="${rp.images[0]}" alt="${rp.name}" loading="lazy" />
-          </div>
-          <div class="product-card__body">
-            <h3>${rp.name}</h3>
-            <div class="product-card__price">£${rp.price.toFixed(2)}</div>
-            <div class="product-card__actions">
-              <span class="btn btn--tiny">BUY NOW</span>
-              <span class="product-card__about">ABOUT</span>
+        <div class="embla__slide">
+          <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
+            <div class="product-card__img">
+              <img src="${rp.images[0]}" alt="${rp.name}" loading="lazy" />
             </div>
-          </div>
-        </a>
+            <div class="product-card__body">
+              <h3>${rp.name}</h3>
+              <div class="product-card__price">£${rp.price.toFixed(2)}</div>
+              <div class="product-card__actions">
+                <span class="btn btn--tiny">BUY NOW</span>
+                <span class="product-card__about">ABOUT</span>
+              </div>
+            </div>
+          </a>
+        </div>
       `).join('');
-      track._rendered = false;
-      track.closest('[data-carousel]')._cinit = false;
-      initAllCarousels();
+      // Reset so it re-inits
+      const embla = track.closest('[data-embla]');
+      if (embla){ embla._emblaInit = false; initEmbla(embla); }
     }
   }
 
@@ -739,7 +771,6 @@
       slides.forEach((s, si) => s.classList.toggle('is-active', si === idx));
       dots.forEach((d, di) => d.classList.toggle('is-active', di === idx));
     }
-
     prev?.addEventListener('click', () => goTo(idx - 1));
     next?.addEventListener('click', () => goTo(idx + 1));
     dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
@@ -754,5 +785,5 @@
   computeScrollProgress();
   initProcess();
   initCounters();
-  initAllCarousels();
+  initAllEmbla();
 })();

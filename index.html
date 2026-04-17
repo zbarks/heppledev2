@@ -25,7 +25,7 @@
 <body>
 
 <!-- ============================================================
-     AGE GATE — first visit only
+     AGE GATE
      ============================================================ -->
 <div class="age-gate" id="ageGate" role="dialog" aria-labelledby="ageGateTitle">
   <div class="age-gate__panel">
@@ -104,31 +104,33 @@
 <div class="overlay" id="overlay"></div>
 
 <!-- ============================================================
-     INTRO — scroll-scrubbed video
+     INTRO — pinned scroll-scrub with fold-over reveal
+     Text persists from first appearance onward.
      ============================================================ -->
 <section class="intro" id="intro" aria-label="Welcome">
-  <div class="intro__stage">
-    <video
-      class="intro__video"
-      id="heroVideo"
-      playsinline
-      muted
-      preload="auto"
-      poster="/assets/hero-poster.jpg">
-      <source src="/assets/hero.mp4" type="video/mp4" />
-      <source src="/assets/hero.webm" type="video/webm" />
-    </video>
-    <div class="intro__vignette"></div>
+  <div class="intro__pin">
+    <div class="intro__stage">
+      <video
+        class="intro__video"
+        id="heroVideo"
+        playsinline
+        muted
+        preload="auto"
+        poster="/assets/hero-poster.jpg">
+        <source src="/assets/hero.mp4" type="video/mp4" />
+        <source src="/assets/hero.webm" type="video/webm" />
+      </video>
+      <div class="intro__vignette"></div>
 
-    <div class="intro__overlay">
-      <div class="intro__center">
-        <p class="intro__eyebrow">Come in.</p>
-        <h1 class="intro__headline">WE'RE MAKING DRINKS.</h1>
-      </div>
-
-      <div class="intro__hint">
-        <span>SCROLL</span>
-        <span class="intro__hint-line"></span>
+      <div class="intro__overlay">
+        <div class="intro__center">
+          <p class="intro__eyebrow">Come in.</p>
+          <h1 class="intro__headline">WE'RE MAKING DRINKS.</h1>
+        </div>
+        <div class="intro__hint">
+          <span>SCROLL</span>
+          <span class="intro__hint-line"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -136,6 +138,7 @@
 
 <!-- ============================================================
      MAIN CONTENT
+     The welcome section folds up from below as intro completes.
      ============================================================ -->
 <main class="content" id="content">
 
@@ -146,7 +149,7 @@
       <div class="wrap">
         <div class="welcome__grid">
           <div>
-            <p class="welcome__eyebrow">Welcome to the Hepple Estate.</p>
+            <p class="script-accent">Welcome to Hepple.</p>
             <h2 class="welcome__headline">A VERY GOOD DRINK IN A VERY GOOD PLACE.</h2>
           </div>
           <div>
@@ -169,67 +172,38 @@
         <img src="/assets/products/lineup.jpg" alt="The Hepple range" loading="lazy" />
       </div>
       <div class="hero-strip__copy">
-        <p class="hero-strip__eyebrow">In pursuit of deliciousness.</p>
+        <p class="script-accent script-accent--hero">In pursuit of deliciousness.</p>
         <a href="#/shop" data-route="/shop" class="btn btn--outline-dark">FIND HEPPLE SPIRITS</a>
       </div>
     </section>
 
-    <section class="range" id="range">
+    <!-- Product carousel — always shows ONE centred card -->
+    <section class="range">
       <div class="wrap">
         <div class="range__head">
           <div>
-            <p class="welcome__eyebrow">Our spirits.</p>
+            <p class="script-accent">Our spirits.</p>
             <h2>EXPLORE THE RANGE.</h2>
           </div>
           <a href="#/shop" data-route="/shop" class="range__seeall">SEE ALL →</a>
         </div>
+      </div>
 
-        <div class="carousel" data-carousel>
-          <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">
+      <div class="embla" data-embla>
+        <div class="embla__viewport" data-embla-viewport>
+          <div class="embla__container" data-embla-container id="homeRangeTrack">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="embla__controls">
+          <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">
+          <div class="embla__dots" data-embla-dots></div>
+          <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
           </button>
-          <div class="carousel__track" data-carousel-track id="homeRangeTrack"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="packaging">
-      <div class="wrap">
-        <div class="packaging__grid">
-          <div class="packaging__img">
-            <img src="/assets/products/gin-giftbox.jpg" alt="Hepple Wild Juniper Gin Gift Box" loading="lazy" />
-          </div>
-          <div class="packaging__copy">
-            <p class="welcome__eyebrow">The gift box.</p>
-            <h2>GIVE A LITTLE <em>HEPPLE.</em></h2>
-            <p>
-              A HANDSOME BOX FOR THE HEPPLE WILD JUNIPER GIN.
-              AVAILABLE AS AN ADD-ON WHEN YOU BUY THE BOTTLE.
-              BECAUSE SOMETIMES IT'S NICE TO MAKE AN OCCASION OF IT.
-            </p>
-            <a href="#/shop/hepple-wild-juniper-gin" data-route="/shop/hepple-wild-juniper-gin" class="btn btn--outline-dark">ADD THE BOX</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="cocktail">
-      <div class="wrap">
-        <div class="cocktail__grid">
-          <div class="cocktail__img"></div>
-          <div>
-            <p class="cocktail__eyebrow">Right here, right now.</p>
-            <h2 class="cocktail__title">THE WILD MARTINI.</h2>
-            <p class="cocktail__recipe">
-              <strong>Method</strong>
-              50ML HEPPLE WILD JUNIPER GIN · 10ML DRY VERMOUTH · LEMON TWIST.<br>
-              STIR WITH ICE. STRAIN INTO A CHILLED GLASS. GARNISH WITH A WIDE PEEL OF LEMON.
-            </p>
-            <a href="#/cocktails" class="cocktail__link" data-route="/cocktails">SEE ALL COCKTAILS →</a>
-          </div>
         </div>
       </div>
     </section>
@@ -241,7 +215,7 @@
             <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="The Hepple Estate" loading="lazy" />
           </div>
           <div class="estate-cta__copy">
-            <p class="welcome__eyebrow">The estate.</p>
+            <p class="script-accent">The estate.</p>
             <h2>TURNING THE BEAUTY OF THE WILD LANDSCAPE INTO <em>FLAVOUR.</em></h2>
             <p>
               FOUR THOUSAND ACRES OF WILD, QUIET COUNTRY.
@@ -255,7 +229,7 @@
     </section>
 
     <section class="visit">
-      <p class="visit__eyebrow">Come and see us.</p>
+      <p class="script-accent script-accent--hero script-accent--light">Come and see us.</p>
       <h2>VISIT THE <em>DISTILLERY.</em></h2>
       <p>TOURS, TASTINGS, AND A VERY GOOD DRINK AT THE END OF IT.<br>ON THE EDGE OF NORTHUMBERLAND NATIONAL PARK.</p>
       <a href="#/visit" class="visit__cta" data-route="/visit">PLAN YOUR VISIT</a>
@@ -278,7 +252,7 @@
 
     <section class="story-intro">
       <div class="wrap">
-        <p class="welcome__eyebrow">Rooted in nature. Poured with intent.</p>
+        <p class="script-accent">Rooted in nature.</p>
         <p class="story-intro__lede">
           HEPPLE IS A DRINKS BRAND ROOTED IN NATURE, EXPRESSED THROUGH MODERN HOSPITALITY.
           WE WORK BETWEEN A WILD LANDSCAPE AND A REFINED DRINKS CULTURE — AND THAT
@@ -287,18 +261,18 @@
       </div>
     </section>
 
-    <section class="stats" id="statsStory">
+    <section class="stats">
       <div class="wrap">
         <div class="stats__grid">
-          <div class="stat" data-stat>
+          <div class="stat">
             <div class="stat__number" data-count-to="4000" data-count-format="comma">0</div>
             <div class="stat__label">ACRES OF WILD<br>NORTHUMBERLAND</div>
           </div>
-          <div class="stat" data-stat>
+          <div class="stat">
             <div class="stat__number" data-count-to="600" data-count-format="comma">0</div>
             <div class="stat__label">JUNIPER SAPLINGS<br>PLANTED</div>
           </div>
-          <div class="stat" data-stat>
+          <div class="stat">
             <div class="stat__number" data-count-to="5" data-count-suffix="×">0</div>
             <div class="stat__label">LONGER TO DISTIL<br>THAN TRADITION</div>
           </div>
@@ -309,7 +283,7 @@
     <section class="process">
       <div class="wrap">
         <div class="process__head">
-          <p class="welcome__eyebrow">The craft.</p>
+          <p class="script-accent">The craft.</p>
           <h2>TURNING THE BEAUTY OF THE WILD LANDSCAPE INTO <em>FLAVOUR.</em></h2>
         </div>
 
@@ -387,7 +361,7 @@
           </div>
 
           <div class="process__nav">
-            <button class="process__btn" data-process-prev aria-label="Previous">
+            <button class="process__btn" data-process-prev>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
               PREV
             </button>
@@ -398,7 +372,7 @@
               <button class="process__dot" data-dot="4"><span>04</span> SUPERCRITICAL</button>
               <button class="process__dot" data-dot="5"><span>05</span> BLEND</button>
             </div>
-            <button class="process__btn" data-process-next aria-label="Next">
+            <button class="process__btn" data-process-next>
               NEXT
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
             </button>
@@ -408,7 +382,7 @@
     </section>
 
     <section class="visit">
-      <p class="visit__eyebrow">Come and see us.</p>
+      <p class="script-accent script-accent--hero script-accent--light">Come and see us.</p>
       <h2>VISIT THE <em>DISTILLERY.</em></h2>
       <p>TOURS, TASTINGS, AND A VERY GOOD DRINK AT THE END OF IT.</p>
       <a href="#/visit" class="visit__cta" data-route="/visit">PLAN YOUR VISIT</a>
@@ -419,7 +393,7 @@
   <div class="page" data-page="/estate">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">The Hepple Estate.</p>
+        <p class="script-accent script-accent--hero">The Hepple Estate.</p>
         <h1>FOUR THOUSAND <em>WILD</em> ACRES.</h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
         <p class="placeholder__latin">
@@ -436,7 +410,7 @@
   <div class="page" data-page="/cocktails">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">Cold glass. Good company.</p>
+        <p class="script-accent script-accent--hero">Cold glass. Good company.</p>
         <h1>COCKTAILS.</h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
         <p class="placeholder__latin">
@@ -452,7 +426,7 @@
   <div class="page" data-page="/visit">
     <section class="placeholder">
       <div class="placeholder__inner">
-        <p class="placeholder__kicker">Come and see us.</p>
+        <p class="script-accent script-accent--hero">Come and see us.</p>
         <h1>VISIT THE <em>DISTILLERY.</em></h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
         <p class="placeholder__latin">
@@ -465,11 +439,11 @@
     </section>
   </div>
 
-  <!-- =================== SHOP INDEX =================== -->
+  <!-- =================== SHOP =================== -->
   <div class="page" data-page="/shop">
     <section class="shop-hero">
       <div class="wrap">
-        <p class="welcome__eyebrow">Shop.</p>
+        <p class="script-accent script-accent--hero">Shop.</p>
         <h1>FOR DRINKS WORTH MAKING.</h1>
         <p class="shop-hero__lede">
           FREE UK DELIVERY ON ORDERS OVER £45.
@@ -493,18 +467,23 @@
       <div class="wrap">
         <div class="range__head">
           <div>
-            <p class="welcome__eyebrow">You might also like.</p>
+            <p class="script-accent">You might also like.</p>
             <h2>MORE FROM THE RANGE.</h2>
           </div>
         </div>
-        <div class="carousel" data-carousel>
-          <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">
+      </div>
+      <div class="embla" data-embla>
+        <div class="embla__viewport" data-embla-viewport>
+          <div class="embla__container" data-embla-container id="relatedTrack"></div>
+        </div>
+        <div class="embla__controls">
+          <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">
+          <div class="embla__dots" data-embla-dots></div>
+          <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
           </button>
-          <div class="carousel__track" data-carousel-track id="relatedTrack"></div>
         </div>
       </div>
     </section>
