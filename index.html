@@ -234,14 +234,14 @@
             <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="The Hepple Estate" loading="lazy" />
           </div>
           <div class="estate-cta__copy">
-            <p class="script-accent">The estate.</p>
+            <p class="script-accent script-accent--hero">The estate.</p>
             <h2>TURNING THE BEAUTY OF THE WILD LANDSCAPE INTO <em>FLAVOUR.</em></h2>
             <p>
               FOUR THOUSAND ACRES OF WILD, QUIET COUNTRY.
               ANCIENT JUNIPER, DOUGLAS FIR, AND WATER FILTERED THROUGH
               PEAT AND LIMESTONE BEFORE IT EVER REACHES OUR STILLS.
             </p>
-            <a href="#/estate" data-route="/estate" class="btn btn--outline-dark">EXPLORE THE ESTATE</a>
+            <a href="#/story" data-route="/story" class="btn btn--outline-dark">READ OUR STORY</a>
           </div>
         </div>
       </div>
@@ -481,37 +481,21 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer__grid">
-      <div class="footer__brand">
+      <a href="#/" data-route="/" class="footer__brand-link" aria-label="Hepple — home">
         <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" class="footer__logo" />
-        <p>DISTILLED SPIRITS FROM THE HEPPLE ESTATE, ON THE EASTERN EDGE OF NORTHUMBERLAND NATIONAL PARK. MADE FOR GOOD COMPANY, WHEREVER YOU FIND IT.</p>
-      </div>
-      <div class="footer__col">
-        <h4>EXPLORE</h4>
-        <ul>
-          <li><a href="#/story"     data-route="/story">OUR STORY</a></li>
-          <li><a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a></li>
-          <li><a href="#/cocktails" data-route="/cocktails">COCKTAILS</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>SHOP</h4>
-        <ul>
-          <li><a href="#/shop/hepple-wild-juniper-gin"  data-route="/shop/hepple-wild-juniper-gin">WILD JUNIPER GIN</a></li>
-          <li><a href="#/shop/hepple-douglas-fir-vodka" data-route="/shop/hepple-douglas-fir-vodka">DOUGLAS FIR VODKA</a></li>
-          <li><a href="#/shop/hepple-moorland-vodka"    data-route="/shop/hepple-moorland-vodka">MOORLAND VODKA</a></li>
-          <li><a href="#/shop"                          data-route="/shop">ALL PRODUCTS</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>CONTACT</h4>
-        <ul>
-          <li>THE OLD COACH HOUSE</li>
-          <li>HEPPLE WHITEFIELD, MORPETH</li>
-          <li>NORTHUMBERLAND NE65 7LN</li>
-          <li><a href="mailto:hello@hepplespirits.com">HELLO@HEPPLESPIRITS.COM</a></li>
-        </ul>
-      </div>
+      </a>
+
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#/story"     data-route="/story">OUR STORY</a>
+        <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
+        <a href="#/cocktails" data-route="/cocktails">COCKTAILS</a>
+        <a href="#/visit"     data-route="/visit">VISIT US</a>
+        <a href="#/shop"      data-route="/shop">SHOP</a>
+      </nav>
+
+      <a class="footer__email" href="mailto:hello@hepplespirits.com">HELLO@HEPPLESPIRITS.COM</a>
     </div>
+
     <div class="footer__bar">
       <div>© <span id="year"></span> HEPPLE SPIRITS COMPANY · PLEASE DRINK RESPONSIBLY</div>
       <div class="footer__barker">

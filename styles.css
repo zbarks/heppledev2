@@ -694,25 +694,42 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
   transform: scale(1.04);
 }
 
+/* Tablet — keep sticky working but tighter */
 @media (max-width: 900px){
-  .sticky-gallery__col--scroll{ grid-column: span 6; }
-  .sticky-gallery__col--sticky{
-    grid-column: span 12;
-    position: static;
-    height: auto;
-    grid-template-rows: none;
-    grid-template-columns: repeat(3, 1fr);
-    order: -1;
-    margin-bottom: .5rem;
-  }
-  .sticky-gallery__col--sticky figure{ height: 14rem; }
-  .sticky-gallery__col--scroll figure{ height: 18rem; }
-}
-@media (max-width: 600px){
-  .sticky-gallery__col--scroll{ grid-column: span 12; }
-  .sticky-gallery__col--sticky{ grid-template-columns: repeat(2, 1fr); }
-  .sticky-gallery__col--sticky figure:nth-child(3){ display:none; }
   .sticky-gallery__col--scroll figure{ height: 16rem; }
+  .sticky-gallery__col--sticky{
+    /* Shorter pin on tablet so outer columns don't dwarf it */
+    height: 75vh;
+    top: 12vh;
+  }
+}
+
+/* Phone — 2 columns only: one scroll + one sticky.
+   Drop some photos so the scroll isn't interminable. */
+@media (max-width: 640px){
+  .sticky-gallery__grid{
+    grid-template-columns: repeat(12, 1fr);
+    gap: .35rem;
+  }
+  /* Only show the FIRST scroll column on phone */
+  .sticky-gallery__col--scroll:first-of-type{
+    grid-column: span 7;
+  }
+  .sticky-gallery__col--scroll:last-of-type{
+    display:none;
+  }
+  .sticky-gallery__col--scroll figure{ height: 11rem; }
+  /* Hide the last images so phone doesn't scroll forever */
+  .sticky-gallery__col--scroll figure:nth-child(n+4){ display:none; }
+
+  .sticky-gallery__col--sticky{
+    grid-column: span 5;
+    position: sticky;
+    top: 10vh;
+    height: 80vh;
+    grid-template-rows: repeat(3, 1fr);
+    order: 0;
+  }
 }
 
 /* Stats */
@@ -1354,34 +1371,42 @@ footer{
 .footer__grid{
   max-width: var(--max);
   margin: 0 auto;
-  display:grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 2rem;
-  padding-bottom: 3rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+  padding-bottom: clamp(2rem, 4vh, 3rem);
 }
-@media (max-width: 860px){ .footer__grid{ grid-template-columns: 1fr 1fr; } }
-.footer__brand .footer__logo{ height:22px; width:auto; margin-bottom: 1rem; }
-.footer__brand p{
-  max-width: 40ch;
-  font-size: .75rem;
-  line-height:1.8;
-  letter-spacing:.12em;
-  opacity:.7;
-  font-weight:500;
-}
-.footer__col h4{
-  font-size:.7rem;
+.footer__brand-link{ display:inline-flex; align-items:center; }
+.footer__logo{ height:26px; width:auto; }
+.footer__nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  font-size:.72rem;
   letter-spacing:.22em;
-  color:var(--hepple-blue);
-  margin:0 0 1rem;
   font-weight:700;
 }
-.footer__col ul{
-  list-style:none; padding:0; margin:0;
-  display:flex; flex-direction:column; gap:.6rem;
-  font-size:.78rem;
-  letter-spacing:.12em;
-  font-weight:500;
+.footer__nav a{
+  color:var(--hepple-ink);
+  border-bottom:1px solid transparent;
+  padding-bottom:2px;
+  transition: border-color .2s ease, color .2s ease;
+}
+.footer__nav a:hover{
+  opacity:1;
+  color:var(--hepple-blue);
+  border-bottom-color: currentColor;
+}
+.footer__email{
+  font-size: .8rem;
+  letter-spacing: .18em;
+  font-weight:600;
+  color:var(--hepple-blue);
+  border-bottom:1px solid currentColor;
+  padding-bottom:3px;
 }
 .footer__bar{
   max-width: var(--max);
@@ -1402,6 +1427,9 @@ footer{
 .footer__bar a{ border-bottom: 1px solid transparent; transition: border-color .2s ease; }
 .footer__bar a:hover{ border-color: currentColor; opacity:1; }
 .footer__barker{ font-size:.6rem; letter-spacing:.26em; }
+@media (max-width: 600px){
+  .footer__bar{ justify-content:center; text-align:center; }
+}
 
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{

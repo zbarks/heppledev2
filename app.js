@@ -334,7 +334,19 @@
     $('#overlay')?.classList.remove('is-active');
   }
 
-  // SCROLL SCRUB
+  // SCROLL SCRUB + MOBILE FALLBACK
+  //
+  // Device-branched strategy:
+  //
+  //  DESKTOP (pointer:fine): scroll scrubs the video via video.currentTime
+  //    with aggressive throttling — only seek when delta > 2 frames, lerp
+  //    hard so seeks are spaced out enough for the decoder to keep up.
+  //
+  //  MOBILE (pointer:coarse): DON'T scrub. Mobile browsers choke on
+  //    video.currentTime seeks of paused video. Instead, autoplay the
+  //    video (muted, inline, looping) and let scroll only drive the
+  //    reveal/complete states. The video plays cinematically behind the
+  //    scroll interaction.
   let videoDuration = 5.2;
   let targetTime    = 0;
   let currentTime   = 0;
@@ -343,26 +355,70 @@
   let maxProgress   = 0;
   let textRevealed  = false;
 
-  const LERP            = 0.12;
-  const WRITE_THRESHOLD = 1/28;
-  const REVEAL_THRESHOLD = 0.10;
-  const COMPLETE_THRESHOLD = 0.92;
+  // Detect mobile/touch device — coarse pointer is a good proxy
+  const IS_TOUCH =
+    (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
+    ('ontouchstart' in window) ||
+    (navigator.maxTouchPoints > 0);
+
+  const LERP              = 0.18;    // desktop lerp — higher = fewer writes
+  const WRITE_THRESHOLD   = 1/15;    // only seek if > ~66ms away = every ~2 frames
+  const REVEAL_THRESHOLD  = 0.08;
+  const COMPLETE_THRESHOLD = 0.90;
 
   if (video){
     video.addEventListener('loadedmetadata', () => {
       if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
     });
-    const prime = async () => {
-      try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
-    };
-    if (video.readyState >= 1) prime();
-    else video.addEventListener('loadedmetadata', prime, { once:true });
+
+    if (IS_TOUCH){
+      // MOBILE: autoplay + loop, do NOT touch currentTime ever
+      video.loop = true;
+      video.muted = true;                    // required for autoplay on iOS
+      video.setAttribute('muted', '');        // belt & braces
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      // Autoplay once metadata is ready
+      const startPlayback = () => {
+        const p = video.play();
+        if (p && typeof p.catch === 'function'){
+          p.catch(() => {
+            // If autoplay fails, resume on first user interaction
+            const resume = () => {
+              video.play().catch(()=>{});
+              document.removeEventListener('touchstart', resume);
+              document.removeEventListener('click', resume);
+            };
+            document.addEventListener('touchstart', resume, { once:true, passive:true });
+            document.addEventListener('click',      resume, { once:true });
+          });
+        }
+      };
+      if (video.readyState >= 2) startPlayback();
+      else video.addEventListener('loadeddata', startPlayback, { once:true });
+    } else {
+      // DESKTOP: prime decoder so first seek is snappy
+      const prime = async () => {
+        try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
+      };
+      if (video.readyState >= 1) prime();
+      else video.addEventListener('loadedmetadata', prime, { once:true });
+    }
   }
 
   function tick(){
     computeScrollProgress();
+
+    // Mobile: no scrubbing, just keep the RAF alive for reveal state
+    if (IS_TOUCH){
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    // Desktop: lerp currentTime → target, write sparingly
     const diff = targetTime - currentTime;
-    if (Math.abs(diff) > 0.001) currentTime += diff * LERP;
+    if (Math.abs(diff) > 0.002) currentTime += diff * LERP;
     else currentTime = targetTime;
 
     if (video && video.readyState >= 2 && isFinite(currentTime)){
@@ -385,7 +441,11 @@
     const raw        = scrolled / scrollable;
 
     if (raw > maxProgress) maxProgress = raw;
-    targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
+
+    // Desktop drives scrubbing; mobile ignores target (video plays on its own)
+    if (!IS_TOUCH){
+      targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
+    }
 
     if (!textRevealed && maxProgress >= REVEAL_THRESHOLD){
       textRevealed = true;
