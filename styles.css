@@ -55,7 +55,13 @@ body{
   font-size:var(--body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x:hidden;
+  /* overflow-x: clip prevents horizontal scroll WITHOUT breaking position:sticky
+     (overflow-x: hidden would implicitly set overflow-y: auto and kill sticky). */
+  overflow-x: clip;
+}
+/* Fallback for very old browsers that don't know about `clip` */
+@supports not (overflow: clip){
+  body{ overflow-x: hidden; }
 }
 body.age-gated, body.scroll-locked{ overflow:hidden; }
 
@@ -613,7 +619,7 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
 .sticky-gallery{
   padding: clamp(4rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
   background: var(--ground);
-  overflow: hidden;
+  /* NO overflow:hidden here — it kills position:sticky on descendants */
 }
 .sticky-gallery__head{
   text-align: center;
@@ -638,14 +644,15 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
 .sticky-gallery__grid{
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: clamp(.75rem, 1.2vw, 1.5rem);
-  padding: 0 var(--gutter);
-  max-width: var(--max);
+  gap: .5rem;             /* tight, like reference gap-2 */
+  padding: 0;              /* full-bleed */
+  max-width: none;
   margin: 0 auto;
 }
 .sticky-gallery__col{
   display: grid;
-  gap: clamp(.75rem, 1.2vw, 1.5rem);
+  gap: .5rem;
+  min-width: 0;            /* prevent grid blow-out */
 }
 .sticky-gallery__col--scroll{
   grid-column: span 4;
@@ -653,10 +660,10 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
 .sticky-gallery__col--sticky{
   grid-column: span 4;
   position: sticky;
-  top: 6vh;
-  height: 88vh;
+  top: 0;
+  height: 100vh;
   grid-template-rows: repeat(3, 1fr);
-  align-self: start;
+  align-self: start;       /* critical for sticky inside grid */
 }
 .sticky-gallery__col figure{
   margin: 0;
@@ -664,13 +671,18 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
   overflow: hidden;
   background: var(--ground-warm);
   border-radius: 4px;
+  min-width: 0;
 }
+/* Outer columns — fixed image height like h-96 in the reference */
 .sticky-gallery__col--scroll figure{
-  aspect-ratio: 4/5;
+  height: 24rem;           /* = h-96 in tailwind */
+  aspect-ratio: auto;
 }
+/* Sticky column — fills its row */
 .sticky-gallery__col--sticky figure{
   width: 100%;
   height: 100%;
+  min-height: 0;
 }
 .sticky-gallery__col img{
   width: 100%;
@@ -691,14 +703,16 @@ h1 em, h2 em, h3 em{ color:var(--hepple-blue); }
     grid-template-rows: none;
     grid-template-columns: repeat(3, 1fr);
     order: -1;
-    margin-bottom: clamp(.75rem, 1.2vw, 1.5rem);
+    margin-bottom: .5rem;
   }
-  .sticky-gallery__col--sticky figure{ aspect-ratio: 4/5; }
+  .sticky-gallery__col--sticky figure{ height: 14rem; }
+  .sticky-gallery__col--scroll figure{ height: 18rem; }
 }
 @media (max-width: 600px){
   .sticky-gallery__col--scroll{ grid-column: span 12; }
   .sticky-gallery__col--sticky{ grid-template-columns: repeat(2, 1fr); }
   .sticky-gallery__col--sticky figure:nth-child(3){ display:none; }
+  .sticky-gallery__col--scroll figure{ height: 16rem; }
 }
 
 /* Stats */
