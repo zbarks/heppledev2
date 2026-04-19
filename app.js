@@ -565,6 +565,8 @@
 
   // =============================================
   // SCROLL SCRUB + MOBILE FALLBACK (unchanged from last build)
+  // + VIDEO LOADING FALLBACK for browsers where video can't load
+  //   (e.g. opening via file://, blocked by extensions, etc.)
   // =============================================
   let videoDuration = 5.2;
   let targetTime    = 0;
@@ -573,11 +575,51 @@
   let introComplete = false;
   let maxProgress   = 0;
   let textRevealed  = false;
+  let videoOk       = false;   // flips to true once we know the video can play
 
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
     ('ontouchstart' in window) ||
     (navigator.maxTouchPoints > 0);
+
+  // Diagnostic — helps debug loading issues
+  console.log('[Hepple]',
+    'protocol=' + window.location.protocol,
+    'touch=' + IS_TOUCH,
+    'video=' + !!video,
+    'userAgent=' + navigator.userAgent.substring(0, 60));
+
+  if (window.location.protocol === 'file:'){
+    console.warn('[Hepple] Opened via file:// — video playback and some features may be blocked by browser security. For best results, open this site through a local server (e.g. `npx serve .` from the project folder) or deploy it to Netlify/Vercel.');
+  }
+
+  // If the video can't load within 2.5 seconds, treat the intro as complete
+  // and show the poster image — user can still use the site normally.
+  // This handles the Windows Chrome bug where <link rel=preload as=video>
+  // was failing and leaving the video in readyState 0 indefinitely.
+  function fallbackToPoster(reason){
+    if (videoOk || introComplete) return;
+    console.warn('[Hepple] Video fallback triggered:', reason);
+    if (video){
+      video.style.display = 'none';
+    }
+    // Use the poster image as the intro backdrop
+    const stage = intro?.querySelector('.intro__stage');
+    if (stage){
+      stage.style.backgroundImage = 'url(assets/hero-poster.jpg)';
+      stage.style.backgroundSize = 'cover';
+      stage.style.backgroundPosition = 'center';
+    }
+    // Reveal the headline + nav + mark complete (this also collapses the
+    // 200vh intro track to 100vh via CSS so the user can scroll past it).
+    if (intro){
+      intro.classList.add('is-text-revealed');
+      intro.classList.add('is-complete');
+    }
+    if (nav) nav.classList.add('is-visible');
+    introComplete = true;
+    sessionStorage.setItem('hepple:seenIntro', '1');
+  }
 
   const LERP              = 0.18;
   const WRITE_THRESHOLD   = 1/15;
@@ -585,9 +627,20 @@
   const COMPLETE_THRESHOLD = 0.90;
 
   if (video){
+    // Ultimate safety net: if video hasn't become playable in 2.5 seconds,
+    // fall back to the poster image so the user can still scroll the site.
+    const loadTimeout = setTimeout(() => {
+      if (!videoOk) fallbackToPoster('2.5s timeout — video never became playable');
+    }, 2500);
+
     video.addEventListener('loadedmetadata', () => {
       if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
     });
+    video.addEventListener('canplay', () => {
+      videoOk = true;
+      clearTimeout(loadTimeout);
+    }, { once: true });
+    video.addEventListener('error', () => fallbackToPoster('video error event'), { once: true });
 
     if (IS_TOUCH){
       video.loop = true;
@@ -614,11 +667,15 @@
       else video.addEventListener('loadeddata', startPlayback, { once:true });
     } else {
       const prime = async () => {
-        try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
+        try { await video.play(); video.pause(); video.currentTime = 0; }
+        catch(err){ console.warn('[Hepple] Video prime failed:', err.message); }
       };
       if (video.readyState >= 1) prime();
       else video.addEventListener('loadedmetadata', prime, { once:true });
     }
+  } else {
+    // No video element at all — just show the intro text
+    fallbackToPoster('no video element');
   }
 
   function tick(){
@@ -1026,7 +1083,7 @@
             <img src="${c.image}" alt="${c.name}" loading="lazy" />
             <div class="flip-card__front-label">
               <h4>${c.name}</h4>
-              <span class="flip-card__front-hint">HOVER FOR RECIPE</span>
+              <span class="flip-card__front-hint">TAP FOR RECIPE</span>
             </div>
           </div>
           <div class="flip-card__face flip-card__back">
@@ -1041,19 +1098,21 @@
     `;
   }
 
-  // Init flip card touch support — tap to flip, tap again elsewhere to un-flip.
-  // CSS handles hover via :hover. For touch devices, we add .is-flipped on tap.
+  // Init flip card: tap the SAME card to toggle flip on/off (mobile-friendly).
+  // On hover-capable devices CSS handles hover too.
   function initFlipCards(scope=document){
     $$('[data-flip-card]', scope).forEach(card => {
       if (card._flipInit) return;
       card._flipInit = true;
-      card.addEventListener('click', (e) => {
-        // On touch, toggle
-        if (IS_TOUCH){
-          const wasFlipped = card.classList.contains('is-flipped');
-          // Un-flip all others first
-          $$('[data-flip-card].is-flipped').forEach(c => c.classList.remove('is-flipped'));
-          if (!wasFlipped) card.classList.add('is-flipped');
+      card.addEventListener('click', () => {
+        // Simple toggle on the card that was clicked. Don't touch other cards.
+        card.classList.toggle('is-flipped');
+      });
+      // Keyboard support: Enter/Space toggles
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          card.classList.toggle('is-flipped');
         }
       });
     });

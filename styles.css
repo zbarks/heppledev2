@@ -187,6 +187,10 @@ h1, h2, h3, h4{
    INTRO — hero video
    ========================================================= */
 .intro{ position:relative; height:200vh; background:#000; z-index:1; }
+/* When intro completes (via scroll OR fallback), collapse the 200vh track
+   to a single viewport so the user can scroll the rest of the page. This
+   is what prevents the "page seems broken on Windows" bug. */
+.intro.is-complete{ height:100vh; }
 .intro__pin{ position:sticky; top:0; height:100vh; width:100%; overflow:hidden; }
 .intro__stage{ position:absolute; inset:0; background:#000; will-change: transform; transform: translateZ(0); }
 .intro__video{
@@ -1932,73 +1936,57 @@ footer{
 }
 
 /* =========================================================
-   FEEDBACK V3 — bigger, diagonal scripts that actually
-   sit ON TOP of headings (over the top-left corner)
-   per Zach's mobile-screenshot feedback
+   FEEDBACK V4 — EVERYTHING in Hepple blue + 15° tilts
+   + bigger scripts positioned above the first letter
    ========================================================= */
 
-/* 1) HERO INTRO — "Come in" needs to be much bigger and
-   diagonally above the headline (currently was just centered above) */
-.intro__eyebrow{
-  /* Bumped up — was clamp(2.2rem, 1.6rem + 2.8vw, 4rem) */
-  font-size: clamp(3.4rem, 2.4rem + 4vw, 5.6rem);
-  display: inline-block;
-  transform: translate(-1.2em, .55em) rotate(-6deg);
-  transform-origin: left bottom;
-  position: relative;
-  z-index: 3;
-  margin: 0;
-  line-height: .9;
-}
-@media (max-width: 700px){
-  .intro__eyebrow{
-    font-size: clamp(2.6rem, 1.8rem + 5vw, 4rem);
-    transform: translate(-.8em, .45em) rotate(-6deg);
-  }
+/* Override the --light variant — Zach wants ALL scripts in Hepple blue */
+.script-accent--light{
+  color: var(--hepple-blue) !important;
 }
 
-/* 2) OFFSET SCRIPT — bigger size, real diagonal tilt,
-   absolutely-positioned over the top-left of the heading.
-   The previous version was just translated upward in flow,
-   which on PC just looked like a normal script above the h2. */
+/* ─────────────────────────────────────────────────────────
+   THE OFFSET SCRIPT — the big one
+   ───────────────────────────────────────────────────────── */
 .script-accent--offset{
   position: absolute;
-  /* Sits well ABOVE the heading and tilted left-up.
-     Top: -.6em raises it; left: -.3em pulls it leftward */
-  top: -.55em;
-  left: -.3em;
-  display: inline-block;
-  transform: rotate(-6deg);
+  /* Sit ABOVE the heading, nudged leftward so it reads as
+     diagonally above-left of the first letter.  */
+  top: 0;
+  left: 0;
+  transform: translate(-.1em, -.55em) rotate(-15deg);
   transform-origin: left bottom;
-  /* BIGGER than before — previously script-md ~3rem */
-  font-size: clamp(2.6rem, 1.9rem + 3vw, 4.2rem);
+
+  font-family: var(--script);
+  /* Big enough to read, still proportional to the heading below */
+  font-size: clamp(2.4rem, 1.8rem + 3.2vw, 4.4rem);
   line-height: 1;
+  color: var(--hepple-blue);
+  font-weight: 400;
+
   margin: 0;
   padding: 0;
   z-index: 3;
   pointer-events: none;
   white-space: nowrap;
 }
+/* Hero variant — bigger again for the big section headers */
 .script-accent--offset.script-accent--hero{
-  /* Hero variant — even bigger */
-  font-size: clamp(3rem, 2.2rem + 3.6vw, 5rem);
-  top: -.5em;
-  left: -.25em;
+  font-size: clamp(2.8rem, 2rem + 3.8vw, 5.2rem);
 }
 @media (max-width: 700px){
   .script-accent--offset{
-    font-size: clamp(2.2rem, 1.5rem + 4vw, 3.2rem);
-    top: -.45em;
-    left: -.2em;
+    font-size: clamp(2rem, 1.4rem + 4vw, 3rem);
+    transform: translate(-.05em, -.45em) rotate(-15deg);
   }
   .script-accent--offset.script-accent--hero{
-    font-size: clamp(2.4rem, 1.6rem + 4.5vw, 3.6rem);
+    font-size: clamp(2.2rem, 1.5rem + 4.5vw, 3.4rem);
   }
 }
 
-/* All wrappers that hold an offset script need position:relative
-   AND padding-top so the absolutely-positioned script doesn't
-   get clipped by the section above */
+/* Every wrapper that contains an offset script needs:
+   - position: relative (so absolute-positioned script anchors to it)
+   - enough padding-top for the script to sit within the section       */
 .welcome__copy,
 .founders-intro__inner,
 .estate-intro__inner,
@@ -2007,41 +1995,128 @@ footer{
 .estate-cta__inner,
 .visit-slim{
   position: relative;
-  padding-top: clamp(2rem, 4vw, 3.5rem);
+  padding-top: clamp(2.8rem, 5vw, 4.5rem);
 }
 
-/* Visit-slim is centered. Script needs to sit ABOVE the h3 but INSIDE the panel,
-   so give the panel extra top padding and position the script relative to its
-   own slot (not the panel top). Override earlier global padding-top rule. */
+/* Visit-slim — the script is centered above the heading (not left) */
 .visit-slim{
-  padding-top: clamp(4rem, 8vh, 6rem) !important;
+  padding-top: clamp(4rem, 8vh, 6rem);
   padding-bottom: clamp(3rem, 6vh, 5rem);
+  text-align: center;
 }
 .visit-slim .script-accent--offset{
-  /* Place the script near the top of the panel, centered */
-  top: clamp(1.2rem, 3vh, 2rem);
+  top: clamp(.8rem, 2.5vh, 1.8rem);
   left: 50%;
-  transform: translateX(-50%) rotate(-6deg);
+  /* Centered and tilted — translate both X and Y then rotate */
+  transform: translate(-50%, 0) rotate(-15deg);
   transform-origin: center bottom;
 }
 
 /* Cocktails-home head is centered too */
+.cocktails-home__head{
+  padding-top: clamp(3.5rem, 6vw, 5rem);
+  text-align: center;
+}
 .cocktails-home__head .script-accent--offset{
+  top: clamp(.5rem, 1.5vh, 1.2rem);
   left: 50%;
-  transform: translateX(-50%) rotate(-6deg);
+  transform: translate(-50%, 0) rotate(-15deg);
   transform-origin: center bottom;
 }
 
-/* =========================================================
-   3) FOUNDERS INTRO — flip text to RIGHT side of image
-   ========================================================= */
+/* ─────────────────────────────────────────────────────────
+   HERO INTRO — "Come in" bigger, tilted, over the "W"
+   ───────────────────────────────────────────────────────── */
+.intro__center{
+  /* Make room for the big tilted eyebrow above the headline */
+  position: relative;
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+.intro__eyebrow{
+  /* Bigger than before, 15° tilt, positioned above-left of the "W" */
+  font-size: clamp(3.8rem, 2.6rem + 4.5vw, 6rem);
+  color: var(--cream);  /* stays cream on the dark hero video */
+  display: inline-block;
+  transform: translate(-1em, .4em) rotate(-15deg);
+  transform-origin: left bottom;
+  margin: 0;
+  line-height: .9;
+  position: relative;
+  z-index: 3;
+}
+@media (max-width: 700px){
+  .intro__eyebrow{
+    font-size: clamp(2.8rem, 2rem + 5vw, 4.2rem);
+    transform: translate(-.6em, .35em) rotate(-15deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   WELCOME PANEL — bigger headline, tight spacing
+   ───────────────────────────────────────────────────────── */
+.welcome__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 1.2rem;
+  max-width: 22ch;
+}
+/* Position "Welcome to Hepple" above-left of the "A" in "AN INDEPENDENT".
+   Nudge it slightly right to clear the fireside image gutter.           */
+.welcome__copy .script-accent--offset{
+  transform: translate(.1em, -.55em) rotate(-15deg);
+}
+@media (max-width: 860px){
+  .welcome__copy .script-accent--offset{
+    transform: translate(-.05em, -.45em) rotate(-15deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   FOUNDERS INTRO — taller + script in Hepple blue + right-aligned
+   + image lightened so blue text reads over it
+   ───────────────────────────────────────────────────────── */
+.founders-intro{
+  overflow: visible;   /* let script poke outside if needed */
+  min-height: 80vh;    /* taller so "This is Our Story" doesn't clip */
+  margin: clamp(3rem, 5vw, 5rem) 0;
+  background: var(--ground);
+}
+.founders-intro__img img{
+  /* Lighten the image so Hepple blue text is readable over it */
+  filter: brightness(1) saturate(1);
+}
+.founders-intro__overlay{
+  min-height: 80vh;
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter);
+}
+.founders-intro__inner{
+  color: var(--hepple-blue);
+}
+.founders-intro__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  letter-spacing: -.02em;
+  color: var(--hepple-blue);
+  margin: 0 0 1.4rem;
+  max-width: 18ch;
+}
+.founders-intro__body{
+  color: var(--hepple-ink);
+  font-weight: 600;
+  /* subtle cream drop-behind for legibility over image */
+  background: rgba(246, 242, 234, .85);
+  padding: .6em .8em;
+  border-radius: 4px;
+  max-width: 50ch;
+}
 .founders-intro--right .founders-intro__overlay{
   justify-content: flex-end;
 }
 .founders-intro--right .founders-intro__inner{
   margin-right: 0;
   margin-left: auto;
-  max-width: 56ch;
+  max-width: 54ch;
   text-align: left;
 }
 @media (max-width: 700px){
@@ -2050,80 +2125,111 @@ footer{
     max-width: none;
   }
 }
-
-/* Founders headline — bigger, light cream */
-.founders-intro__headline{
-  font-size: var(--h-xl);
-  line-height: .95;
-  letter-spacing: -.02em;
+/* Make sure "This is Our Story" sits above the "I" of "IN PURSUIT".
+   Founders column is right-aligned so we anchor the script to the
+   left edge of the heading but slightly smaller so it doesn't
+   overflow beyond the section on wide screens. */
+.founders-intro__inner .script-accent--offset{
+  left: 0;
+  top: 0;
+  transform: translate(-.05em, -.5em) rotate(-15deg);
+  transform-origin: left bottom;
+  /* ~20% smaller in this context so it fits */
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 3.6rem);
+}
+/* Use a solid dark outline button so it's readable on the lighter image */
+.founders-intro__inner .btn--outline-light{
+  border-color: var(--hepple-blue);
+  color: var(--hepple-blue);
+  background: rgba(246, 242, 234, .85);
+}
+.founders-intro__inner .btn--outline-light:hover{
+  background: var(--hepple-blue);
   color: var(--cream);
-  margin: 0 0 1.4rem;
-  max-width: 18ch;
 }
 
-/* =========================================================
-   4) ESTATE INTRO — center across the page
-   ========================================================= */
+/* ─────────────────────────────────────────────────────────
+   ESTATE INTRO — centered, Welcome to our Eden above
+   ───────────────────────────────────────────────────────── */
 .estate-intro--centered{
   text-align: center;
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
 }
 .estate-intro--centered .estate-intro__inner{
   margin: 0 auto;
   max-width: 60ch;
-  display: block;
-  text-align: center;
+  padding-top: clamp(4rem, 7vw, 6rem);
 }
 .estate-intro--centered .estate-intro__inner .script-accent--offset{
-  /* Center the offset script over the heading */
   left: 50%;
-  transform: translateX(-50%) rotate(-6deg);
+  top: clamp(.5rem, 2vh, 1.5rem);
+  transform: translate(-50%, 0) rotate(-15deg);
   transform-origin: center bottom;
 }
 .estate-intro__h2{
   font-size: var(--h-xl);
   line-height: 1;
   margin: 0 auto;
-  max-width: 32ch;
+  max-width: 34ch;
+  color: var(--hepple-blue);
 }
 
-/* =========================================================
-   5) ESTATE-CTA OVERLAY VARIANT — text sits OVER the photo
-   ========================================================= */
+/* ─────────────────────────────────────────────────────────
+   ESTATE CTA OVERLAY — text OVER photo, all in Hepple blue
+   Image gets lightened so blue reads over it
+   ───────────────────────────────────────────────────────── */
 .estate-cta--overlay{
   position: relative;
-  min-height: clamp(28rem, 60vh, 42rem);
-  overflow: hidden;
-  background: var(--hepple-ink);
-  margin: clamp(2rem, 4vw, 3rem) 0;
+  min-height: clamp(32rem, 70vh, 48rem);
+  overflow: visible;
+  background: var(--ground);
+  margin: clamp(3rem, 5vw, 5rem) 0;
 }
 .estate-cta--overlay .estate-cta__bg{
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 .estate-cta--overlay .estate-cta__bg img{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(.55);
+  /* Brighten + cream tint so Hepple blue text reads */
+  filter: brightness(1.08) saturate(.9);
+}
+/* Cream overlay on top of image for text contrast */
+.estate-cta--overlay .estate-cta__bg::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(237, 232, 224, 0) 0%,
+    rgba(237, 232, 224, .15) 40%,
+    rgba(237, 232, 224, .75) 100%);
+  pointer-events: none;
 }
 .estate-cta--overlay .estate-cta__overlay{
   position: relative;
   z-index: 2;
-  min-height: clamp(28rem, 60vh, 42rem);
+  min-height: clamp(32rem, 70vh, 48rem);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(3rem, 8vh, 6rem) var(--gutter);
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter);
   text-align: center;
 }
 .estate-cta--overlay .estate-cta__inner{
-  max-width: 40rem;
-  color: var(--cream);
+  max-width: 44rem;
+  color: var(--hepple-blue);
+  /* Cream panel behind text for guaranteed readability */
+  background: rgba(246, 242, 234, .75);
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: 6px;
 }
 .estate-cta__headline{
   font-size: var(--h-xl);
   line-height: .95;
-  color: var(--cream);
+  color: var(--hepple-blue);
   margin: 0 0 1rem;
   letter-spacing: -.015em;
 }
@@ -2133,46 +2239,105 @@ footer{
   font-size: var(--h-md);
   letter-spacing: .02em;
   line-height: 1.2;
-  color: var(--cream);
-  margin: 0 0 2rem;
+  color: var(--hepple-blue);
+  margin: 0 0 1.8rem;
   text-transform: uppercase;
 }
 .estate-cta__sub em{
-  color: var(--cream);
+  color: var(--hepple-blue);
   font-style: italic;
 }
+/* Estate CTA uses dark outline button now (it's on cream) */
+.estate-cta--overlay .btn--outline-light{
+  /* force dark variant since we're on a cream panel */
+  border-color: var(--hepple-blue);
+  color: var(--hepple-blue);
+}
+.estate-cta--overlay .btn--outline-light:hover{
+  background: var(--hepple-blue);
+  color: var(--cream);
+}
 
-/* Subheadings on cocktails-home and shop-cocktails and story-hero */
+/* ─────────────────────────────────────────────────────────
+   STORY HERO — Our Inspiration / Our Craft etc. above H1
+   ───────────────────────────────────────────────────────── */
+.story-hero__title h1{
+  white-space: normal;
+  color: var(--cream);
+}
+/* Script over story-hero images — tints cream because it's on a dark image */
+.story-hero__title .script-accent--offset{
+  color: var(--cream);  /* legibility over dark images */
+}
+
+/* ─────────────────────────────────────────────────────────
+   COCKTAILS HEADING — bring down from nav bar
+   ───────────────────────────────────────────────────────── */
+.cocktails-home{
+  padding-top: clamp(6rem, 12vh, 10rem);
+}
+.cocktails-home__head h2{
+  margin-top: 0;
+  color: var(--hepple-blue);
+}
+/* The "DELICIOUS DRINKS START HERE" should be script-style, Hepple blue */
 .cocktails-home__sub,
-.shop-cocktails__sub,
+.shop-cocktails__sub{
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  letter-spacing: 0;
+  line-height: 1.2;
+  color: var(--hepple-blue);
+  margin: .8rem auto 1.2rem;
+  text-transform: none;
+  max-width: 32ch;
+}
 .story-hero__sub{
   font-family: var(--sans);
   font-weight: 700;
   font-size: var(--h-md);
   letter-spacing: .02em;
   line-height: 1.2;
-  color: var(--hepple-blue);
-  margin: .6rem 0 1.2rem;
+  color: var(--cream);
+  margin: .8rem 0 1.2rem;
   text-transform: uppercase;
 }
-.story-hero__sub{ color: var(--cream); }
-.cocktails-home__sub{ margin-left: auto; margin-right: auto; max-width: 32ch; }
 
-/* Visit slim — line break preserved */
+/* Visit slim line break */
 .visit-slim h3 br{ display: inline; }
+.visit-slim h3{ color: var(--hepple-blue); }
 
-/* Welcome headline — bigger to match feedback */
-.welcome__headline{
-  font-size: var(--h-xl);
-  line-height: .95;
-  letter-spacing: -.02em;
-  margin: 0 0 1.4rem;
-  max-width: 22ch;
+/* ─────────────────────────────────────────────────────────
+   COCKTAIL CARDS — more mobile spacing + safe lift room
+   ───────────────────────────────────────────────────────── */
+.flip-row{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+@media (max-width: 860px){
+  .flip-row{
+    grid-template-columns: 1fr;
+    /* Extra vertical space so lifted card doesn't bleed into next */
+    gap: clamp(2.5rem, 6vw, 3.5rem);
+    padding: 0 1rem;
+  }
+}
+/* Disable the lift on mobile (tap = flip, no lift) so cards don't collide */
+@media (max-width: 860px) and (hover: none){
+  .flip-card:hover .flip-card__inner,
+  .flip-card:focus-within .flip-card__inner{
+    transform: none;
+  }
+  .flip-card.is-flipped .flip-card__inner{
+    transform: rotateY(180deg);  /* keep the flip, lose the lift */
+  }
 }
 
-/* =========================================================
-   PRODUCT CARDS — two-line title (HEPPLE on top, variant below)
-   ========================================================= */
+/* ─────────────────────────────────────────────────────────
+   PRODUCT CARDS — two-line title
+   ───────────────────────────────────────────────────────── */
 .product-card__title,
 .shop-card__title,
 .product-detail__title{
@@ -2196,8 +2361,6 @@ footer{
   display: block;
   margin-top: .12em;
 }
-
-/* Kicker — sits ABOVE the title on cards (replacing script) */
 .product-card__kicker,
 .shop-card__kicker{
   font-family: var(--sans);
@@ -2220,16 +2383,6 @@ footer{
   opacity: .85;
 }
 
-/* Estate intro padding above */
-.estate-intro{
-  padding: clamp(4rem, 10vh, 8rem) 0 clamp(2rem, 5vh, 4rem);
-}
-
-/* Story hero white-space */
-.story-hero__title h1{
-  white-space: normal;
-}
-
-.cocktails-home__head h2{
-  margin-top: 0;
-}
+/* Tiny niggles */
+.range__head h2{ color: var(--hepple-blue); }
+.cocktails-home__foot{ text-align: center; margin-top: clamp(2rem, 5vh, 3.5rem); }
