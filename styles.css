@@ -186,21 +186,20 @@ h1, h2, h3, h4{
 /* =========================================================
    INTRO — hero video
    ========================================================= */
-.intro{ position:relative; height:200vh; background:#000; z-index:1; }
-/* When intro completes (via scroll OR fallback), collapse the 200vh track
-   to a single viewport so the user can scroll the rest of the page. This
-   is what prevents the "page seems broken on Windows" bug. */
-.intro.is-complete{ height:100vh; }
-.intro__pin{ position:sticky; top:0; height:100vh; width:100%; overflow:hidden; }
-.intro__stage{ position:absolute; inset:0; background:#000; will-change: transform; transform: translateZ(0); }
+.intro{
+  position:relative;
+  height:100vh;
+  background:#000;
+  z-index:1;
+  overflow:hidden;
+}
+.intro.is-complete{ height:100vh; }   /* legacy hook, kept for safety */
+.intro__stage{ position:absolute; inset:0; background:#000; }
 .intro__video{
   position:absolute; inset:0;
   width:100%; height:100%;
   object-fit:cover;
   filter: saturate(1.05) contrast(1.02);
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .intro__vignette{
   position:absolute; inset:0;
@@ -221,24 +220,23 @@ h1, h2, h3, h4{
 .intro__center{ align-self:center; text-align:center; max-width:44rem; }
 .intro__eyebrow{
   font-family:var(--script);
-  /* Per feedback — script is secondary flair, sized proportionate */
   font-size: clamp(2.2rem, 1.6rem + 2.8vw, 4rem);
   color:var(--cream);
-  opacity:0;
-  transform:translateY(14px);
-  transition:opacity 1.4s ease, transform 1.4s ease;
+  /* Simple fade-in on page load — no scroll trigger */
+  animation: introFade 1.4s ease .2s both;
   margin:0 0 .15em;
   line-height:1;
 }
 .intro__headline{
-  /* Per feedback — a bit smaller, more jaunty */
   font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem);
   line-height:1.02;
   color:var(--cream);
-  opacity:0;
-  transform:translateY(18px);
-  transition:opacity 1.4s ease .2s, transform 1.4s ease .2s;
+  animation: introFade 1.4s ease .5s both;
   letter-spacing:-.015em;
+}
+@keyframes introFade{
+  from{ opacity:0; transform:translateY(14px); }
+  to  { opacity:1; transform:translateY(0); }
 }
 .intro__hint{
   align-self:end;
@@ -248,7 +246,8 @@ h1, h2, h3, h4{
   letter-spacing:.3em;
   font-weight:600;
   opacity:.82;
-  transition:opacity .5s ease;
+  color:var(--cream);
+  animation: introFade 1s ease 1s both;
 }
 .intro__hint-line{
   width:1px; height:44px;
@@ -260,10 +259,6 @@ h1, h2, h3, h4{
   50%{ transform:scaleY(1); opacity:1; }
   100%{ transform:scaleY(1); transform-origin:bottom; opacity:0; }
 }
-.intro.is-text-revealed .intro__eyebrow,
-.intro.is-text-revealed .intro__headline{ opacity:1; transform:translateY(0); }
-.intro.is-complete .intro__hint{ opacity:0; }
-.intro.is-complete .intro__video{ opacity:.25; transition: opacity 1s ease; }
 
 /* =========================================================
    NAV — Hepple blue accents
@@ -2149,29 +2144,36 @@ footer{
 }
 
 /* ─────────────────────────────────────────────────────────
-   ESTATE INTRO — centered, Welcome to our Eden above
+   ESTATE INTRO — LEFT-aligned, script above-left of "T"
+   per Zach: "needs to be to the left above the text"
    ───────────────────────────────────────────────────────── */
 .estate-intro--centered{
-  text-align: center;
+  text-align: left;
   padding: clamp(5rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
 }
+.estate-intro--centered .wrap{
+  /* keep wrap default — content flows from left gutter */
+}
 .estate-intro--centered .estate-intro__inner{
-  margin: 0 auto;
+  margin: 0;
   max-width: 60ch;
-  padding-top: clamp(4rem, 7vw, 6rem);
+  padding-top: clamp(2.8rem, 5vw, 4.5rem);
+  text-align: left;
 }
 .estate-intro--centered .estate-intro__inner .script-accent--offset{
-  left: 50%;
-  top: clamp(.5rem, 2vh, 1.5rem);
-  transform: translate(-50%, 0) rotate(-15deg);
-  transform-origin: center bottom;
+  /* Sit above-left of the "T" of THE ESTATE — left-anchored, tilted */
+  left: 0;
+  top: 0;
+  transform: translate(-.05em, -.5em) rotate(-15deg);
+  transform-origin: left bottom;
 }
 .estate-intro__h2{
   font-size: var(--h-xl);
   line-height: 1;
-  margin: 0 auto;
+  margin: 0;
   max-width: 34ch;
   color: var(--hepple-blue);
+  text-align: left;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -2386,3 +2388,169 @@ footer{
 /* Tiny niggles */
 .range__head h2{ color: var(--hepple-blue); }
 .cocktails-home__foot{ text-align: center; margin-top: clamp(2rem, 5vh, 3.5rem); }
+
+/* =========================================================
+   FEEDBACK V5 — final round of Zach's fixes
+   - Welcome script tighter to heading + nudge left, mobile clearance
+   - Founders script visible (no clip)
+   - Sticky gallery: hide entirely on mobile
+   - Cocktail sub: regular sans not script
+   - Visit-slim: bigger, no overlap
+   - Mobile product card: kill any black box
+   - Remove flip card hover lift on PC for the small problematic case
+   ========================================================= */
+
+/* 1. WELCOME PANEL — tighter spacing, nudge script LEFT of "A"
+   On mobile, script must clear the Hepple Gin photo above. */
+.welcome__copy{
+  padding-top: clamp(1.8rem, 3.5vw, 3rem);   /* was 2.8/5/4.5 — tighter */
+}
+.welcome__copy .script-accent--offset{
+  /* Above-left of "A" in "AN INDEPENDENT" */
+  left: 0;
+  top: 0;
+  transform: translate(-.5em, -.3em) rotate(-15deg);
+  transform-origin: left bottom;
+}
+@media (max-width: 860px){
+  .welcome__copy{
+    /* On mobile the image is ABOVE the copy; give script room */
+    padding-top: clamp(2.5rem, 8vw, 4rem);
+  }
+  .welcome__copy .script-accent--offset{
+    /* On mobile shift slightly right so it doesn't clip viewport edge */
+    transform: translate(.1em, -.3em) rotate(-15deg);
+  }
+}
+
+/* 2. FOUNDERS — keep "This is Our Story" inside the visible frame.
+   Anchor it to the right column (which is right-aligned), and
+   make sure it never overflows the section.                       */
+.founders-intro{
+  overflow: hidden;   /* contain anything that tries to escape */
+}
+.founders-intro__inner{
+  position: relative;
+  /* Need padding-top large enough to host the script */
+  padding-top: clamp(3.5rem, 6vw, 5.5rem);
+}
+.founders-intro__inner .script-accent--offset{
+  left: 0;
+  top: 0;
+  /* Smaller font + smaller offset so it fits cleanly */
+  font-size: clamp(1.8rem, 1.4rem + 2vw, 3rem);
+  transform: translate(0, -.3em) rotate(-15deg);
+  transform-origin: left bottom;
+}
+@media (max-width: 700px){
+  .founders-intro__inner .script-accent--offset{
+    font-size: clamp(1.6rem, 1.2rem + 3vw, 2.4rem);
+    transform: translate(0, -.25em) rotate(-15deg);
+  }
+}
+
+/* 3. STICKY GALLERY — show on desktop only.
+   Replace with simple stacked images on mobile.                    */
+@media (max-width: 860px){
+  .sticky-gallery__col--sticky{
+    position: static !important;
+    height: auto !important;
+    display: none;   /* hide the middle sticky column on mobile */
+  }
+  .sticky-gallery__col--scroll{
+    grid-column: span 12 !important;
+  }
+  .sticky-gallery__col--scroll:last-of-type{
+    display: grid !important;   /* re-enable hidden column */
+  }
+  .sticky-gallery__col--scroll figure{
+    height: 14rem !important;
+  }
+  .sticky-gallery__col--scroll figure:nth-child(n+4){
+    display: block !important;
+  }
+  .sticky-gallery__grid{
+    gap: .5rem;
+    padding: 0 var(--gutter);
+  }
+}
+
+/* 4. COCKTAILS SUB — regular bold sans, NOT script.
+   Override the v4 script-style I'd added. */
+.cocktails-home__sub,
+.shop-cocktails__sub{
+  font-family: var(--sans) !important;
+  font-weight: 700 !important;
+  font-size: clamp(.9rem, .75rem + .5vw, 1.15rem) !important;
+  letter-spacing: .18em !important;
+  line-height: 1.4 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: uppercase !important;
+  margin: .6rem auto 1.4rem !important;
+  max-width: 36ch;
+}
+
+/* 5. VISIT-SLIM — bigger panel, more padding so script has clearance */
+.visit-slim{
+  padding-top: clamp(5rem, 10vh, 7.5rem) !important;
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+}
+.visit-slim .script-accent--offset{
+  /* Sit higher and to the LEFT of THE HEPPLE EXPERIENCE per Zach */
+  top: clamp(.8rem, 2.5vh, 2rem);
+  left: 50%;
+  transform: translate(-65%, 0) rotate(-15deg);  /* shift left of center */
+  transform-origin: center bottom;
+}
+.visit-slim h3{
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.4rem);
+  line-height: 1;
+  margin: 1rem 0 1.6rem;
+  color: var(--hepple-blue);
+}
+
+/* 6. MOBILE PRODUCT CARD — kill any rogue dark element
+   The "weird black box top-left" Zach reported. Most likely culprits:
+   - Old broken alt-text rendering when img fails
+   - A pseudo-element or focus ring
+   We make the image container guaranteed transparent and ensure
+   no children get inherited dark backgrounds.                   */
+@media (max-width: 700px){
+  .product-card,
+  .shop-card{
+    background: var(--cream) !important;
+    overflow: hidden;
+  }
+  .product-card__img,
+  .shop-card__img{
+    background: transparent !important;
+    position: relative;
+  }
+  .product-card__img::before,
+  .product-card__img::after,
+  .shop-card__img::before,
+  .shop-card__img::after{
+    display: none !important;
+    content: none !important;
+  }
+  /* Hide alt text if image fails (visually replace with empty space) */
+  .product-card__img img,
+  .shop-card__img img{
+    color: transparent;
+  }
+  /* If first slide of Embla has an extra control overlay on mobile,
+     make sure the prev arrow doesn't show as a black square           */
+  .embla__controls{
+    margin-top: 1rem;
+  }
+}
+
+/* 7. INTRO HEADLINE — make sure no full stop wraps in awkwardly */
+.intro__headline{
+  white-space: nowrap;
+}
+@media (max-width: 700px){
+  .intro__headline{
+    white-space: normal;
+  }
+}

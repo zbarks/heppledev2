@@ -464,15 +464,9 @@
       } else {
         if (intro){
           intro.style.display = '';
-          intro.classList.remove('is-text-revealed', 'is-complete');
         }
         introComplete = false;
-        maxProgress = 0;
-        targetTime = 0;
-        currentTime = 0;
-        lastWriteTime = -1;
-        textRevealed = false;
-        if (video){ try { video.currentTime = 0; } catch(_){} }
+        if (video){ try { video.currentTime = 0; video.play().catch(()=>{}); } catch(_){} }
         nav.classList.remove('is-visible');
         window.scrollTo(0, 0);
       }
@@ -564,165 +558,77 @@
   }
 
   // =============================================
-  // SCROLL SCRUB + MOBILE FALLBACK (unchanged from last build)
-  // + VIDEO LOADING FALLBACK for browsers where video can't load
-  //   (e.g. opening via file://, blocked by extensions, etc.)
+  // SIMPLE INTRO — no scroll scrubbing, no 200vh pin.
+  // Video autoplays muted/looped; text fades in via CSS animation;
+  // nav becomes visible after user scrolls past the hero.
   // =============================================
-  let videoDuration = 5.2;
-  let targetTime    = 0;
-  let currentTime   = 0;
-  let lastWriteTime = -1;
   let introComplete = false;
-  let maxProgress   = 0;
-  let textRevealed  = false;
-  let videoOk       = false;   // flips to true once we know the video can play
 
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
     ('ontouchstart' in window) ||
     (navigator.maxTouchPoints > 0);
 
-  // Diagnostic — helps debug loading issues
   console.log('[Hepple]',
     'protocol=' + window.location.protocol,
     'touch=' + IS_TOUCH,
     'video=' + !!video,
-    'userAgent=' + navigator.userAgent.substring(0, 60));
+    'ua=' + navigator.userAgent.substring(0, 70));
 
-  if (window.location.protocol === 'file:'){
-    console.warn('[Hepple] Opened via file:// — video playback and some features may be blocked by browser security. For best results, open this site through a local server (e.g. `npx serve .` from the project folder) or deploy it to Netlify/Vercel.');
-  }
-
-  // If the video can't load within 2.5 seconds, treat the intro as complete
-  // and show the poster image — user can still use the site normally.
-  // This handles the Windows Chrome bug where <link rel=preload as=video>
-  // was failing and leaving the video in readyState 0 indefinitely.
   function fallbackToPoster(reason){
-    if (videoOk || introComplete) return;
-    console.warn('[Hepple] Video fallback triggered:', reason);
-    if (video){
-      video.style.display = 'none';
-    }
-    // Use the poster image as the intro backdrop
+    console.warn('[Hepple] Video fallback:', reason);
+    if (video) video.style.display = 'none';
     const stage = intro?.querySelector('.intro__stage');
     if (stage){
       stage.style.backgroundImage = 'url(assets/hero-poster.jpg)';
       stage.style.backgroundSize = 'cover';
       stage.style.backgroundPosition = 'center';
     }
-    // Reveal the headline + nav + mark complete (this also collapses the
-    // 200vh intro track to 100vh via CSS so the user can scroll past it).
-    if (intro){
-      intro.classList.add('is-text-revealed');
-      intro.classList.add('is-complete');
-    }
-    if (nav) nav.classList.add('is-visible');
-    introComplete = true;
-    sessionStorage.setItem('hepple:seenIntro', '1');
   }
-
-  const LERP              = 0.18;
-  const WRITE_THRESHOLD   = 1/15;
-  const REVEAL_THRESHOLD  = 0.08;
-  const COMPLETE_THRESHOLD = 0.90;
 
   if (video){
-    // Ultimate safety net: if video hasn't become playable in 2.5 seconds,
-    // fall back to the poster image so the user can still scroll the site.
+    // 3-second safety net: if no canplay event by then, switch to poster
     const loadTimeout = setTimeout(() => {
-      if (!videoOk) fallbackToPoster('2.5s timeout — video never became playable');
-    }, 2500);
+      if (video.readyState < 3) fallbackToPoster('3s timeout — video not ready');
+    }, 3000);
+    video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
+    video.addEventListener('error', () => fallbackToPoster('video error'), { once: true });
 
-    video.addEventListener('loadedmetadata', () => {
-      if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
-    });
-    video.addEventListener('canplay', () => {
-      videoOk = true;
-      clearTimeout(loadTimeout);
-    }, { once: true });
-    video.addEventListener('error', () => fallbackToPoster('video error event'), { once: true });
-
-    if (IS_TOUCH){
-      video.loop = true;
-      video.muted = true;
-      video.setAttribute('muted', '');
-      video.playsInline = true;
-      video.setAttribute('playsinline', '');
-      video.setAttribute('webkit-playsinline', '');
-      const startPlayback = () => {
-        const p = video.play();
-        if (p && typeof p.catch === 'function'){
-          p.catch(() => {
-            const resume = () => {
-              video.play().catch(()=>{});
-              document.removeEventListener('touchstart', resume);
-              document.removeEventListener('click', resume);
-            };
-            document.addEventListener('touchstart', resume, { once:true, passive:true });
-            document.addEventListener('click',      resume, { once:true });
-          });
-        }
-      };
-      if (video.readyState >= 2) startPlayback();
-      else video.addEventListener('loadeddata', startPlayback, { once:true });
-    } else {
-      const prime = async () => {
-        try { await video.play(); video.pause(); video.currentTime = 0; }
-        catch(err){ console.warn('[Hepple] Video prime failed:', err.message); }
-      };
-      if (video.readyState >= 1) prime();
-      else video.addEventListener('loadedmetadata', prime, { once:true });
-    }
-  } else {
-    // No video element at all — just show the intro text
-    fallbackToPoster('no video element');
-  }
-
-  function tick(){
-    computeScrollProgress();
-    if (IS_TOUCH){
-      requestAnimationFrame(tick);
-      return;
-    }
-    const diff = targetTime - currentTime;
-    if (Math.abs(diff) > 0.002) currentTime += diff * LERP;
-    else currentTime = targetTime;
-
-    if (video && video.readyState >= 2 && isFinite(currentTime)){
-      if (Math.abs(currentTime - lastWriteTime) > WRITE_THRESHOLD){
-        try { video.currentTime = currentTime; lastWriteTime = currentTime; }
-        catch(_){}
+    // Try to play (autoplay attribute is on, this is a backup for browsers
+    // that need a programmatic kick)
+    const tryPlay = () => {
+      const p = video.play();
+      if (p && typeof p.catch === 'function'){
+        p.catch(err => {
+          console.warn('[Hepple] Autoplay refused:', err.message);
+          // On user interaction, try again
+          const resume = () => {
+            video.play().catch(()=>{});
+            document.removeEventListener('touchstart', resume);
+            document.removeEventListener('click', resume);
+          };
+          document.addEventListener('touchstart', resume, { once:true, passive:true });
+          document.addEventListener('click',      resume, { once:true });
+        });
       }
-    }
-    requestAnimationFrame(tick);
+    };
+    if (video.readyState >= 2) tryPlay();
+    else video.addEventListener('loadeddata', tryPlay, { once: true });
   }
 
-  function computeScrollProgress(){
-    if (getRoute() !== '/' || !intro || intro.style.display === 'none') return;
-
-    const rect       = intro.getBoundingClientRect();
-    const introH     = intro.offsetHeight;
-    const viewport   = window.innerHeight;
-    const scrollable = Math.max(1, introH - viewport);
-    const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
-    const raw        = scrolled / scrollable;
-
-    if (raw > maxProgress) maxProgress = raw;
-    if (!IS_TOUCH){
-      targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
-    }
-
-    if (!textRevealed && maxProgress >= REVEAL_THRESHOLD){
-      textRevealed = true;
-      intro.classList.add('is-text-revealed');
-    }
-    if (maxProgress >= COMPLETE_THRESHOLD && !introComplete){
+  // Reveal nav when user has scrolled past most of the intro
+  function checkIntroScroll(){
+    if (introComplete || !intro) return;
+    const rect = intro.getBoundingClientRect();
+    if (rect.bottom < window.innerHeight * 0.5){
       introComplete = true;
-      intro.classList.add('is-complete');
-      nav.classList.add('is-visible');
+      if (nav) nav.classList.add('is-visible');
       sessionStorage.setItem('hepple:seenIntro', '1');
     }
   }
+  window.addEventListener('scroll', checkIntroScroll, { passive: true });
+  // Also check on load in case we're returning to a scrolled position
+  setTimeout(checkIntroScroll, 100);
 
   // DRAWERS
   $('#menuBtn')?.addEventListener('click', () => {
