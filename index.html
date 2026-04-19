@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Hepple — In Pursuit of Deliciousness</title>
-<meta name="description" content="Hepple Spirits — distilled in Northumberland. Elegant, drink-led, quietly luxurious." />
+<meta name="description" content="Hepple Spirits — an independent spirits house led by taste and flavour. Distilled in Northumberland." />
 <meta name="theme-color" content="#EDE8E0" />
 
 <meta property="og:title" content="Hepple — In Pursuit of Deliciousness" />
@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<!-- NAV -->
+<!-- NAV — Visit US removed from main menu per feedback -->
 <nav class="nav" id="nav" aria-label="Primary">
   <a href="#/" class="nav__brand" data-route="/" data-brand aria-label="Hepple — home">
     <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" />
@@ -51,13 +51,13 @@
   <ul class="nav__links">
     <li><a href="#/story"     data-route="/story">OUR STORY</a></li>
     <li><a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a></li>
+    <li><a href="#/craft"     data-route="/craft">OUR CRAFT</a></li>
     <li><a href="#/cocktails" data-route="/cocktails">COCKTAILS</a></li>
-    <li><a href="#/visit"     data-route="/visit">VISIT US</a></li>
     <li><a href="#/shop"      data-route="/shop">SHOP</a></li>
   </ul>
 
   <div class="nav__right">
-    <a href="#/shop" class="nav__cta" data-route="/shop">SHOP</a>
+    <a href="#/shop" class="nav__cta nav__cta--juniper" data-route="/shop">SHOP</a>
     <button class="nav__cart" id="cartBtn" aria-label="Open cart">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
         <path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/>
@@ -75,9 +75,10 @@
   <a href="#/"          data-route="/">HOME</a>
   <a href="#/story"     data-route="/story">OUR STORY</a>
   <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
+  <a href="#/craft"     data-route="/craft">OUR CRAFT</a>
   <a href="#/cocktails" data-route="/cocktails">COCKTAILS</a>
-  <a href="#/visit"     data-route="/visit">VISIT US</a>
   <a href="#/shop"      data-route="/shop">SHOP</a>
+  <a href="#/visit"     data-route="/visit">VISIT US</a>
 </aside>
 
 <aside class="cart-panel" id="cartPanel" aria-hidden="true">
@@ -127,38 +128,53 @@
   <!-- HOME -->
   <div class="page is-active" data-page="/">
 
-    <section class="welcome">
+    <!-- Welcome panel: fire-martini image + headline + subsection buttons to story / estate -->
+    <section class="welcome welcome--holder">
       <div class="wrap">
         <div class="welcome__grid">
-          <div>
-            <p class="script-accent">Welcome to Hepple.</p>
-            <h2 class="welcome__headline">A VERY GOOD DRINK IN A VERY GOOD PLACE.</h2>
+          <div class="welcome__img">
+            <img src="/assets/gallery/fire-martini.jpg" alt="Hepple Gin poured by the fire" loading="lazy" />
           </div>
           <div>
+            <p class="script-accent">Welcome to Hepple.</p>
+            <h2 class="welcome__headline">AN INDEPENDENT<br>SPIRITS HOUSE LED BY<br>TASTE AND FLAVOUR.</h2>
             <p class="welcome__lede">
-              DISTILLED IN THE REMOTE NORTHUMBRIAN HILLS.
-              QUIETLY, CAREFULLY, AND WITH A GREAT DEAL OF ATTENTION
-              TO WHAT'S GROWING OUTSIDE.
+              LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+              SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+              UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS.
             </p>
-            <div class="welcome__meta">
-              <span>EST. <strong>2014</strong></span>
-              <span>NORTHUMBERLAND <strong>NATIONAL PARK</strong></span>
+            <div class="welcome__actions">
+              <a href="#/story"  data-route="/story"  class="btn btn--outline-dark">OUR STORY</a>
+              <a href="#/estate" data-route="/estate" class="btn btn--outline-dark">THE ESTATE</a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="hero-strip">
-      <div class="hero-strip__img">
-        <img src="/assets/products/lineup.jpg" alt="The Hepple range" loading="lazy" />
+    <!-- Founders intro block — "In pursuit of deliciousness" -->
+    <section class="founders-intro">
+      <div class="founders-intro__img">
+        <img src="/assets/gallery/klj-hepple-may2022-shot-09-468.jpg" alt="The four Hepple founders on the hill" loading="lazy" />
       </div>
-      <div class="hero-strip__copy">
-        <p class="script-accent script-accent--hero">In pursuit of deliciousness.</p>
-        <a href="#/shop" data-route="/shop" class="btn btn--outline-dark">FIND HEPPLE SPIRITS</a>
+      <div class="founders-intro__overlay">
+        <div class="founders-intro__inner">
+          <p class="script-accent script-accent--hero script-accent--light">In pursuit of deliciousness.</p>
+          <p class="founders-intro__body">
+            HEPPLE WAS FOUNDED BY FOUR FRIENDS WITH VERY DIFFERENT SKILLS,
+            CHASING THE SAME SEEMINGLY IMPOSSIBLE QUESTION:
+            HOW CAN WE TURN THE WILD BEAUTY OF THIS LANDSCAPE INTO FLAVOUR?
+          </p>
+          <p class="founders-intro__body">
+            TOGETHER, THEY TAKE WHAT GROWS HERE AND SHAPE IT INTO DELICIOUS
+            DRINKS TO SHARE WITH THE WORLD.
+          </p>
+          <a href="#/story" data-route="/story" class="btn btn--outline-light">THIS IS OUR STORY</a>
+        </div>
       </div>
     </section>
 
+    <!-- Explore the range — product carousel with real copy per feedback -->
     <section class="range">
       <div class="wrap">
         <div class="range__head">
@@ -186,21 +202,17 @@
       </div>
     </section>
 
-    <!-- STICKY IMAGE GALLERY — "Journeying through Hepple" -->
-    <section class="sticky-gallery">
-      <div class="sticky-gallery__head">
-        <div class="wrap">
-          <p class="script-accent script-accent--hero">Journeying through Hepple.</p>
-          <h2>A YEAR ON THE <em>ESTATE.</em></h2>
-          <p class="sticky-gallery__lede">
-            FROM THE GARDENS AT HEPPLE WHITEFIELD TO THE WILD MOORS ABOVE.
-            THE PLACE, THE PEOPLE, AND THE PROCESS THAT MAKE HEPPLE WHAT IT IS.
-          </p>
-        </div>
+    <!-- The Estate isn't a backdrop — intro to sticky gallery -->
+    <section class="estate-intro">
+      <div class="wrap">
+        <p class="script-accent script-accent--hero">Welcome to the wondrous world of Hepple.</p>
+        <h2 class="estate-intro__h2">THE ESTATE ISN'T A BACKDROP.<br>IT'S THE STARTING POINT FOR<br>EVERY DECISION ABOUT WHAT WE MAKE.</h2>
       </div>
+    </section>
 
+    <!-- Sticky gallery -->
+    <section class="sticky-gallery">
       <div class="sticky-gallery__grid">
-        <!-- Left column scrolls -->
         <div class="sticky-gallery__col sticky-gallery__col--scroll">
           <figure><img src="/assets/gallery/klj-hepple-may2022-shot-02-465.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="/assets/gallery/cdx-00776.jpg" alt="" loading="lazy" /></figure>
@@ -208,15 +220,11 @@
           <figure><img src="/assets/gallery/hepplegin-71-large.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="/assets/gallery/mg-2869.jpg" alt="" loading="lazy" /></figure>
         </div>
-
-        <!-- Middle column sticky -->
         <div class="sticky-gallery__col sticky-gallery__col--sticky">
           <figure><img src="/assets/gallery/hepple-gin-june22event-120.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="/assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="/assets/gallery/journeying.jpg" alt="" loading="lazy" /></figure>
         </div>
-
-        <!-- Right column scrolls -->
         <div class="sticky-gallery__col sticky-gallery__col--scroll">
           <figure><img src="/assets/gallery/cdx-09959.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="/assets/gallery/planters-1.jpg" alt="" loading="lazy" /></figure>
@@ -227,44 +235,63 @@
       </div>
     </section>
 
+    <!-- Our Craft CTA (replaces the "Turning the beauty" image section) -->
     <section class="estate-cta">
       <div class="wrap">
         <div class="estate-cta__grid">
           <div class="estate-cta__img">
-            <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="The Hepple Estate" loading="lazy" />
+            <img src="https://hepplespirits.com/cdn/shop/files/Screenshot_2024-11-14_at_11.05.27.png?v=1731582345&width=1400" alt="The Hepple craft" loading="lazy" />
           </div>
           <div class="estate-cta__copy">
-            <p class="script-accent script-accent--hero">The estate.</p>
+            <p class="script-accent script-accent--hero">The craft.</p>
             <h2>TURNING THE BEAUTY OF THE WILD LANDSCAPE INTO <em>FLAVOUR.</em></h2>
             <p>
-              FOUR THOUSAND ACRES OF WILD, QUIET COUNTRY.
-              ANCIENT JUNIPER, DOUGLAS FIR, AND WATER FILTERED THROUGH
-              PEAT AND LIMESTONE BEFORE IT EVER REACHES OUR STILLS.
+              LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+              SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
             </p>
-            <a href="#/story" data-route="/story" class="btn btn--outline-dark">READ OUR STORY</a>
+            <a href="#/craft" data-route="/craft" class="btn btn--outline-dark">OUR CRAFT</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="visit">
-      <p class="script-accent script-accent--hero script-accent--light">Come and see us.</p>
-      <h2>VISIT THE <em>DISTILLERY.</em></h2>
-      <p>TOURS, TASTINGS, AND A VERY GOOD DRINK AT THE END OF IT.<br>ON THE EDGE OF NORTHUMBERLAND NATIONAL PARK.</p>
-      <a href="#/visit" class="visit__cta" data-route="/visit">PLAN YOUR VISIT</a>
+    <!-- COCKTAILS section on home — Delicious Drinks Start Here -->
+    <section class="cocktails-home" id="cocktailsHome">
+      <div class="wrap">
+        <div class="cocktails-home__head">
+          <p class="script-accent script-accent--hero">Delicious drinks start here.</p>
+          <h2>COCKTAILS.</h2>
+          <p class="cocktails-home__lede">
+            LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+            HOVER ANY CARD TO SEE THE RECIPE.
+          </p>
+        </div>
+        <div id="cocktailsGrid"></div>
+        <div class="cocktails-home__foot">
+          <a href="#/cocktails" data-route="/cocktails" class="btn btn--outline-dark">SEE ALL COCKTAILS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slim Visit block at the very bottom (reduced) -->
+    <section class="visit-slim">
+      <p class="script-accent">Come and see us.</p>
+      <h3>WE'RE WAITING FOR YOU.</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
     </section>
 
   </div>
 
 
-  <!-- OUR STORY -->
+  <!-- OUR STORY — now about the brand; founders + Team placeholder -->
   <div class="page" data-page="/story">
 
     <section class="story-hero">
       <div class="story-hero__img">
-        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=2000" alt="" loading="lazy" />
+        <img src="/assets/gallery/founders.jpg" alt="The Hepple founders" loading="lazy" />
       </div>
       <div class="story-hero__title">
+        <p class="script-accent script-accent--hero script-accent--light">In pursuit of deliciousness.</p>
         <h1>OUR STORY</h1>
       </div>
     </section>
@@ -273,13 +300,65 @@
       <div class="wrap">
         <p class="script-accent">Rooted in nature.</p>
         <p class="story-intro__lede">
-          HEPPLE IS A DRINKS BRAND ROOTED IN NATURE, EXPRESSED THROUGH MODERN HOSPITALITY.
-          WE WORK BETWEEN A WILD LANDSCAPE AND A REFINED DRINKS CULTURE — AND THAT
-          CONTRAST IS WHAT MAKES HEPPLE INTERESTING.
+          LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+          SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+          UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS
+          NISI UT ALIQUIP EX EA COMMODO CONSEQUAT.
         </p>
       </div>
     </section>
 
+    <!-- THE PEOPLE OF HEPPLE — placeholder team grid -->
+    <section class="team">
+      <div class="wrap">
+        <div class="team__head">
+          <p class="script-accent">Meet the team.</p>
+          <h2>THE PEOPLE OF <em>HEPPLE.</em></h2>
+          <p class="team__lede">
+            LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+            HOVER A NAME OR PHOTO TO HIGHLIGHT.
+          </p>
+        </div>
+
+        <div class="team__showcase" id="teamShowcase">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <section class="visit-slim">
+      <p class="script-accent">Come and see us.</p>
+      <h3>WE'RE WAITING FOR YOU.</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
+    </section>
+  </div>
+
+
+  <!-- THE HEPPLE ESTATE — now has the number counters + rewilding story -->
+  <div class="page" data-page="/estate">
+
+    <section class="story-hero">
+      <div class="story-hero__img">
+        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=2000" alt="" loading="lazy" />
+      </div>
+      <div class="story-hero__title">
+        <p class="script-accent script-accent--hero script-accent--light">Rooted in nature.</p>
+        <h1>THE HEPPLE ESTATE</h1>
+      </div>
+    </section>
+
+    <section class="story-intro">
+      <div class="wrap">
+        <p class="script-accent">Wild, quiet, Northumbrian.</p>
+        <p class="story-intro__lede">
+          LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+          SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+          UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS.
+        </p>
+      </div>
+    </section>
+
+    <!-- Counters moved here per feedback -->
     <section class="stats">
       <div class="wrap">
         <div class="stats__grid">
@@ -299,6 +378,38 @@
       </div>
     </section>
 
+    <section class="visit-slim">
+      <p class="script-accent">Come and see us.</p>
+      <h3>WE'RE WAITING FOR YOU.</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
+    </section>
+  </div>
+
+
+  <!-- OUR CRAFT — process stepper moves here from Our Story -->
+  <div class="page" data-page="/craft">
+
+    <section class="story-hero">
+      <div class="story-hero__img">
+        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_423.jpg?v=1662457006&width=2000" alt="" loading="lazy" />
+      </div>
+      <div class="story-hero__title">
+        <p class="script-accent script-accent--hero script-accent--light">The craft.</p>
+        <h1>OUR CRAFT</h1>
+      </div>
+    </section>
+
+    <section class="story-intro">
+      <div class="wrap">
+        <p class="script-accent">How we make Hepple.</p>
+        <p class="story-intro__lede">
+          LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+          SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+          UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS.
+        </p>
+      </div>
+    </section>
+
     <section class="process">
       <div class="wrap">
         <div class="process__head">
@@ -315,7 +426,7 @@
               <div class="process__copy">
                 <span class="process__number">01</span>
                 <h3>SOURCING WILD BOTANICALS</h3>
-                <p>OUR JUNIPER, DOUGLAS FIR AND BOG MYRTLE ARE HARVESTED FROM THE ESTATE ITSELF — PICKED AT THEIR PRIME AND CARRIED STRAIGHT TO THE STILL.</p>
+                <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.</p>
               </div>
             </article>
             <article class="process__step" data-step="2">
@@ -324,8 +435,8 @@
               </div>
               <div class="process__copy">
                 <span class="process__number">02</span>
-                <h3>TRADITIONAL ONE-SHOT DISTILLATION</h3>
-                <p>WE BEGIN WITH A ONE-SHOT LONDON DRY METHOD — A RICH, CREAMY FOUNDATION THAT MOST DISTILLERIES WOULD CONSIDER THE END OF THE JOB.</p>
+                <h3>TRADITIONAL DISTILLATION</h3>
+                <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE.</p>
               </div>
             </article>
             <article class="process__step" data-step="3">
@@ -335,7 +446,7 @@
               <div class="process__copy">
                 <span class="process__number">03</span>
                 <h3>GLASS VACUUM DISTILLATION</h3>
-                <p>OUR FRESHEST BOTANICALS GO INTO A GLASS VACUUM STILL AT 40°C — PRESERVING DELICATE, BRIGHT NOTES THAT HEAT WOULD OTHERWISE DESTROY.</p>
+                <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION.</p>
               </div>
             </article>
             <article class="process__step" data-step="4">
@@ -345,7 +456,7 @@
               <div class="process__copy">
                 <span class="process__number">04</span>
                 <h3>SUPERCRITICAL EXTRACTION</h3>
-                <p>JUNIPER BERRIES ARE HELD AT SUPERCRITICAL PRESSURE — A LIQUID AND GAS AT ONCE — TO DRAW OUT THEIR DEEPEST CEDAR AND SANDALWOOD CHARACTER.</p>
+                <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE.</p>
               </div>
             </article>
             <article class="process__step" data-step="5">
@@ -355,7 +466,7 @@
               <div class="process__copy">
                 <span class="process__number">05</span>
                 <h3>BLEND, BOTTLE, SHIP</h3>
-                <p>THREE EXPRESSIONS, BLENDED AND BOTTLED ON THE ESTATE. READY TO BE POURED — BY YOU, FOR WHOEVER YOU'RE WITH.</p>
+                <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT.</p>
               </div>
             </article>
           </div>
@@ -381,39 +492,38 @@
       </div>
     </section>
 
-    <section class="visit">
-      <p class="script-accent script-accent--hero script-accent--light">Come and see us.</p>
-      <h2>VISIT THE <em>DISTILLERY.</em></h2>
-      <p>TOURS, TASTINGS, AND A VERY GOOD DRINK AT THE END OF IT.</p>
-      <a href="#/visit" class="visit__cta" data-route="/visit">PLAN YOUR VISIT</a>
+    <section class="visit-slim">
+      <p class="script-accent">Come and see us.</p>
+      <h3>WE'RE WAITING FOR YOU.</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
     </section>
   </div>
 
-  <!-- ESTATE -->
-  <div class="page" data-page="/estate">
-    <section class="placeholder">
-      <div class="placeholder__inner">
-        <p class="script-accent script-accent--hero">The Hepple Estate.</p>
-        <h1>FOUR THOUSAND <em>WILD</em> ACRES.</h1>
-        <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">THIS PAGE IS BEING WRITTEN. COME BACK SOON FOR THE FULL ESTATE STORY — LANDSCAPE, BOTANICALS, THE WILDING PROGRAMME AND THE JUNIPER TRUST.</p>
-        <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
-      </div>
-    </section>
-  </div>
 
-  <!-- COCKTAILS -->
+  <!-- COCKTAILS — full page with all 9 flip cards grouped by SKU -->
   <div class="page" data-page="/cocktails">
-    <section class="placeholder">
-      <div class="placeholder__inner">
-        <p class="script-accent script-accent--hero">Cold glass. Good company.</p>
-        <h1>COCKTAILS.</h1>
-        <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">A LITTLE LIBRARY OF DRINKS IS ON THE WAY — MARTINIS, NEGRONIS, SPRITZES, AND A FEW QUIET SURPRISES WORTH MAKING AT HOME.</p>
-        <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
+
+    <section class="story-hero story-hero--shorter">
+      <div class="story-hero__img">
+        <img src="https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.11.14.png?v=1662387258&width=2000" alt="" loading="lazy" />
+      </div>
+      <div class="story-hero__title">
+        <p class="script-accent script-accent--hero script-accent--light">Delicious drinks start here.</p>
+        <h1>COCKTAILS</h1>
       </div>
     </section>
+
+    <section class="cocktails-page" id="cocktailsPage">
+      <!-- Rendered by JS — grouped into 3 sections -->
+    </section>
+
+    <section class="visit-slim">
+      <p class="script-accent">Come and see us.</p>
+      <h3>WE'RE WAITING FOR YOU.</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
+    </section>
   </div>
+
 
   <!-- VISIT -->
   <div class="page" data-page="/visit">
@@ -422,11 +532,15 @@
         <p class="script-accent script-accent--hero">Come and see us.</p>
         <h1>VISIT THE <em>DISTILLERY.</em></h1>
         <div class="placeholder__status">NOT YET CONFIGURED BY BARKER DIGITAL</div>
-        <p class="placeholder__latin">TOUR BOOKINGS WILL APPEAR HERE SHORTLY. UNTIL THEN, SAY HELLO AT HELLO@HEPPLESPIRITS.COM AND WE'LL POINT YOU IN THE RIGHT DIRECTION.</p>
+        <p class="placeholder__latin">
+          LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
+          SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+        </p>
         <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
       </div>
     </section>
   </div>
+
 
   <!-- SHOP -->
   <div class="page" data-page="/shop">
@@ -435,8 +549,8 @@
         <p class="script-accent script-accent--hero">Shop.</p>
         <h1>FOR DRINKS WORTH MAKING.</h1>
         <p class="shop-hero__lede">
+          LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.
           FREE UK DELIVERY ON ORDERS OVER £45.
-          NEXT-DAY DISPATCH WHEN YOU ORDER BEFORE NOON.
         </p>
       </div>
     </section>
@@ -446,7 +560,35 @@
         <div class="shop-grid" id="shopGrid"></div>
       </div>
     </section>
+
+    <!-- Cocktails carousel below the shop per feedback ("repeated in a carousel... how the cocktails would also show up in the shop") -->
+    <section class="shop-cocktails">
+      <div class="wrap">
+        <div class="range__head">
+          <div>
+            <p class="script-accent">How to enjoy.</p>
+            <h2>COCKTAILS TO MAKE WITH HEPPLE.</h2>
+          </div>
+          <a href="#/cocktails" data-route="/cocktails" class="range__seeall">SEE ALL →</a>
+        </div>
+      </div>
+      <div class="embla" data-embla>
+        <div class="embla__viewport" data-embla-viewport>
+          <div class="embla__container" data-embla-container id="shopCocktailsTrack"></div>
+        </div>
+        <div class="embla__controls">
+          <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="embla__dots" data-embla-dots></div>
+          <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
+
 
   <!-- PRODUCT DETAIL -->
   <div class="page" data-page="/shop/*">
@@ -478,7 +620,8 @@
     </section>
   </div>
 
-  <!-- FOOTER -->
+
+  <!-- FOOTER (unchanged slim version per prior feedback) -->
   <footer>
     <div class="footer__grid">
       <a href="#/" data-route="/" class="footer__brand-link" aria-label="Hepple — home">
@@ -488,6 +631,7 @@
       <nav class="footer__nav" aria-label="Footer">
         <a href="#/story"     data-route="/story">OUR STORY</a>
         <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
+        <a href="#/craft"     data-route="/craft">OUR CRAFT</a>
         <a href="#/cocktails" data-route="/cocktails">COCKTAILS</a>
         <a href="#/visit"     data-route="/visit">VISIT US</a>
         <a href="#/shop"      data-route="/shop">SHOP</a>

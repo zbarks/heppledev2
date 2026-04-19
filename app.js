@@ -1,9 +1,7 @@
 /* ==========================================================
    HEPPLE — app.js
-   - Pinned scroll-scrub intro (monotonic, text persists)
-   - Embla-style single-card carousel
-   - 3 products, EACH with its own gift box (on product pages only)
-   - £2.50 gift box add-on available on all 3 products
+   Per 18 April feedback: real product copy, 9 cocktails grouped by SKU,
+   team showcase placeholder, flip cards with hover-stays-flipped
    ========================================================== */
 (() => {
   'use strict';
@@ -14,7 +12,9 @@
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  // =============================================
   // AGE GATE
+  // =============================================
   (function initAgeGate(){
     const gate = $('#ageGate');
     if (!gate) return;
@@ -45,50 +45,274 @@
   })();
 
   // =============================================
-  // PRODUCT CATALOGUE
-  // Each product has its own giftBoxImage — shown ONLY on product detail page.
-  // Gift box add-on (£2.50) available on ALL products.
+  // PRODUCT CATALOGUE — per 18 April feedback
+  // Each product has its own giftBoxImage; gift box is £2.50 add-on
   // =============================================
   const GIFT_BOX_PRICE = 2.50;
 
   const PRODUCTS = [
     {
-      slug:   'hepple-wild-juniper-gin',
-      name:   'HEPPLE WILD JUNIPER GIN',
-      short:  'Wild Juniper Gin',
-      kicker: 'In pursuit of deliciousness.',
-      price:  39.95,
-      meta:   { size:'70CL', abv:'45%', origin:'NORTHUMBERLAND' },
-      image:  '/assets/products/hepple-gin.jpg',
+      slug:    'hepple-wild-juniper-gin',
+      name:    'HEPPLE WILD JUNIPER GIN',
+      short:   'Wild Juniper Gin',
+      tagline: 'Bright. Wild. Elegant.',
+      kicker:  'Everything begins with juniper.',
+      price:   39.95,
+      meta:    { size: '70CL', abv: '45%', origin: 'NORTHUMBERLAND' },
+      sku:     'juniper-pink',
+      image:   '/assets/products/hepple-gin.jpg',
       giftBoxImage: '/assets/products/giftbox-wild-juniper-gin.jpg',
-      desc: "A RICH, JUNIPER-FORWARD GIN DISTILLED THREE WAYS FROM BOTANICALS GROWN ON OUR ESTATE. FRESH, COMPLEX, AND UNASHAMEDLY MODERN — THE ONE WE'D BRING TO EVERY MARTINI, EVERY TIME."
+      body: [
+        "ON THE HEPPLE ESTATE, ANCIENT JUNIPER BUSHES GROW WILD ACROSS THE NORTHUMBERLAND MOORLAND — SHAPED BY WIND, WEATHER AND TIME.",
+        "EACH SUMMER, WE HARVEST THE BERRIES BY HAND WHILE THEY ARE STILL BRIGHT GREEN. AT THIS STAGE, JUNIPER IS FRESHER, MORE VIBRANT AND MORE ALIVE — FULL OF CITRUS LIFT, NATURAL ZEST AND A QUIET ELEGANCE YOU DON'T FIND IN THE DRIED BERRY ALONE.",
+        "THAT FRESHNESS SITS AT THE HEART OF THIS GIN. DRIED JUNIPER IS USED CAREFULLY, TO BRING DEPTH AND STRUCTURE. BUT IT'S THE WILD GREEN JUNIPER PICKED FRESH FROM THE ESTATE THAT DEFINES THE CHARACTER: BRIGHT, LIFTED AND UNMISTAKABLY HEPPLE.",
+        "AROUND IT SITS A CAREFULLY SELECTED GROUP OF BOTANICALS — DOUGLAS FIR, BLACKCURRANT LEAF, LOVAGE, CHAMOMILE, CORIANDER SEED, ANGELICA ROOT, ORRIS ROOT, CASSIA BARK, LIQUORICE ROOT, AND GRAINS OF PARADISE — EACH CHOSEN AND TESTED REPEATEDLY FOR HOW IT SUPPORTS AND EXTENDS THE CHARACTER OF JUNIPER, RATHER THAN COMPETING WITH IT.",
+        "NOTHING IS THERE BY ACCIDENT. EVERYTHING IS THERE TO MAKE A BETTER DRINK."
+      ],
+      tasting: {
+        nose:   'SPICY JUNIPER, FRESH GREEN APPLE, BRIGHT GRAPEFRUIT',
+        palate: 'CLEAN, BRIGHT CITRUS, DEVELOPING INTO SOFT CANTALOUPE MELON AND LIFTED ZESTY JUNIPER',
+        finish: 'LONG AND BALANCED, WITH SUBTLE NOTES OF CEDAR AND SANDALWOOD BENEATH A VIBRANT RICH JUNIPER POP'
+      },
+      howToEnjoy: {
+        lead: "OUR FAVOURITE WAY TO TRULY EXPERIENCE THE FULL SPECTRUM OF FLAVOUR IS AN ICY COLD MARTINI WITH A FRESH LEMON ZEST.",
+        recipe: [
+          "5 PARTS (75ML) HEPPLE WILD JUNIPER GIN",
+          "1 PART (15ML) DRY VERMOUTH",
+          "STIR WITH CUBED ICE IN A MIXING GLASS OR JUG UNTIL COLD AS THE ARCTIC (20–30 SECONDS).",
+          "STRAIN INTO A CHILLED GLASS.",
+          "FINISH WITH A LEMON TWIST."
+        ],
+        alt: "ALSO WORKS BEAUTIFULLY IN A G&T OR A TOM COLLINS."
+      }
     },
     {
-      slug:   'hepple-douglas-fir-vodka',
-      name:   'HEPPLE DOUGLAS FIR VODKA',
-      short:  'Douglas Fir Vodka',
-      kicker: 'Forest in a glass.',
-      price:  39.95,
-      meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      image:  '/assets/products/douglas-fir.jpg',
+      slug:    'hepple-douglas-fir-vodka',
+      name:    'HEPPLE DOUGLAS FIR VODKA',
+      short:   'Douglas Fir Vodka',
+      tagline: 'Fresh. Lifted. Unexpected.',
+      kicker:  'Where forest becomes flavour.',
+      price:   39.95,
+      meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
+      sku:     'doug-fir-green',
+      image:   '/assets/products/douglas-fir.jpg',
       giftBoxImage: '/assets/products/giftbox-douglas-fir-vodka.jpg',
-      desc: "ZESTY, TROPICAL, UNMISTAKABLY PINE. HAND-HARVESTED DOUGLAS FIR NEEDLES DISTILLED IN A GLASS VACUUM TO KEEP EVERY BRIGHT, RESINOUS NOTE INTACT."
+      body: [
+        "HIGH ABOVE THE HEPPLE ESTATE, ANCIENT DOUGLAS FIR TREES RISE THROUGH THE VALLEY — SOME MORE THAN TWO HUNDRED YEARS OLD. EVERGREEN THROUGH WINTER, SHARP WITH RESIN AND ALIVE WITH SCENT, THEY CARRY A CLARITY YOU DON'T EXPECT TO FIND IN A VODKA.",
+        "WE HARVEST THE YOUNG NEEDLES BY HAND, WORKING TO CAPTURE THAT MOMENT WHEN THE FLAVOUR IS AT ITS BRIGHTEST — GREEN, CITRUS-LED AND QUIETLY AROMATIC. IT'S A CHARACTER THAT'S SURPRISINGLY DELICATE: FRESH RATHER THAN HEAVY, LIFTED RATHER THAN OVERTLY PINE.",
+        "THIS TOOK TIME TO UNDERSTAND. THROUGH EXTENSIVE TRIALS AND CAREFUL EXTRACTION, WE WORKED TO EXPRESS THE COMPLEXITIES OF DOUGLAS FIR IN FULL — NOT JUST AS AN IDEA, BUT AS A COMPLETE FLAVOUR. THE RESULT IS A VODKA WITH DEFINITION AND LENGTH, CHOSEN AT 41% ABV WHERE EVERYTHING COMES INTO BALANCE.",
+        "WE MADE IT TO BRING SOMETHING NEW AND TRULY UNIQUE TO THE GLASS — A VODKA WITH REAL PRESENCE, DESIGNED TO BRING A REFINED COMPLEXITY AND SAVOURY POP TO YOUR COCKTAILS."
+      ],
+      tasting: {
+        nose:   'FRESH, DELICATE DOUGLAS FIR UNDERPINNED BY SOUR LEMON AND RICHER CITRUS OIL',
+        palate: 'RIPE JUICY MELON, DEVELOPING INTO BRIGHT GRAPEFRUIT PEEL AND GENTLE TROPICAL NOTES',
+        finish: 'DEEP, CLEAN AND LINGERING, WITH PINE, WHITE GRAPEFRUIT AND A SOFT, ROUNDED LENGTH'
+      },
+      howToEnjoy: {
+        lead: "SIP NEAT, OR OVER ICE.",
+        recipe: [
+          "GREAT IN A MARTINI WITH A PINK GRAPEFRUIT ZEST.",
+          "REFRESHING SERVED LONG WITH SODA AND A SQUEEZE OF PINK GRAPEFRUIT."
+        ]
+      }
     },
     {
-      slug:   'hepple-moorland-vodka',
-      name:   'HEPPLE MOORLAND VODKA',
-      short:  'Moorland Vodka',
-      kicker: 'Pure, clean, Northumbrian.',
-      price:  34.95,
-      meta:   { size:'70CL', abv:'40%', origin:'NORTHUMBERLAND' },
-      image:  '/assets/products/wheat-vodka.jpg',
+      slug:    'hepple-moorland-vodka',
+      name:    'HEPPLE MOORLAND VODKA',
+      short:   'Moorland Vodka',
+      tagline: 'Clean. Textured. Composed.',
+      kicker:  'Precision in restraint.',
+      price:   34.95,
+      meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
+      sku:     'moorland-teal',
+      image:   '/assets/products/wheat-vodka.jpg',
       giftBoxImage: '/assets/products/giftbox-moorland-vodka.jpg',
-      desc: "DISTILLED FROM ENGLISH WHEAT AND CUT WITH THE CLEANEST WATER IN ENGLAND — FILTERED THROUGH PEAT, SANDSTONE AND LIMESTONE BENEATH THE MOOR."
+      body: [
+        "MADE FROM ENGLISH WHEAT AND BLENDED WITH OUR OWN SPRING WATER — FILTERED SLOWLY THROUGH PEAT, SANDSTONE AND LIMESTONE — IT BEGINS WITH CLARITY. NOT BY STRIPPING EVERYTHING AWAY, BUT BY KEEPING ONLY WHAT MATTERS.",
+        "USING OUR COPPER POT STILL, WE WORKED CAREFULLY TO REFINE THE SPIRIT WITHOUT LOSING ITS NATURAL CHARACTER. THROUGH CONTROLLED DISTILLATION AND PRECISE CUTS, WE REMOVE HEAVINESS WHILE PRESERVING TEXTURE, SOFTNESS AND A GENTLE GRAIN AND MINERALLY WARMTH THAT CARRIES THROUGH THE GLASS.",
+        "THE RESULT IS A VODKA THAT IS CLEAN, BUT NOT EMPTY. BALANCED, BUT NEVER FLAT.",
+        "WE MADE OUR VODKA TO BE THE QUIET FOUNDATION OF A GREAT DRINK — RESOLVING, LIFTING AND BRINGING EVERYTHING INTO PLACE."
+      ],
+      tasting: {
+        nose:   'CLEAN AND ROUNDED, WITH SOFT CEREAL NOTES AND A GENTLE HINT OF SPICE',
+        palate: 'FULL AND SMOOTH, WITH A CLEAN MINERAL EARTH MID-PALATE AND NOTES OF TOASTED CEREAL',
+        finish: 'LONG AND COMPOSED, WITH SOFT CEREAL SWEETNESS AND A CLEAN, SLIGHTLY SALINE LINGERING LENGTH'
+      },
+      howToEnjoy: {
+        lead: "BEST ENJOYED IN AN ICY COLD MARTINI, WITH A LEMON ZEST OR WITH YOUR FAVOURITE OLIVES. WE LIKE IT DIRTY TOO, BUT THAT'S OUR LITTLE SECRET, OK?",
+        recipe: [
+          "GREAT STRAIGHT FROM THE FREEZER WITH FOOD OR FRIENDS.",
+          "THE PERFECT INGREDIENT IN YOUR FAVOURITE VODKA COCKTAIL."
+        ]
+      }
     }
   ];
   const productBySlug = Object.fromEntries(PRODUCTS.map(p => [p.slug, p]));
 
+  // =============================================
+  // COCKTAILS — 9 drinks grouped by SKU per feedback
+  // Images pulled from hepplespirits.com CDN
+  // Recipes are Latin placeholders (per feedback: all text Latin unless specified)
+  // =============================================
+  const LATIN = "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT. SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.";
+  const LATIN_SHORT = "LOREM IPSUM DOLOR SIT AMET.";
+
+  const COCKTAILS = [
+    // ── HEPPLE WILD JUNIPER GIN ──
+    {
+      id:       'classic-martini',
+      name:     'CLASSIC MARTINI',
+      sku:      'hepple-wild-juniper-gin',
+      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.11.14.png?v=1662387258&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/hepple-martini',
+      ingredients: [
+        '75ML HEPPLE WILD JUNIPER GIN',
+        '15ML DRY VERMOUTH',
+        'LEMON TWIST'
+      ],
+      method:   'STIR WITH CUBED ICE UNTIL ICE COLD. STRAIN INTO A CHILLED GLASS. FINISH WITH A LEMON TWIST.'
+    },
+    {
+      id:       'gin-basil-smash',
+      name:     'GIN BASIL SMASH',
+      sku:      'hepple-wild-juniper-gin',
+      image:    'https://hepplespirits.com/cdn/shop/articles/IMG_2414.jpg?v=1678366307&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/hepple-gin-basil-smash',
+      ingredients: [
+        '60ML HEPPLE WILD JUNIPER GIN',
+        '25ML FRESH LEMON JUICE',
+        '15ML SUGAR SYRUP',
+        'LARGE HANDFUL OF FRESH BASIL'
+      ],
+      method:   'MUDDLE THE BASIL WITH THE SYRUP. ADD GIN AND LEMON, SHAKE HARD WITH ICE, DOUBLE-STRAIN INTO A ROCKS GLASS OVER FRESH ICE.'
+    },
+    {
+      id:       'cherry-negroni',
+      name:     'CHERRY NEGRONI',
+      sku:      'hepple-wild-juniper-gin',
+      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_May2022_Shot_09_206_working-v2_sRGB.jpg?v=1662390195&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/cherry-and-chocolate-negroni',
+      ingredients: [
+        '30ML HEPPLE WILD JUNIPER GIN',
+        '30ML CAMPARI',
+        '30ML SWEET VERMOUTH',
+        'DASH OF CHERRY BITTERS'
+      ],
+      method:   'STIR ALL INGREDIENTS WITH ICE UNTIL WELL CHILLED. STRAIN OVER A LARGE ICE CUBE. GARNISH WITH A ZEST OF ORANGE.'
+    },
+    // ── HEPPLE DOUGLAS FIR VODKA ──
+    {
+      id:       'bergamot-martini',
+      name:     'BERGAMOT MARTINI',
+      sku:      'hepple-douglas-fir-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-08_at_09.53.25.png?v=1662627213&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/bergamot-martini',
+      ingredients: [
+        '60ML HEPPLE DOUGLAS FIR VODKA',
+        '10ML BERGAMOT LIQUEUR',
+        '5ML DRY VERMOUTH',
+        'BERGAMOT ZEST'
+      ],
+      method:   'STIR ALL INGREDIENTS WITH ICE UNTIL ICE COLD. STRAIN INTO A CHILLED GLASS AND GARNISH WITH BERGAMOT ZEST.'
+    },
+    {
+      id:       'shooting-star',
+      name:     'SHOOTING STAR',
+      sku:      'hepple-douglas-fir-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.21.21.png?v=1662387729&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/shooting-star-cocktail',
+      ingredients: [
+        '50ML HEPPLE DOUGLAS FIR VODKA',
+        '25ML PINK GRAPEFRUIT JUICE',
+        '10ML LIME JUICE',
+        '10ML STAR ANISE SYRUP'
+      ],
+      method:   'SHAKE ALL INGREDIENTS WITH ICE, DOUBLE-STRAIN INTO A COUPE. GARNISH WITH A STAR ANISE POD.'
+    },
+    {
+      id:       'forest-sour',
+      name:     'FOREST SOUR',
+      sku:      'hepple-douglas-fir-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.17.46.png?v=1662387595&width=800',
+      source:   'https://hepplespirits.com/blogs/cocktail-recipes/douglas-fir-sour',
+      ingredients: [
+        '60ML HEPPLE DOUGLAS FIR VODKA',
+        '25ML LEMON JUICE',
+        '15ML SUGAR SYRUP',
+        '1 EGG WHITE'
+      ],
+      method:   'DRY SHAKE WITHOUT ICE. ADD ICE, SHAKE AGAIN HARD. STRAIN INTO A CHILLED COUPE. BITTERS ON THE FOAM.'
+    },
+    // ── HEPPLE MOORLAND VODKA ──
+    {
+      id:       'dirty-martini',
+      name:     'DIRTY MARTINI (OUR LITTLE SECRET)',
+      sku:      'hepple-moorland-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.11.14.png?v=1662387258&width=800',
+      source:   null,
+      ingredients: [
+        '60ML HEPPLE MOORLAND VODKA',
+        '10ML DRY VERMOUTH',
+        '10ML OLIVE BRINE',
+        'GREEN OLIVES'
+      ],
+      method:   'STIR WITH ICE UNTIL WELL CHILLED. STRAIN INTO A CHILLED MARTINI GLASS. GARNISH WITH OLIVES. LOREM IPSUM.'
+    },
+    {
+      id:       'moorland-cooler',
+      name:     'MOORLAND COOLER',
+      sku:      'hepple-moorland-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_May2022_Shot_12_023.jpg?v=1665590025&width=800',
+      source:   null,
+      ingredients: [
+        '50ML HEPPLE MOORLAND VODKA',
+        '25ML LEMON JUICE',
+        '15ML SUGAR SYRUP',
+        'SODA TO TOP',
+        'CUCUMBER RIBBON'
+      ],
+      method:   'BUILD IN A HIGHBALL OVER ICE. TOP WITH SODA. GARNISH WITH CUCUMBER. LOREM IPSUM DOLOR SIT AMET.'
+    },
+    {
+      id:       'butterfly',
+      name:     'BUTTERFLY',
+      sku:      'hepple-moorland-vodka',
+      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_26.04.21_Shot_05-046_working.jpg?v=1662717442&width=800',
+      source:   null,
+      ingredients: [
+        '30ML HEPPLE MOORLAND VODKA',
+        '20ML GREEN CHARTREUSE',
+        '20ML MARASCHINO',
+        '20ML LIME JUICE'
+      ],
+      method:   'SHAKE HARD WITH ICE UNTIL ICE COLD. DOUBLE-STRAIN INTO A CHILLED COUPE. LOREM IPSUM.'
+    }
+  ];
+
+  // =============================================
+  // TEAM — placeholder only (no photos yet per feedback)
+  // =============================================
+  const TEAM_MEMBERS = [
+    { id: '1', name: 'Lorem Ipsum',     role: 'FOUNDER & MASTER DISTILLER' },
+    { id: '2', name: 'Dolor Sit Amet',  role: 'HEAD OF PRODUCTION' },
+    { id: '3', name: 'Consectetur',     role: 'BOTANIST' },
+    { id: '4', name: 'Adipiscing Elit', role: 'HEAD OF BRAND' },
+    { id: '5', name: 'Sed Eiusmod',     role: 'OPERATIONS' },
+    { id: '6', name: 'Tempor Incididunt', role: 'HOSPITALITY' }
+  ];
+
+  // Tiny inline SVG placeholder — works without external images
+  function placeholderAvatar(seed){
+    const colors = ['#E3DDD1', '#d7d0c3', '#CFE0DE', '#f6f2ea', '#EDE8E0', '#E8DFD1'];
+    const c = colors[seed % colors.length];
+    return `data:image/svg+xml;utf8,${encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140'><rect width='120' height='140' fill='${c}'/><circle cx='60' cy='56' r='22' fill='%231b1a2e' opacity='.25'/><path d='M20,140 C20,100 40,84 60,84 C80,84 100,100 100,140 Z' fill='%231b1a2e' opacity='.25'/></svg>`
+    )}`;
+  }
+
+  // =============================================
   // CART
+  // =============================================
   const CART_KEY = 'hepple:cart';
   let cart = (() => {
     try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
@@ -182,7 +406,9 @@
     t._hideTimer = setTimeout(() => t.classList.remove('is-visible'), 2200);
   }
 
+  // =============================================
   // ROUTER
+  // =============================================
   const intro   = $('#intro');
   const nav     = $('#nav');
   const content = $('#content');
@@ -213,12 +439,14 @@
       a.classList.toggle('is-active', active);
     });
 
-    if (route === '/shop') renderShopGrid();
+    if (route === '/shop'){ renderShopGrid(); renderShopCocktails(); }
     if (/^\/shop\/[\w-]+$/.test(route)){
       const slug = route.split('/')[2];
       renderProductDetail(slug);
     }
-    if (route === '/') renderHomeRange();
+    if (route === '/'){ renderHomeRange(); renderHomeCocktails(); }
+    if (route === '/cocktails') renderCocktailsPage();
+    if (route === '/story') renderTeam();
   }
   function showIntroOrNot(route, forceIntro=false){
     const onHome = route === '/';
@@ -295,11 +523,6 @@
       if (cb){
         cb.checked = !cb.checked;
         giftToggle.classList.toggle('is-checked', cb.checked);
-        // Jump gallery to the gift box slide when adding; back to bottle when removing
-        const galleryBtn = cb.checked
-          ? $('[data-pd-next]')
-          : $('[data-pd-prev]');
-        // noop — purely visual preference, leave gallery state to user
       }
       return;
     }
@@ -334,19 +557,9 @@
     $('#overlay')?.classList.remove('is-active');
   }
 
-  // SCROLL SCRUB + MOBILE FALLBACK
-  //
-  // Device-branched strategy:
-  //
-  //  DESKTOP (pointer:fine): scroll scrubs the video via video.currentTime
-  //    with aggressive throttling — only seek when delta > 2 frames, lerp
-  //    hard so seeks are spaced out enough for the decoder to keep up.
-  //
-  //  MOBILE (pointer:coarse): DON'T scrub. Mobile browsers choke on
-  //    video.currentTime seeks of paused video. Instead, autoplay the
-  //    video (muted, inline, looping) and let scroll only drive the
-  //    reveal/complete states. The video plays cinematically behind the
-  //    scroll interaction.
+  // =============================================
+  // SCROLL SCRUB + MOBILE FALLBACK (unchanged from last build)
+  // =============================================
   let videoDuration = 5.2;
   let targetTime    = 0;
   let currentTime   = 0;
@@ -355,14 +568,13 @@
   let maxProgress   = 0;
   let textRevealed  = false;
 
-  // Detect mobile/touch device — coarse pointer is a good proxy
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
     ('ontouchstart' in window) ||
     (navigator.maxTouchPoints > 0);
 
-  const LERP              = 0.18;    // desktop lerp — higher = fewer writes
-  const WRITE_THRESHOLD   = 1/15;    // only seek if > ~66ms away = every ~2 frames
+  const LERP              = 0.18;
+  const WRITE_THRESHOLD   = 1/15;
   const REVEAL_THRESHOLD  = 0.08;
   const COMPLETE_THRESHOLD = 0.90;
 
@@ -372,19 +584,16 @@
     });
 
     if (IS_TOUCH){
-      // MOBILE: autoplay + loop, do NOT touch currentTime ever
       video.loop = true;
-      video.muted = true;                    // required for autoplay on iOS
-      video.setAttribute('muted', '');        // belt & braces
+      video.muted = true;
+      video.setAttribute('muted', '');
       video.playsInline = true;
       video.setAttribute('playsinline', '');
       video.setAttribute('webkit-playsinline', '');
-      // Autoplay once metadata is ready
       const startPlayback = () => {
         const p = video.play();
         if (p && typeof p.catch === 'function'){
           p.catch(() => {
-            // If autoplay fails, resume on first user interaction
             const resume = () => {
               video.play().catch(()=>{});
               document.removeEventListener('touchstart', resume);
@@ -398,7 +607,6 @@
       if (video.readyState >= 2) startPlayback();
       else video.addEventListener('loadeddata', startPlayback, { once:true });
     } else {
-      // DESKTOP: prime decoder so first seek is snappy
       const prime = async () => {
         try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
       };
@@ -409,14 +617,10 @@
 
   function tick(){
     computeScrollProgress();
-
-    // Mobile: no scrubbing, just keep the RAF alive for reveal state
     if (IS_TOUCH){
       requestAnimationFrame(tick);
       return;
     }
-
-    // Desktop: lerp currentTime → target, write sparingly
     const diff = targetTime - currentTime;
     if (Math.abs(diff) > 0.002) currentTime += diff * LERP;
     else currentTime = targetTime;
@@ -441,8 +645,6 @@
     const raw        = scrolled / scrollable;
 
     if (raw > maxProgress) maxProgress = raw;
-
-    // Desktop drives scrubbing; mobile ignores target (video plays on its own)
     if (!IS_TOUCH){
       targetTime = Math.max(0, Math.min(videoDuration * maxProgress, videoDuration - 0.05));
     }
@@ -451,7 +653,6 @@
       textRevealed = true;
       intro.classList.add('is-text-revealed');
     }
-
     if (maxProgress >= COMPLETE_THRESHOLD && !introComplete){
       introComplete = true;
       intro.classList.add('is-complete');
@@ -473,7 +674,9 @@
   $('#cartClose')?.addEventListener('click', closeDrawers);
   $('#overlay')?.addEventListener('click', closeDrawers);
 
-  // EMBLA
+  // =============================================
+  // EMBLA — single-card-centred carousel
+  // =============================================
   function initEmbla(root){
     if (!root || root._emblaInit) return;
     root._emblaInit = true;
@@ -539,7 +742,9 @@
   }
   function initAllEmbla(){ $$('[data-embla]').forEach(initEmbla); }
 
-  // PROCESS
+  // =============================================
+  // PROCESS STEPPER
+  // =============================================
   function initProcess(){
     const root = $('[data-process]');
     if (!root) return;
@@ -567,7 +772,9 @@
     goTo(0);
   }
 
-  // COUNTERS
+  // =============================================
+  // NUMBER COUNTERS
+  // =============================================
   function animateNumber(el){
     const target = parseFloat(el.dataset.countTo || '0');
     const format = el.dataset.countFormat || '';
@@ -602,7 +809,9 @@
     nums.forEach(n => io.observe(n));
   }
 
-  // HOME RANGE (shows ONLY the 3 bottles, NO gift boxes)
+  // =============================================
+  // HOME RANGE CAROUSEL
+  // =============================================
   function renderHomeRange(){
     const track = $('#homeRangeTrack');
     if (!track || track._rendered) return;
@@ -615,6 +824,7 @@
           </div>
           <div class="product-card__body">
             <h3>${p.name}</h3>
+            <div class="product-card__tagline">${p.tagline}</div>
             <div class="product-card__price">£${p.price.toFixed(2)}</div>
             <div class="product-card__actions">
               <span class="btn btn--tiny">BUY NOW</span>
@@ -627,7 +837,9 @@
     initAllEmbla();
   }
 
-  // SHOP GRID (shows ONLY the 3 bottles, NO gift boxes)
+  // =============================================
+  // SHOP GRID
+  // =============================================
   function renderShopGrid(){
     const grid = $('#shopGrid');
     if (!grid) return;
@@ -637,6 +849,7 @@
           <img src="${p.image}" alt="${p.name}" loading="lazy" />
         </div>
         <h3>${p.name}</h3>
+        <div class="shop-card__tagline">${p.tagline}</div>
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
         <div class="shop-card__price">£${p.price.toFixed(2)}</div>
         <div class="shop-card__actions">
@@ -646,7 +859,9 @@
     `).join('');
   }
 
-  // PRODUCT DETAIL — bottle + gift box in carousel (2 slides), £2.50 add-on
+  // =============================================
+  // PRODUCT DETAIL — with full body, tasting notes, how-to-enjoy
+  // =============================================
   function renderProductDetail(slug){
     const root = $('#productDetail');
     const p = productBySlug[slug];
@@ -659,7 +874,6 @@
       return;
     }
 
-    // Slides: bottle first, gift box second
     const galleryImgs = [
       { src: p.image,        label: `${p.name} bottle` },
       { src: p.giftBoxImage, label: `${p.name} gift box` }
@@ -673,6 +887,16 @@
     const dotsHtml = galleryImgs.map((_, i) =>
       `<button class="pd-gallery__dot ${i === 0 ? 'is-active' : ''}" data-goto-slide="${i}" aria-label="Image ${i+1}"></button>`
     ).join('');
+
+    const bodyHtml = p.body.map(para => `<p>${para}</p>`).join('');
+    const howHtml = p.howToEnjoy ? `
+      <div class="product-detail__section">
+        <h4>HOW TO ENJOY</h4>
+        <p>${p.howToEnjoy.lead}</p>
+        ${p.howToEnjoy.recipe ? `<ul>${p.howToEnjoy.recipe.map(r => `<li>${r}</li>`).join('')}</ul>` : ''}
+        ${p.howToEnjoy.alt ? `<p>${p.howToEnjoy.alt}</p>` : ''}
+      </div>
+    ` : '';
 
     root.innerHTML = `
       <div class="product-detail__grid">
@@ -694,8 +918,18 @@
           </div>
           <p class="script-accent">${p.kicker}</p>
           <h1 class="product-detail__title">${p.name}</h1>
+          <div class="product-detail__tagline">${p.tagline}</div>
           <div class="product-detail__price">£${p.price.toFixed(2)}</div>
-          <p class="product-detail__desc">${p.desc}</p>
+          <div class="product-detail__body-copy">${bodyHtml}</div>
+          <div class="product-detail__section">
+            <h4>TASTING NOTES</h4>
+            <div class="product-detail__tasting">
+              <div><strong>NOSE</strong> ${p.tasting.nose}</div>
+              <div><strong>PALATE</strong> ${p.tasting.palate}</div>
+              <div><strong>FINISH</strong> ${p.tasting.finish}</div>
+            </div>
+          </div>
+          ${howHtml}
           <div class="product-detail__meta">
             <div><strong>${p.meta.size}</strong>SIZE</div>
             <div><strong>${p.meta.abv}</strong>ABV</div>
@@ -725,7 +959,6 @@
 
     initProductGallery();
 
-    // Related carousel — other 2 bottles only
     const track = $('#relatedTrack');
     if (track){
       const related = PRODUCTS.filter(x => x.slug !== slug);
@@ -737,6 +970,7 @@
             </div>
             <div class="product-card__body">
               <h3>${rp.name}</h3>
+              <div class="product-card__tagline">${rp.tagline}</div>
               <div class="product-card__price">£${rp.price.toFixed(2)}</div>
               <div class="product-card__actions">
                 <span class="btn btn--tiny">BUY NOW</span>
@@ -771,7 +1005,188 @@
     dots.forEach((d, di) => d.addEventListener('click', () => goTo(di)));
   }
 
+  // =============================================
+  // FLIP CARDS (cocktails) — hover stays flipped, flips back on mouse-leave
+  // =============================================
+  function cocktailCardHtml(c){
+    const ingredientsHtml = c.ingredients.map(ing => `<li>${ing}</li>`).join('');
+    return `
+      <div class="flip-card" data-flip-card tabindex="0">
+        <div class="flip-card__inner">
+          <div class="flip-card__face flip-card__front">
+            <img src="${c.image}" alt="${c.name}" loading="lazy" />
+            <div class="flip-card__front-label">
+              <h4>${c.name}</h4>
+              <span class="flip-card__front-hint">HOVER FOR RECIPE</span>
+            </div>
+          </div>
+          <div class="flip-card__face flip-card__back">
+            <h4>${c.name}</h4>
+            <h5>INGREDIENTS</h5>
+            <ul>${ingredientsHtml}</ul>
+            <h5>METHOD</h5>
+            <p>${c.method}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Init flip card touch support — tap to flip, tap again elsewhere to un-flip.
+  // CSS handles hover via :hover. For touch devices, we add .is-flipped on tap.
+  function initFlipCards(scope=document){
+    $$('[data-flip-card]', scope).forEach(card => {
+      if (card._flipInit) return;
+      card._flipInit = true;
+      card.addEventListener('click', (e) => {
+        // On touch, toggle
+        if (IS_TOUCH){
+          const wasFlipped = card.classList.contains('is-flipped');
+          // Un-flip all others first
+          $$('[data-flip-card].is-flipped').forEach(c => c.classList.remove('is-flipped'));
+          if (!wasFlipped) card.classList.add('is-flipped');
+        }
+      });
+    });
+  }
+
+  // Render cocktails on HOME (a single row of 3 representative drinks — one per SKU)
+  function renderHomeCocktails(){
+    const grid = $('#cocktailsGrid');
+    if (!grid || grid._rendered) return;
+    grid._rendered = true;
+
+    // Pick one cocktail per SKU for the home preview
+    const picks = [
+      COCKTAILS.find(c => c.sku === 'hepple-wild-juniper-gin'),
+      COCKTAILS.find(c => c.sku === 'hepple-douglas-fir-vodka'),
+      COCKTAILS.find(c => c.sku === 'hepple-moorland-vodka')
+    ].filter(Boolean);
+
+    grid.className = 'flip-row';
+    grid.innerHTML = picks.map(cocktailCardHtml).join('');
+    initFlipCards(grid);
+  }
+
+  // Render the full cocktails page — 3 groups, 3 cards each
+  function renderCocktailsPage(){
+    const root = $('#cocktailsPage');
+    if (!root || root._rendered) return;
+    root._rendered = true;
+
+    const groups = PRODUCTS.map(p => ({
+      sku: p.slug,
+      name: p.name,
+      tagline: p.tagline,
+      color: `var(--${p.sku})`,
+      cocktails: COCKTAILS.filter(c => c.sku === p.slug)
+    }));
+
+    root.innerHTML = `
+      <div class="wrap">
+        <div class="cocktails-home__head">
+          <p class="script-accent">Delicious drinks start here.</p>
+          <h2>COCKTAILS.</h2>
+          <p class="cocktails-home__lede" style="max-width:52ch; margin:0 auto; font-size:.9rem; line-height:1.8; letter-spacing:.06em; opacity:.7;">
+            THREE SKUS, NINE WAYS TO ENJOY THEM. HOVER A CARD TO REVEAL THE RECIPE.
+          </p>
+        </div>
+
+        ${groups.map(g => `
+          <div class="cocktails-group">
+            <div class="cocktails-group__head">
+              <span class="cocktails-group__dot" style="background:${g.color};"></span>
+              <h3>${g.name}</h3>
+              <span class="cocktails-group__tagline">${g.tagline}</span>
+            </div>
+            <div class="flip-row">
+              ${g.cocktails.map(cocktailCardHtml).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    initFlipCards(root);
+  }
+
+  // Render cocktails carousel below shop
+  function renderShopCocktails(){
+    const track = $('#shopCocktailsTrack');
+    if (!track || track._rendered) return;
+    track._rendered = true;
+
+    track.innerHTML = COCKTAILS.map(c => `
+      <div class="embla__slide">
+        <div style="padding: 0 .25rem;">
+          ${cocktailCardHtml(c)}
+        </div>
+      </div>
+    `).join('');
+
+    const embla = track.closest('[data-embla]');
+    if (embla){ embla._emblaInit = false; initEmbla(embla); }
+    initFlipCards(track);
+  }
+
+  // =============================================
+  // TEAM SHOWCASE
+  // =============================================
+  function renderTeam(){
+    const root = $('#teamShowcase');
+    if (!root || root._rendered) return;
+    root._rendered = true;
+
+    // Split 6 members into 3 staggered columns (per user's component)
+    const cols = [[], [], []];
+    TEAM_MEMBERS.forEach((m, i) => cols[i % 3].push(m));
+
+    const colsHtml = cols.map((col, colIdx) => `
+      <div class="team__col ${colIdx === 1 ? 'team__col--2' : colIdx === 2 ? 'team__col--3' : ''}">
+        ${col.map(m => `
+          <div class="team-photo" data-team-id="${m.id}">
+            <img src="${placeholderAvatar(parseInt(m.id))}" alt="${m.name}" />
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    const listHtml = TEAM_MEMBERS.map(m => `
+      <div class="team-row" data-team-id="${m.id}">
+        <div class="team-row__line">
+          <span class="team-row__dash"></span>
+          <span class="team-row__name">${m.name}</span>
+        </div>
+        <div class="team-row__role">${m.role}</div>
+      </div>
+    `).join('');
+
+    root.innerHTML = `
+      <div class="team__grid">${colsHtml}</div>
+      <div class="team__list">${listHtml}</div>
+    `;
+
+    // Hover sync: photo <-> name row
+    const photos = $$('.team-photo', root);
+    const rows   = $$('.team-row', root);
+
+    function activate(id){
+      root.classList.toggle('has-active', !!id);
+      photos.forEach(p => p.classList.toggle('is-active', p.dataset.teamId === id));
+      rows.forEach(r => r.classList.toggle('is-active', r.dataset.teamId === id));
+    }
+
+    [...photos, ...rows].forEach(el => {
+      el.addEventListener('mouseenter', () => activate(el.dataset.teamId));
+      el.addEventListener('mouseleave', () => activate(null));
+      el.addEventListener('focus',      () => activate(el.dataset.teamId));
+      el.addEventListener('blur',       () => activate(null));
+    });
+  }
+
+  // =============================================
   // BOOT
+  // =============================================
   renderCart();
   requestAnimationFrame(tick);
   route();
