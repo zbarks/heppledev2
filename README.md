@@ -60,7 +60,9 @@ npx serve .
 # → http://localhost:3000
 ```
 
-## Deploy to Vercel
+**Why a server?** All asset paths (`assets/...`, `styles.css`, `app.js`) are now relative — they work both from a server AND from double-clicking `index.html` on Windows/Mac. Previously they used leading slashes (`/assets/...`) which only resolved on a web root, so opening the file directly on Windows showed a blank page. If you ever change a path back to a leading slash, the local-file-double-click workflow breaks again.
+
+## Deploy to Netlify / Vercel
 
 1. `git init && git add . && git commit -m "init"`
 2. Push to GitHub

@@ -35,7 +35,7 @@
       const panel = gate.querySelector('.age-gate__panel');
       if (panel){
         panel.innerHTML = `
-          <img src="/assets/brand/hepple-logotype-blue.png" alt="Hepple" class="age-gate__logo" />
+          <img src="assets/brand/hepple-logotype-blue.png" alt="Hepple" class="age-gate__logo" />
           <p class="age-gate__eyebrow">Come back soon.</p>
           <h1 class="age-gate__title">YOU MUST BE 18 OR OVER<br>TO ENTER THIS SITE</h1>
           <p class="age-gate__body">WE LOOK FORWARD TO WELCOMING YOU WHEN YOU'RE OF LEGAL DRINKING AGE.</p>
@@ -54,14 +54,16 @@
     {
       slug:    'hepple-wild-juniper-gin',
       name:    'HEPPLE WILD JUNIPER GIN',
+      nameTop: 'HEPPLE',
+      nameRest:'WILD JUNIPER GIN',
       short:   'Wild Juniper Gin',
-      tagline: 'Bright. Wild. Elegant.',
-      kicker:  'Everything begins with juniper.',
+      tagline: 'BRIGHT. WILD. ELEGANT',
+      kicker:  'THE HEART OF HEPPLE',
       price:   39.95,
       meta:    { size: '70CL', abv: '45%', origin: 'NORTHUMBERLAND' },
       sku:     'juniper-pink',
-      image:   '/assets/products/hepple-gin.jpg',
-      giftBoxImage: '/assets/products/giftbox-wild-juniper-gin.jpg',
+      image:   'assets/products/hepple-gin.jpg',
+      giftBoxImage: 'assets/products/giftbox-wild-juniper-gin.jpg',
       body: [
         "ON THE HEPPLE ESTATE, ANCIENT JUNIPER BUSHES GROW WILD ACROSS THE NORTHUMBERLAND MOORLAND — SHAPED BY WIND, WEATHER AND TIME.",
         "EACH SUMMER, WE HARVEST THE BERRIES BY HAND WHILE THEY ARE STILL BRIGHT GREEN. AT THIS STAGE, JUNIPER IS FRESHER, MORE VIBRANT AND MORE ALIVE — FULL OF CITRUS LIFT, NATURAL ZEST AND A QUIET ELEGANCE YOU DON'T FIND IN THE DRIED BERRY ALONE.",
@@ -89,14 +91,16 @@
     {
       slug:    'hepple-douglas-fir-vodka',
       name:    'HEPPLE DOUGLAS FIR VODKA',
+      nameTop: 'HEPPLE',
+      nameRest:'DOUGLAS FIR VODKA',
       short:   'Douglas Fir Vodka',
-      tagline: 'Fresh. Lifted. Unexpected.',
-      kicker:  'Where forest becomes flavour.',
+      tagline: 'FRESH. LIFTED. UNEXPECTED',
+      kicker:  'WHERE FOREST BECOMES FLAVOUR',
       price:   39.95,
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'doug-fir-green',
-      image:   '/assets/products/douglas-fir.jpg',
-      giftBoxImage: '/assets/products/giftbox-douglas-fir-vodka.jpg',
+      image:   'assets/products/douglas-fir.jpg',
+      giftBoxImage: 'assets/products/giftbox-douglas-fir-vodka.jpg',
       body: [
         "HIGH ABOVE THE HEPPLE ESTATE, ANCIENT DOUGLAS FIR TREES RISE THROUGH THE VALLEY — SOME MORE THAN TWO HUNDRED YEARS OLD. EVERGREEN THROUGH WINTER, SHARP WITH RESIN AND ALIVE WITH SCENT, THEY CARRY A CLARITY YOU DON'T EXPECT TO FIND IN A VODKA.",
         "WE HARVEST THE YOUNG NEEDLES BY HAND, WORKING TO CAPTURE THAT MOMENT WHEN THE FLAVOUR IS AT ITS BRIGHTEST — GREEN, CITRUS-LED AND QUIETLY AROMATIC. IT'S A CHARACTER THAT'S SURPRISINGLY DELICATE: FRESH RATHER THAN HEAVY, LIFTED RATHER THAN OVERTLY PINE.",
@@ -119,14 +123,16 @@
     {
       slug:    'hepple-moorland-vodka',
       name:    'HEPPLE MOORLAND VODKA',
+      nameTop: 'HEPPLE',
+      nameRest:'MOORLAND VODKA',
       short:   'Moorland Vodka',
-      tagline: 'Clean. Textured. Composed.',
-      kicker:  'Precision in restraint.',
+      tagline: 'PURE, CRISP, SMOOTH',
+      kicker:  'PRECISION IN RESTRAINT',
       price:   34.95,
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'moorland-teal',
-      image:   '/assets/products/wheat-vodka.jpg',
-      giftBoxImage: '/assets/products/giftbox-moorland-vodka.jpg',
+      image:   'assets/products/wheat-vodka.jpg',
+      giftBoxImage: 'assets/products/giftbox-moorland-vodka.jpg',
       body: [
         "MADE FROM ENGLISH WHEAT AND BLENDED WITH OUR OWN SPRING WATER — FILTERED SLOWLY THROUGH PEAT, SANDSTONE AND LIMESTONE — IT BEGINS WITH CLARITY. NOT BY STRIPPING EVERYTHING AWAY, BUT BY KEEPING ONLY WHAT MATTERS.",
         "USING OUR COPPER POT STILL, WE WORKED CAREFULLY TO REFINE THE SPIRIT WITHOUT LOSING ITS NATURAL CHARACTER. THROUGH CONTROLLED DISTILLATION AND PRECISE CUTS, WE REMOVE HEAVINESS WHILE PRESERVING TEXTURE, SOFTNESS AND A GENTLE GRAIN AND MINERALLY WARMTH THAT CARRIES THROUGH THE GLASS.",
@@ -248,7 +254,7 @@
       id:       'dirty-martini',
       name:     'DIRTY MARTINI (OUR LITTLE SECRET)',
       sku:      'hepple-moorland-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.11.14.png?v=1662387258&width=800',
+      image:    'https://hepplespirits.com/cdn/shop/articles/IMG_2414.jpg?v=1678366307&width=800',
       source:   null,
       ingredients: [
         '60ML HEPPLE MOORLAND VODKA',
@@ -823,7 +829,8 @@
             <img src="${p.image}" alt="${p.name}" loading="lazy" />
           </div>
           <div class="product-card__body">
-            <h3>${p.name}</h3>
+            <h3 class="product-card__title"><span class="product-card__brand">${p.nameTop}</span><span class="product-card__variant">${p.nameRest}</span></h3>
+            <div class="product-card__kicker">${p.kicker}</div>
             <div class="product-card__tagline">${p.tagline}</div>
             <div class="product-card__price">£${p.price.toFixed(2)}</div>
             <div class="product-card__actions">
@@ -848,7 +855,8 @@
         <div class="shop-card__img">
           <img src="${p.image}" alt="${p.name}" loading="lazy" />
         </div>
-        <h3>${p.name}</h3>
+        <h3 class="shop-card__title"><span class="shop-card__brand">${p.nameTop}</span><span class="shop-card__variant">${p.nameRest}</span></h3>
+        <div class="shop-card__kicker">${p.kicker}</div>
         <div class="shop-card__tagline">${p.tagline}</div>
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
         <div class="shop-card__price">£${p.price.toFixed(2)}</div>
@@ -916,8 +924,8 @@
           <div class="product-detail__crumbs">
             <a href="#/shop" data-route="/shop">SHOP</a> / ${p.short.toUpperCase()}
           </div>
-          <p class="script-accent">${p.kicker}</p>
-          <h1 class="product-detail__title">${p.name}</h1>
+          <p class="product-detail__kicker">${p.kicker}</p>
+          <h1 class="product-detail__title"><span class="product-detail__brand">${p.nameTop}</span><span class="product-detail__variant">${p.nameRest}</span></h1>
           <div class="product-detail__tagline">${p.tagline}</div>
           <div class="product-detail__price">£${p.price.toFixed(2)}</div>
           <div class="product-detail__body-copy">${bodyHtml}</div>
@@ -969,7 +977,8 @@
               <img src="${rp.image}" alt="${rp.name}" loading="lazy" />
             </div>
             <div class="product-card__body">
-              <h3>${rp.name}</h3>
+              <h3 class="product-card__title"><span class="product-card__brand">${rp.nameTop}</span><span class="product-card__variant">${rp.nameRest}</span></h3>
+              <div class="product-card__kicker">${rp.kicker}</div>
               <div class="product-card__tagline">${rp.tagline}</div>
               <div class="product-card__price">£${rp.price.toFixed(2)}</div>
               <div class="product-card__actions">
@@ -1085,8 +1094,8 @@
     root.innerHTML = `
       <div class="wrap">
         <div class="cocktails-home__head">
-          <p class="script-accent">Delicious drinks start here.</p>
-          <h2>COCKTAILS.</h2>
+          <h2>LET'S MAKE<br>COCKTAILS</h2>
+          <p class="cocktails-home__sub">DELICIOUS DRINKS START HERE</p>
           <p class="cocktails-home__lede" style="max-width:52ch; margin:0 auto; font-size:.9rem; line-height:1.8; letter-spacing:.06em; opacity:.7;">
             THREE SKUS, NINE WAYS TO ENJOY THEM. HOVER A CARD TO REVEAL THE RECIPE.
           </p>

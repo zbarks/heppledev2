@@ -1,13 +1,13 @@
 /* ==========================================================
    HEPPLE — fonts
    ========================================================== */
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/Proxima_Nova_Thin.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap;}
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/ProximaNova-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/ProximaNova-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap;}
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/Proxima_Nova_Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap;}
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/Proxima_Nova_Extrabold.otf") format("opentype");font-weight:800;font-style:normal;font-display:swap;}
-@font-face{font-family:"Proxima Nova";src:url("/assets/fonts/Proxima_Nova_Black.otf") format("opentype");font-weight:900;font-style:normal;font-display:swap;}
-@font-face{font-family:"Maristella";src:url("/assets/fonts/Maristella.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Thin.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/ProximaNova-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/ProximaNova-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Extrabold.otf") format("opentype");font-weight:800;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Black.otf") format("opentype");font-weight:900;font-style:normal;font-display:swap;}
+@font-face{font-family:"Maristella";src:url("assets/fonts/Maristella.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
 
 /* ==========================================================
    BRAND TOKENS — per feedback doc
@@ -1930,3 +1930,156 @@ footer{
 @media (max-width: 860px){
   .welcome--holder .welcome__img{ aspect-ratio: 4/3; }
 }
+
+/* =========================================================
+   FEEDBACK V2 — offset script + new heading hierarchy
+   added per Hepple v2 website feedback PDF
+   ========================================================= */
+
+/* Offset script — sits up & to the LEFT of the heading,
+   slightly overlapping it. Uses translate so the heading
+   below stays in normal flow and doesn't shift.            */
+.script-accent--offset{
+  position: relative;
+  display: inline-block;
+  transform: translate(-.2em, -.15em) rotate(-3deg);
+  transform-origin: left bottom;
+  margin: 0 0 .1em;
+  padding: 0;
+  z-index: 2;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@media (max-width: 700px){
+  .script-accent--offset{
+    transform: translate(-.1em, -.1em) rotate(-3deg);
+  }
+}
+
+/* Welcome copy column — needs relative for the offset script */
+.welcome__copy{
+  position: relative;
+}
+
+/* Founders intro — new headline element to match the new hierarchy */
+.founders-intro__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  letter-spacing: -.02em;
+  color: var(--cream);
+  margin: 0 0 1.4rem;
+  max-width: 18ch;
+}
+
+/* Estate intro inner wrapper — relative so offset script is positioned */
+.estate-intro__inner{
+  position: relative;
+  max-width: 60ch;
+}
+
+/* Subheadings under the main H2/H1 — used on
+   estate-cta, cocktails-home, story-hero, shop-cocktails    */
+.estate-cta__sub,
+.cocktails-home__sub,
+.shop-cocktails__sub,
+.story-hero__sub{
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--h-md);
+  letter-spacing: .02em;
+  line-height: 1.2;
+  color: var(--hepple-blue);
+  margin: .6rem 0 1.2rem;
+  text-transform: uppercase;
+}
+.story-hero__sub{ color: var(--cream); }
+.cocktails-home__sub{ margin-left: auto; margin-right: auto; max-width: 32ch; }
+
+/* Visit slim — line break and tighter look */
+.visit-slim h3 br{ display: inline; }
+
+/* =========================================================
+   PRODUCT CARDS — two-line title (HEPPLE on top, variant below)
+   ========================================================= */
+.product-card__title,
+.shop-card__title,
+.product-detail__title{
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  margin: 0;
+}
+.product-card__brand,
+.shop-card__brand,
+.product-detail__brand{
+  font-weight: 700;
+  letter-spacing: -.01em;
+  display: block;
+}
+.product-card__variant,
+.shop-card__variant,
+.product-detail__variant{
+  font-weight: 700;
+  letter-spacing: -.01em;
+  display: block;
+  margin-top: .12em;
+}
+
+/* Kicker — sits ABOVE the title on cards (replacing script) */
+.product-card__kicker,
+.shop-card__kicker{
+  font-family: var(--sans);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+  margin: 0 0 .5rem;
+  opacity: .75;
+}
+
+/* Product detail kicker (was script-accent before) */
+.product-detail__kicker{
+  font-family: var(--sans);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .24em;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+  margin: 0 0 .8rem;
+  opacity: .85;
+}
+
+/* =========================================================
+   ESTATE INTRO — give it positioning context for the
+   offset script (it lives inside .estate-intro__inner now)
+   ========================================================= */
+.estate-intro{
+  padding: clamp(4rem, 10vh, 8rem) 0 clamp(2rem, 5vh, 4rem);
+}
+.estate-intro__h2{
+  font-size: var(--h-xl);
+  line-height: 1;
+  margin: 0;
+  max-width: 28ch;
+}
+
+/* =========================================================
+   STORY HERO — keep title block relative for offset script
+   ========================================================= */
+.story-hero__title{ position: relative; }
+.story-hero__title h1{
+  /* allow line breaks from <br> in heading */
+  white-space: normal;
+}
+
+/* =========================================================
+   COCKTAILS-HOME HEAD — center the offset effect cleanly
+   ========================================================= */
+.cocktails-home__head{ position: relative; }
+.cocktails-home__head h2{
+  margin-top: 0;
+}
+
+/* Founders intro inner — relative for offset script */
+.founders-intro__inner{ position: relative; }
