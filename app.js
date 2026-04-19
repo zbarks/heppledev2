@@ -254,7 +254,7 @@
       id:       'dirty-martini',
       name:     'DIRTY MARTINI (OUR LITTLE SECRET)',
       sku:      'hepple-moorland-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/IMG_2414.jpg?v=1678366307&width=800',
+      image:    'assets/cocktails/dirty-martini-clink.jpg',
       source:   null,
       ingredients: [
         '60ML HEPPLE MOORLAND VODKA',
