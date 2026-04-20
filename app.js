@@ -558,21 +558,19 @@
   }
 
   // =============================================
-  // INTRO — proper scroll-scrub per Zach:
-  //   - Video starts paused on page load (no text visible yet)
-  //   - Scrolling drives the video frame-by-frame (video.currentTime)
-  //   - Scroll up = video reverses
-  //   - Stop scrolling = video stops at that frame
-  //   - Once scroll progress passes threshold, intro "completes" and the
-  //     section collapses so scroll continues normally to next page
-  //   - No autoplay loop; video never plays on its own
+  // INTRO — natural play-through on scroll per final feedback:
+  //   - Page loads, video paused at frame 0, text hidden
+  //   - User scrolls → video starts playing normally
+  //   - Video plays through to end at its own pace (no frame-seeking)
+  //   - During playback, text fades in
+  //   - After video ends, section "completes" and scroll continues
+  //   - User can scroll back up to replay (video.currentTime = 0, play)
+  //   - No autoplay loop, no cut mid-video, no glitch
   // =============================================
   let introComplete = false;
   let textRevealed  = false;
+  let videoStarted  = false;
   let videoDuration = 5.2;
-  let targetTime    = 0;
-  let smoothedTime  = 0;
-  let lastWriteTime = -1;
 
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
@@ -602,39 +600,69 @@
     introComplete = true;
   }
 
+  function markIntroComplete(){
+    if (introComplete) return;
+    introComplete = true;
+    if (intro) intro.classList.add('is-complete');
+    if (nav) nav.classList.add('is-visible');
+    sessionStorage.setItem('hepple:seenIntro', '1');
+  }
+
+  function startVideoPlayback(){
+    if (!video || videoStarted || introComplete) return;
+    videoStarted = true;
+    // Reveal the text
+    if (intro && !textRevealed){
+      intro.classList.add('is-text-revealed');
+      textRevealed = true;
+    }
+    // Start video playback from wherever it currently is
+    try {
+      video.currentTime = 0;
+    } catch(_){}
+    const p = video.play();
+    if (p && typeof p.catch === 'function'){
+      p.catch(err => {
+        console.warn('[Hepple] Play failed:', err.message);
+        // If play fails, just skip to complete
+        markIntroComplete();
+      });
+    }
+  }
+
   if (video){
-    // Required attributes for scrub-style seeking
     video.muted = true;
     video.setAttribute('muted', '');
     video.playsInline = true;
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
-    // CRITICAL: remove loop + autoplay so the video doesn't play on its own
     video.loop = false;
     video.removeAttribute('loop');
     video.removeAttribute('autoplay');
 
-    // 4-second safety net — if video can't load, show poster
+    // 4-second safety net
     const loadTimeout = setTimeout(() => {
       if (video.readyState < 2) fallbackToPoster('4s timeout');
     }, 4000);
+    video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
     video.addEventListener('error', () => fallbackToPoster('video error'), { once: true });
 
     video.addEventListener('loadedmetadata', () => {
       if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
     });
-    video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
 
-    // Prime: play briefly, pause, seek to 0. Gets the first frame visible
-    // so the video element isn't black when page loads.
+    // When video ends, release the scroll lock
+    video.addEventListener('ended', markIntroComplete);
+
+    // Prime: seek to first frame so it's visible, don't play yet
     const prime = async () => {
       try {
-        await video.play();
-        video.pause();
         video.currentTime = 0;
-      } catch(err){
-        console.warn('[Hepple] Prime failed:', err.message);
-      }
+        // iOS Safari needs a play/pause cycle to show the first frame
+        if (video.paused){
+          try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
+        }
+      } catch(err){}
     };
     if (video.readyState >= 2) prime();
     else video.addEventListener('loadeddata', prime, { once: true });
@@ -642,61 +670,33 @@
     fallbackToPoster('no video element');
   }
 
-  // Scroll handler — compute progress, update target video time, reveal text,
-  // mark complete. Runs on every scroll event (passive, cheap).
+  // First scroll on the intro triggers video playback. While the video is
+  // playing, scroll is effectively "locked" (via the sticky pin) — user
+  // continues to see intro until video completes.
   function handleIntroScroll(){
-    if (!intro) return;
+    if (!intro || introComplete) return;
 
-    const rect       = intro.getBoundingClientRect();
-    const introH     = intro.offsetHeight;
-    const viewport   = window.innerHeight;
+    const rect = intro.getBoundingClientRect();
+    const introH = intro.offsetHeight;
+    const viewport = window.innerHeight;
     const scrollable = Math.max(1, introH - viewport);
-    const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
-    const progress   = scrolled / scrollable;
+    const scrolled = Math.min(Math.max(-rect.top, 0), scrollable);
+    const progress = scrolled / scrollable;
 
-    // Target video time proportional to scroll progress
-    targetTime = Math.max(0, Math.min(videoDuration * progress, videoDuration - 0.05));
-
-    // Reveal text once we're ~10% through the scroll
-    if (!textRevealed && progress > 0.10){
-      textRevealed = true;
-      intro.classList.add('is-text-revealed');
-    } else if (textRevealed && progress < 0.03){
-      // Hide again if scrolled back to very top
-      textRevealed = false;
-      intro.classList.remove('is-text-revealed');
+    // First meaningful scroll starts the video
+    if (!videoStarted && progress > 0.02){
+      startVideoPlayback();
     }
-
-    // Mark complete at 92% — this collapses the pin via CSS so scroll
-    // continues naturally to the next section (no cut).
-    if (!introComplete && progress > 0.92){
-      introComplete = true;
-      intro.classList.add('is-complete');
-      if (nav) nav.classList.add('is-visible');
-      sessionStorage.setItem('hepple:seenIntro', '1');
+    // Text reveals as soon as video starts
+    // Video's own 'ended' event marks complete — but also a safety net:
+    // if they've scrolled all the way to the end of the 200vh track,
+    // release the lock manually.
+    if (progress > 0.95){
+      markIntroComplete();
     }
   }
-
-  // Animation-frame loop — smoothly lerp smoothedTime toward targetTime
-  // so scroll-to-video mapping feels fluid, and write it to video.currentTime.
-  const LERP = 0.22;
-  const WRITE_THRESHOLD = 1 / 20;
-  function scrubTick(){
-    const diff = targetTime - smoothedTime;
-    if (Math.abs(diff) > 0.002) smoothedTime += diff * LERP;
-    else smoothedTime = targetTime;
-    if (video && video.readyState >= 2 && isFinite(smoothedTime)){
-      if (Math.abs(smoothedTime - lastWriteTime) > WRITE_THRESHOLD){
-        try { video.currentTime = smoothedTime; lastWriteTime = smoothedTime; }
-        catch(_){}
-      }
-    }
-    requestAnimationFrame(scrubTick);
-  }
-  requestAnimationFrame(scrubTick);
 
   window.addEventListener('scroll', handleIntroScroll, { passive: true });
-  // Initial check
   setTimeout(handleIntroScroll, 100);
 
   // DRAWERS

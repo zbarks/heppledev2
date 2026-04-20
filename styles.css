@@ -2873,3 +2873,177 @@ video::-webkit-media-controls-start-playback-button{
   top: clamp(.8rem, 2vh, 1.6rem) !important;
   transform: translate(-50%, 0) !important;
 }
+
+/* =========================================================
+   FEEDBACK V8 — final polish round
+   - Intro text: upper half, properly centered
+   - Welcome-to-Hepple: straight (not tilted), bigger, close to heading
+   - Welcome-to-Eden: big like Welcome-to-Hepple, over sticky gallery
+   - Story-hero text: white, "Our Story/Inspiration/Craft" above H1
+   - Story-hero images: shift up so faces visible
+   - Process timeline photos
+   ========================================================= */
+
+/* 1. INTRO TEXT — upper portion of hero, properly centered.
+   Kill the translate-50-50 which conflicts with reveal-animation transform. */
+.intro__overlay{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start !important;   /* top half */
+  padding-top: 22vh !important;              /* pushes text into upper half */
+  text-align: center;
+}
+.intro__center{
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  width: 100%;
+  max-width: 44rem;
+}
+.intro__eyebrow,
+.intro__headline{
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  display: block !important;
+}
+/* Proper text reveal — use only opacity, no transform conflict */
+.intro__eyebrow,
+.intro__headline{
+  opacity: 0 !important;
+  transform: none !important;
+  transition: opacity 1s ease !important;
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* 2. WELCOME-TO-HEPPLE — straight (not tilted), bigger, tight to heading */
+.welcome__copy{
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.welcome__copy .script-accent--offset{
+  transform: translate(0, .4em) !important;  /* straight, no rotation */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  top: 0 !important;
+  left: .1em !important;
+}
+
+/* 3. WELCOME-TO-EDEN — BIG like Welcome-to-Hepple, over the sticky gallery */
+.estate-intro--centered .estate-intro__inner{
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.estate-intro--centered .estate-intro__inner .script-accent--offset{
+  transform: translate(0, .4em) !important;   /* straight, big */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* Move estate intro OVER the sticky gallery — overlay pattern */
+.estate-intro--centered{
+  position: relative;
+  z-index: 3;
+  padding-bottom: 0 !important;   /* connects directly to gallery below */
+  margin-bottom: -2rem;            /* small overlap */
+}
+
+/* 4. STORY-HERO (Our Story, Estate, Craft, Cocktails pages) — accent scripts
+   in WHITE sitting above the H1. Script=small, H1=big, consistent ratio.  */
+.story-hero__title{
+  position: relative;
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+}
+.story-hero__title .script-accent--offset{
+  color: var(--cream) !important;        /* WHITE on dark photos */
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 3rem) !important;
+  transform: translate(0, .3em) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+.story-hero__title h1{
+  color: var(--cream);
+  margin-top: .2em;
+}
+
+/* 5. STORY-HERO image crops — shift down so subject's face is visible.
+   Object-position: center top pulls the top of the photo into view. */
+.story-hero__img img{
+  object-position: center 30% !important;   /* was default 50% */
+}
+
+/* 6. STORY-HERO padding so text starts further from nav */
+.story-hero{
+  padding-top: clamp(4rem, 8vh, 6rem) !important;
+  min-height: clamp(24rem, 50vh, 36rem);
+}
+
+/* 7. DELICIOUS DRINKS START HERE — script accent style, Hepple blue
+   (not on dark bg, stays blue) */
+.cocktails-home__sub,
+.shop-cocktails__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .4rem auto 1.4rem !important;
+  max-width: 40ch;
+}
+
+/* 8. FOUNDERS — "This is Our Story" is already working per Zach */
+
+/* 9. VISIT-SLIM — kept as-is (already correct per Zach) */
+
+/* 10. ESTATE-INTRO no longer centered across full width — left-aligned
+    and positioned as overlay on top of sticky gallery.                */
+.estate-intro--centered{
+  text-align: left;
+}
+.estate-intro--centered .wrap{
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+.estate-intro__h2{
+  color: var(--hepple-blue);
+  max-width: 34ch;
+}
+
+/* =========================================================
+   ESTATE-INTRO OVER STICKY GALLERY (V8 continued)
+   Text sits above the sticky gallery section then overlaps
+   the top edge of the gallery slightly for visual tie-in.
+   ========================================================= */
+.estate-gallery-combo{
+  position: relative;
+}
+.estate-intro--over-gallery{
+  position: relative;
+  z-index: 2;
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(3rem, 5vh, 4rem) !important;
+  background: var(--ground);
+  text-align: left;
+  margin-bottom: -3rem;   /* small overlap into gallery */
+}
+.estate-intro--over-gallery .wrap{
+  position: relative;
+}
+.estate-intro--over-gallery .estate-intro__inner{
+  max-width: 60ch;
+  padding-top: clamp(2.5rem, 4vw, 4rem) !important;
+}
+.estate-intro--over-gallery .script-accent--offset{
+  color: var(--hepple-blue) !important;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  transform: translate(0, .4em) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
