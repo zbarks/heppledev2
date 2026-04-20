@@ -3047,3 +3047,256 @@ video::-webkit-media-controls-start-playback-button{
   top: 0 !important;
   left: 0 !important;
 }
+
+/* =========================================================
+   FEEDBACK V9 — final lockdown round
+   ========================================================= */
+
+/* 1. STORY-HERO title — make container INLINE-BLOCK so the accent script
+   sits above-left of the actual H1 text, not above-left of the page. */
+.story-hero__title{
+  display: inline-block !important;
+  left: 50% !important;
+  bottom: clamp(2rem, 8vh, 5rem) !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: min(92vw, 44rem);
+  padding: 0 !important;
+  text-align: center;
+}
+.story-hero__title h1{
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 0;
+}
+/* The script sits above-left of the H1, inside the H1's bounding box */
+.story-hero__title .script-accent--offset{
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  transform: translate(-.1em, -.9em) !important;
+  transform-origin: left bottom;
+  color: var(--cream) !important;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem) !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+/* Move the script OUT of story-hero__title (which was its parent) and INTO
+   the h1 bounding box so it anchors correctly. We handle this via the
+   selector below — the script is the FIRST-CHILD of story-hero__title
+   and H1 is the SECOND-CHILD. We use this structure in HTML.             */
+.story-hero__title{
+  position: absolute;
+}
+/* Ensure the H1 has space ABOVE it for the accent to float into */
+.story-hero__title h1{
+  padding-top: clamp(1.4rem, 2.5vw, 2.4rem);
+}
+/* Now position the script ABOVE the H1 within the title container */
+.story-hero__title > .script-accent--offset{
+  top: 0 !important;
+  left: 0 !important;
+  transform: translate(.1em, 0) !important;   /* straight, nudge right slightly */
+}
+
+/* 2. HERO INTRO — NO autoplay under any circumstance. Video is paused
+   until user scrolls. Remove any leftover animation-driven reveal. */
+.intro__video{
+  /* Visible until play() is called by scroll handler */
+  display: block;
+}
+
+/* 3. HERO TEXT — bigger "Come in" with clear gap from "WE'RE MAKING DRINKS" */
+.intro__eyebrow{
+  font-size: clamp(2.8rem, 2rem + 3.5vw, 5rem) !important;
+  margin-bottom: .5em !important;
+  line-height: 1;
+}
+.intro__headline{
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem) !important;
+  line-height: 1.05 !important;
+  margin: 0;
+}
+
+/* 4. WELCOME-TO-HEPPLE — bigger script, clear gap */
+.welcome__copy{
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;   /* more room for script */
+}
+.welcome__copy .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: translate(0, 0) !important;   /* straight, no overlap */
+  margin-bottom: .3em;
+}
+/* Add spacing below the script so it doesn't touch the headline */
+.welcome__copy .script-accent--offset + h2,
+.welcome__copy h2{
+  margin-top: .5rem;
+}
+
+/* 5. ALL other section scripts — same pattern: bigger, straight, above the
+   heading with clear gap.                                               */
+.founders-intro__inner .script-accent--offset,
+.estate-intro__inner .script-accent--offset{
+  font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.4rem) !important;
+  transform: translate(0, 0) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* 6. VISIT-SLIM — same pattern */
+.visit-slim .script-accent--offset{
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem) !important;
+  transform: translate(-50%, 0) !important;
+  top: clamp(1.2rem, 3vh, 2rem) !important;
+  left: 50% !important;
+}
+
+/* 7. COCKTAILS HOME sub — sentence case (we'll change the text in HTML);
+   here we just re-affirm the script styling in Hepple blue */
+.cocktails-home__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .4rem auto 1.4rem !important;
+  max-width: 40ch;
+}
+
+/* =========================================================
+   V9 — ESTATE INTRO OVER STICKY GALLERY (the background IS the gallery)
+   Per Zach: "The background is the sticky scroll, not a white panel"
+   ========================================================= */
+.estate-gallery-combo{
+  position: relative;
+}
+/* Push the sticky gallery UP behind the intro so intro sits ON TOP */
+.estate-gallery-combo .sticky-gallery{
+  margin-top: calc(-1 * clamp(10rem, 22vh, 16rem));
+  padding-top: clamp(10rem, 22vh, 16rem);
+  position: relative;
+  z-index: 1;
+}
+/* The intro text sits in front — give it a translucent panel so it's
+   readable over the gallery images */
+.estate-intro--over-gallery{
+  position: relative;
+  z-index: 2;
+  background: transparent !important;
+  padding: clamp(4rem, 8vh, 6rem) 0 clamp(2rem, 4vh, 3rem) !important;
+  margin-bottom: 0 !important;
+}
+.estate-intro--over-gallery .estate-intro__inner{
+  background: rgba(246, 242, 234, .90);   /* cream translucent for contrast */
+  padding: clamp(1.8rem, 3.5vw, 2.8rem) clamp(1.6rem, 3vw, 2.4rem);
+  border-radius: 4px;
+  display: inline-block;
+  max-width: 60ch;
+}
+
+/* =========================================================
+   FEEDBACK V10 — FINAL pattern per Zach's spec
+   HOME page blue scripts = LEFT-aligned above-left of heading
+   STORY/ESTATE/CRAFT page white scripts = CENTERED above heading
+   All bigger, tight spacing, no touching, consistent ratio
+   ========================================================= */
+
+/* ─────────── HOME PAGE BLUE SCRIPTS — LEFT-ALIGNED ─────────── */
+.welcome__copy,
+.founders-intro__inner,
+.estate-intro--over-gallery .estate-intro__inner{
+  position: relative;
+  /* Enough room for script to sit above without touching heading */
+  padding-top: clamp(3.5rem, 5vw, 5rem) !important;
+}
+.welcome__copy .script-accent--offset,
+.founders-intro__inner .script-accent--offset,
+.estate-intro--over-gallery .script-accent--offset{
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;   /* straight, no rotation */
+  font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.6rem) !important;
+  color: var(--hepple-blue) !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* ─────────── VISIT-SLIM — centered blue (panel is centered) ─────────── */
+.visit-slim{
+  padding-top: clamp(4rem, 7vh, 6rem) !important;
+  padding-bottom: clamp(4rem, 7vh, 6rem);
+  position: relative;
+}
+.visit-slim .script-accent--offset{
+  position: absolute !important;
+  top: clamp(1.2rem, 3vh, 2rem) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3.2rem) !important;
+  color: var(--hepple-blue) !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+}
+
+/* ─────────── STORY/ESTATE/CRAFT page white scripts — CENTERED ─────────── */
+/* Reset whatever prior rules said, then reposition centered */
+.story-hero__title{
+  display: inline-block !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(2rem, 8vh, 5rem) !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: min(92vw, 44rem);
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+  text-align: center !important;
+}
+.story-hero__title .script-accent--offset{
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;   /* CENTERED, not left */
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 3rem) !important;
+  color: var(--cream) !important;           /* WHITE on photo */
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+.story-hero__title h1{
+  color: var(--cream);
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* ─────────── Mobile adjustments — slightly smaller but still readable ─────────── */
+@media (max-width: 700px){
+  .welcome__copy,
+  .founders-intro__inner,
+  .estate-intro--over-gallery .estate-intro__inner{
+    padding-top: clamp(2.8rem, 6vw, 3.8rem) !important;
+  }
+  .welcome__copy .script-accent--offset,
+  .founders-intro__inner .script-accent--offset,
+  .estate-intro--over-gallery .script-accent--offset{
+    font-size: clamp(1.8rem, 1.4rem + 3vw, 2.6rem) !important;
+  }
+  .story-hero__title .script-accent--offset{
+    font-size: clamp(1.5rem, 1.2rem + 2vw, 2.2rem) !important;
+  }
+  .visit-slim .script-accent--offset{
+    font-size: clamp(1.6rem, 1.3rem + 2vw, 2.4rem) !important;
+  }
+}

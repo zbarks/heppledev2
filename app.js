@@ -466,7 +466,7 @@
           intro.style.display = '';
         }
         introComplete = false;
-        if (video){ try { video.currentTime = 0; video.play().catch(()=>{}); } catch(_){} }
+        if (video){ try { video.currentTime = 0; video.pause(); } catch(_){} }
         nav.classList.remove('is-visible');
         window.scrollTo(0, 0);
       }
@@ -654,15 +654,11 @@
     // When video ends, release the scroll lock
     video.addEventListener('ended', markIntroComplete);
 
-    // Prime: seek to first frame so it's visible, don't play yet
-    const prime = async () => {
-      try {
-        video.currentTime = 0;
-        // iOS Safari needs a play/pause cycle to show the first frame
-        if (video.paused){
-          try { await video.play(); video.pause(); video.currentTime = 0; } catch(_){}
-        }
-      } catch(err){}
+    // Seek to first frame ONLY — never play until user scrolls.
+    // Mobile/iOS Safari may show a black frame until user interacts,
+    // but that's fine — the poster image covers the video until play starts.
+    const prime = () => {
+      try { video.currentTime = 0; } catch(_){}
     };
     if (video.readyState >= 2) prime();
     else video.addEventListener('loadeddata', prime, { once: true });
@@ -1129,7 +1125,7 @@
       <div class="wrap">
         <div class="cocktails-home__head">
           <h2>LET'S MAKE<br>COCKTAILS</h2>
-          <p class="cocktails-home__sub">DELICIOUS DRINKS START HERE</p>
+          <p class="cocktails-home__sub">Delicious drinks start here</p>
           <p class="cocktails-home__lede" style="max-width:52ch; margin:0 auto; font-size:.9rem; line-height:1.8; letter-spacing:.06em; opacity:.7;">
             THREE SKUS, NINE WAYS TO ENJOY THEM. HOVER A CARD TO REVEAL THE RECIPE.
           </p>
