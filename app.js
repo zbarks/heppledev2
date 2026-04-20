@@ -169,7 +169,7 @@
       id:       'classic-martini',
       name:     'CLASSIC MARTINI',
       sku:      'hepple-wild-juniper-gin',
-      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.11.14.png?v=1662387258&width=800',
+      image:    'assets/cocktails/dirty-martini-clink.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/hepple-martini',
       ingredients: [
         '75ML HEPPLE WILD JUNIPER GIN',
@@ -182,7 +182,7 @@
       id:       'gin-basil-smash',
       name:     'GIN BASIL SMASH',
       sku:      'hepple-wild-juniper-gin',
-      image:    'https://hepplespirits.com/cdn/shop/articles/IMG_2414.jpg?v=1678366307&width=800',
+      image:    'assets/gallery/fire-martini.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/hepple-gin-basil-smash',
       ingredients: [
         '60ML HEPPLE WILD JUNIPER GIN',
@@ -196,7 +196,7 @@
       id:       'cherry-negroni',
       name:     'CHERRY NEGRONI',
       sku:      'hepple-wild-juniper-gin',
-      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_May2022_Shot_09_206_working-v2_sRGB.jpg?v=1662390195&width=800',
+      image:    'assets/gallery/klj-hepple-may2022-shot-02-465.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/cherry-and-chocolate-negroni',
       ingredients: [
         '30ML HEPPLE WILD JUNIPER GIN',
@@ -211,7 +211,7 @@
       id:       'bergamot-martini',
       name:     'BERGAMOT MARTINI',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-08_at_09.53.25.png?v=1662627213&width=800',
+      image:    'assets/gallery/hepple-gin-june22event-120.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/bergamot-martini',
       ingredients: [
         '60ML HEPPLE DOUGLAS FIR VODKA',
@@ -225,7 +225,7 @@
       id:       'shooting-star',
       name:     'SHOOTING STAR',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.21.21.png?v=1662387729&width=800',
+      image:    'assets/gallery/hepplegin-1-2-large.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/shooting-star-cocktail',
       ingredients: [
         '50ML HEPPLE DOUGLAS FIR VODKA',
@@ -239,7 +239,7 @@
       id:       'forest-sour',
       name:     'FOREST SOUR',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/Screenshot_2022-09-05_at_15.17.46.png?v=1662387595&width=800',
+      image:    'assets/gallery/fire-martini.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/douglas-fir-sour',
       ingredients: [
         '60ML HEPPLE DOUGLAS FIR VODKA',
@@ -268,7 +268,7 @@
       id:       'moorland-cooler',
       name:     'MOORLAND COOLER',
       sku:      'hepple-moorland-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_May2022_Shot_12_023.jpg?v=1665590025&width=800',
+      image:    'assets/gallery/hepplegin-71-large.jpg',
       source:   null,
       ingredients: [
         '50ML HEPPLE MOORLAND VODKA',
@@ -283,7 +283,7 @@
       id:       'butterfly',
       name:     'BUTTERFLY',
       sku:      'hepple-moorland-vodka',
-      image:    'https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_26.04.21_Shot_05-046_working.jpg?v=1662717442&width=800',
+      image:    'assets/products/negroni.jpg',
       source:   null,
       ingredients: [
         '30ML HEPPLE MOORLAND VODKA',
@@ -558,11 +558,15 @@
   }
 
   // =============================================
-  // SIMPLE INTRO — no scroll scrubbing, no 200vh pin.
-  // Video autoplays muted/looped; text fades in via CSS animation;
-  // nav becomes visible after user scrolls past the hero.
+  // INTRO — "play while scrolling" pattern per Zach's spec:
+  //   - Scroll down → video plays
+  //   - Stop scrolling → video pauses
+  //   - Scroll far enough → intro is "complete" and collapses
+  // This is more robust than frame-perfect seeking, especially on
+  // Windows where video.currentTime seeking can silently fail.
   // =============================================
   let introComplete = false;
+  let textRevealed  = false;
 
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
@@ -584,51 +588,112 @@
       stage.style.backgroundSize = 'cover';
       stage.style.backgroundPosition = 'center';
     }
+    if (intro){
+      intro.classList.add('is-text-revealed');
+      intro.classList.add('is-complete');
+    }
+    if (nav) nav.classList.add('is-visible');
+    introComplete = true;
+    sessionStorage.setItem('hepple:seenIntro', '1');
   }
 
   if (video){
-    // 3-second safety net: if no canplay event by then, switch to poster
+    // Set all the autoplay-friendly attributes programmatically too
+    video.muted = true;
+    video.setAttribute('muted', '');
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.loop = true;
+    video.setAttribute('loop', '');
+
+    // 4-second safety net
     const loadTimeout = setTimeout(() => {
-      if (video.readyState < 3) fallbackToPoster('3s timeout — video not ready');
-    }, 3000);
+      if (video.readyState < 2) fallbackToPoster('4s timeout - video not playable');
+    }, 4000);
     video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
     video.addEventListener('error', () => fallbackToPoster('video error'), { once: true });
 
-    // Try to play (autoplay attribute is on, this is a backup for browsers
-    // that need a programmatic kick)
-    const tryPlay = () => {
+    // Kick the video into a playable state — try to play briefly then pause
+    // so first frame is visible. Catches autoplay-blocked browsers.
+    const primeVideo = () => {
       const p = video.play();
       if (p && typeof p.catch === 'function'){
-        p.catch(err => {
-          console.warn('[Hepple] Autoplay refused:', err.message);
-          // On user interaction, try again
+        p.catch(() => {
+          // Autoplay refused. Try again after first user interaction.
           const resume = () => {
             video.play().catch(()=>{});
             document.removeEventListener('touchstart', resume);
             document.removeEventListener('click', resume);
+            document.removeEventListener('scroll', resume);
           };
           document.addEventListener('touchstart', resume, { once:true, passive:true });
           document.addEventListener('click',      resume, { once:true });
+          document.addEventListener('scroll',     resume, { once:true, passive:true });
         });
       }
     };
-    if (video.readyState >= 2) tryPlay();
-    else video.addEventListener('loadeddata', tryPlay, { once: true });
+    if (video.readyState >= 2) primeVideo();
+    else video.addEventListener('loadeddata', primeVideo, { once:true });
+  } else {
+    fallbackToPoster('no video element');
   }
 
-  // Reveal nav when user has scrolled past most of the intro
-  function checkIntroScroll(){
-    if (introComplete || !intro) return;
+  // Scroll-driven play/pause: video plays while the user is scrolling
+  // through the intro, pauses when they stop.
+  let scrollTimer = null;
+  let lastScrollY = window.scrollY;
+
+  function handleIntroScroll(){
+    if (!intro) return;
+
     const rect = intro.getBoundingClientRect();
-    if (rect.bottom < window.innerHeight * 0.5){
+    const introH = intro.offsetHeight;
+    const viewport = window.innerHeight;
+    const scrollable = Math.max(1, introH - viewport);
+    const scrolled = Math.min(Math.max(-rect.top, 0), scrollable);
+    const progress = scrolled / scrollable;
+
+    // Reveal text once we're ~10% through
+    if (!textRevealed && progress > 0.08){
+      textRevealed = true;
+      intro.classList.add('is-text-revealed');
+    }
+
+    // Complete at 85% through
+    if (!introComplete && progress > 0.85){
       introComplete = true;
+      intro.classList.add('is-complete');
       if (nav) nav.classList.add('is-visible');
       sessionStorage.setItem('hepple:seenIntro', '1');
     }
+
+    // Play-while-scrolling
+    if (video && !introComplete && rect.bottom > 0 && rect.top < viewport){
+      // We're scrolling while inside the intro — play the video
+      if (video.paused && video.readyState >= 2){
+        video.play().catch(()=>{});
+      }
+      // Set a timer to pause when scrolling stops
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        if (video && !video.paused && !introComplete){
+          video.pause();
+        }
+      }, 180);
+    }
   }
-  window.addEventListener('scroll', checkIntroScroll, { passive: true });
-  // Also check on load in case we're returning to a scrolled position
-  setTimeout(checkIntroScroll, 100);
+
+  window.addEventListener('scroll', handleIntroScroll, { passive: true });
+  // Fallback: after 2s, reveal the text even if user hasn't scrolled
+  setTimeout(() => {
+    if (!textRevealed && intro){
+      intro.classList.add('is-text-revealed');
+      textRevealed = true;
+    }
+  }, 1500);
+  // Initial check in case page loaded scrolled
+  setTimeout(handleIntroScroll, 100);
 
   // DRAWERS
   $('#menuBtn')?.addEventListener('click', () => {

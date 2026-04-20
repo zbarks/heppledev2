@@ -188,19 +188,31 @@ h1, h2, h3, h4{
    ========================================================= */
 .intro{
   position:relative;
-  height:100vh;
+  height:200vh;
   background:#000;
   z-index:1;
+}
+/* Once complete (i.e. user has scrubbed past the video) the section
+   collapses to a single viewport so the rest of the page is reachable
+   normally. This is the safety hatch that fixed the Windows lock-up. */
+.intro.is-complete{ height:100vh; }
+.intro__pin{
+  position:sticky; top:0;
+  height:100vh; width:100%;
   overflow:hidden;
 }
-.intro.is-complete{ height:100vh; }   /* legacy hook, kept for safety */
 .intro__stage{ position:absolute; inset:0; background:#000; }
 .intro__video{
   position:absolute; inset:0;
   width:100%; height:100%;
   object-fit:cover;
   filter: saturate(1.05) contrast(1.02);
+  /* Hide the default play button on iOS Safari */
+  pointer-events: none;
 }
+.intro__video::-webkit-media-controls{ display: none !important; }
+.intro__video::-webkit-media-controls-overlay-play-button{ display: none !important; }
+.intro__video::-webkit-media-controls-start-playback-button{ display: none !important; }
 .intro__vignette{
   position:absolute; inset:0;
   background:
@@ -222,8 +234,9 @@ h1, h2, h3, h4{
   font-family:var(--script);
   font-size: clamp(2.2rem, 1.6rem + 2.8vw, 4rem);
   color:var(--cream);
-  /* Simple fade-in on page load — no scroll trigger */
-  animation: introFade 1.4s ease .2s both;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity 1.2s ease, transform 1.2s ease;
   margin:0 0 .15em;
   line-height:1;
 }
@@ -231,8 +244,14 @@ h1, h2, h3, h4{
   font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem);
   line-height:1.02;
   color:var(--cream);
-  animation: introFade 1.4s ease .5s both;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity 1.2s ease .15s, transform 1.2s ease .15s;
   letter-spacing:-.015em;
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity:1; transform:translateY(0);
 }
 @keyframes introFade{
   from{ opacity:0; transform:translateY(14px); }
@@ -247,8 +266,9 @@ h1, h2, h3, h4{
   font-weight:600;
   opacity:.82;
   color:var(--cream);
-  animation: introFade 1s ease 1s both;
+  transition:opacity .5s ease;
 }
+.intro.is-complete .intro__hint{ opacity:0; }
 .intro__hint-line{
   width:1px; height:44px;
   background:linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
@@ -2553,4 +2573,85 @@ footer{
   .intro__headline{
     white-space: normal;
   }
+}
+
+/* =========================================================
+   FEEDBACK V6 — Windows video scrub + polish round
+   ========================================================= */
+
+/* 1. Mobile sticky gallery — only show the ~6 curated keepers */
+@media (max-width: 700px){
+  .sticky-gallery .mobile-hide,
+  .sticky-gallery figure.mobile-hide{
+    display: none !important;
+  }
+}
+
+/* 2. iOS Safari — kill the default video overlay play button entirely */
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button{
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+.intro__video{
+  pointer-events: none;   /* user can't trigger controls */
+}
+
+/* 3. FOUNDERS — "This is Our Story" TOUCHING "IN PURSUIT".
+   Bring the script down so it sits snug against the heading top edge. */
+.founders-intro__inner{
+  padding-top: clamp(2.2rem, 3.5vw, 3.2rem) !important;
+}
+.founders-intro__inner .script-accent--offset{
+  /* Sit directly above the heading, touching its top */
+  transform: translate(0, .1em) rotate(-15deg) !important;
+}
+
+/* 4. VISIT-SLIM — ensure script fully visible, not cut off */
+.visit-slim{
+  padding-top: clamp(6rem, 12vh, 9rem) !important;
+  overflow: visible !important;
+}
+.visit-slim .script-accent--offset{
+  top: clamp(1.5rem, 4vh, 3rem) !important;
+  /* Centered horizontally — not offset left, since the panel is centered */
+  left: 50% !important;
+  transform: translate(-50%, 0) rotate(-15deg) !important;
+  transform-origin: center bottom !important;
+}
+
+/* 5. WELCOME panel — consistent with V5 but verify script touches heading */
+.welcome__copy{
+  padding-top: clamp(2rem, 4vw, 3.5rem) !important;
+}
+.welcome__copy .script-accent--offset{
+  transform: translate(-.3em, .1em) rotate(-15deg) !important;
+}
+
+/* 6. ESTATE INTRO — make script visibly offset from heading (not cut on left) */
+.estate-intro--centered .estate-intro__inner{
+  padding-top: clamp(2.2rem, 4.5vw, 3.6rem) !important;
+}
+.estate-intro--centered .estate-intro__inner .script-accent--offset{
+  transform: translate(0, .1em) rotate(-15deg) !important;
+}
+
+/* 7. Intro hero — make sure headline is actually centered in the stage */
+.intro__center{
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+.intro__eyebrow,
+.intro__headline{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 8. Intro video — make sure Safari gets it visible and playable */
+.intro__video{
+  background: #000;
+  display: block !important;
 }

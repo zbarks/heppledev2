@@ -110,24 +110,29 @@
 </aside>
 <div class="overlay" id="overlay"></div>
 
-<!-- INTRO — video autoplays muted/looped, text fades in over it.
-     Scroll past it normally; no sticky pin, no scroll-scrubbing. -->
+<!-- INTRO — scroll-scrubbed hero video. The intro section is 200vh tall.
+     The inner __pin sticks at top:0 for that 200vh, and as the user scrolls,
+     the video's currentTime is updated in proportion to scroll progress.
+     Once scrolled past, .is-complete collapses the section so the rest
+     of the page is reachable normally. -->
 <section class="intro" id="intro" aria-label="Welcome">
-  <div class="intro__stage">
-    <video class="intro__video" id="heroVideo" playsinline muted loop autoplay preload="metadata" poster="assets/hero-poster.jpg">
-      <source src="assets/hero.mp4" type="video/mp4" />
-      <source src="assets/hero.webm" type="video/webm" />
-    </video>
-    <div class="intro__vignette"></div>
+  <div class="intro__pin">
+    <div class="intro__stage">
+      <video class="intro__video" id="heroVideo" playsinline webkit-playsinline muted autoplay loop preload="auto" poster="assets/hero-poster.jpg">
+        <source src="assets/hero.mp4" type="video/mp4" />
+        <source src="assets/hero.webm" type="video/webm" />
+      </video>
+      <div class="intro__vignette"></div>
 
-    <div class="intro__overlay">
-      <div class="intro__center">
-        <p class="intro__eyebrow">Come in</p>
-        <h1 class="intro__headline">WE'RE MAKING DRINKS</h1>
-      </div>
-      <div class="intro__hint">
-        <span>SCROLL</span>
-        <span class="intro__hint-line"></span>
+      <div class="intro__overlay">
+        <div class="intro__center">
+          <p class="intro__eyebrow">Come in</p>
+          <h1 class="intro__headline">WE'RE MAKING DRINKS</h1>
+        </div>
+        <div class="intro__hint">
+          <span>SCROLL</span>
+          <span class="intro__hint-line"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -228,22 +233,22 @@
       <div class="sticky-gallery__grid">
         <div class="sticky-gallery__col sticky-gallery__col--scroll">
           <figure><img src="assets/gallery/klj-hepple-may2022-shot-02-465.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/cdx-00776.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/cdx-00776.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="assets/gallery/hepple-070918-0256.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/hepplegin-71-large.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/mg-2869.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/hepplegin-71-large.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/mg-2869.jpg" alt="" loading="lazy" /></figure>
         </div>
         <div class="sticky-gallery__col sticky-gallery__col--sticky">
           <figure><img src="assets/gallery/hepple-gin-june22event-120.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="assets/gallery/journeying.jpg" alt="" loading="lazy" /></figure>
         </div>
         <div class="sticky-gallery__col sticky-gallery__col--scroll">
           <figure><img src="assets/gallery/cdx-09959.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/planters-1.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/planters-1.jpg" alt="" loading="lazy" /></figure>
           <figure><img src="assets/gallery/klj-hepple-may2022-shot-09-468.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/hepplegin-1-2-large.jpg" alt="" loading="lazy" /></figure>
-          <figure><img src="assets/gallery/hepple-070918-1796.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/hepplegin-1-2-large.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery/hepple-070918-1796.jpg" alt="" loading="lazy" /></figure>
         </div>
       </div>
     </section>
@@ -344,7 +349,7 @@
 
     <section class="story-hero">
       <div class="story-hero__img">
-        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=2000" alt="" loading="lazy" />
+        <img src="assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" />
       </div>
       <div class="story-hero__title">
         <p class="script-accent script-accent--hero script-accent--light script-accent--offset">Our Inspiration</p>
@@ -395,7 +400,7 @@
 
     <section class="story-hero">
       <div class="story-hero__img">
-        <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_423.jpg?v=1662457006&width=2000" alt="" loading="lazy" />
+        <img src="assets/gallery/hepple-070918-0256.jpg" alt="" loading="lazy" />
       </div>
       <div class="story-hero__title">
         <p class="script-accent script-accent--hero script-accent--light script-accent--offset">Our Craft</p>
@@ -423,7 +428,7 @@
           <div class="process__steps" data-process-track>
             <article class="process__step is-active" data-step="1">
               <div class="process__img">
-                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_021.jpg?v=1663855719&width=1400" alt="" loading="lazy" />
+                <img src="assets/gallery/journeying.jpg" alt="" loading="lazy" />
               </div>
               <div class="process__copy">
                 <span class="process__number">01</span>
@@ -433,7 +438,7 @@
             </article>
             <article class="process__step" data-step="2">
               <div class="process__img">
-                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_347.jpg?v=1663855703&width=1400" alt="" loading="lazy" />
+                <img src="assets/gallery/klj-hepple-autumn-26-10-22-shot-02-188.jpg" alt="" loading="lazy" />
               </div>
               <div class="process__copy">
                 <span class="process__number">02</span>
@@ -443,7 +448,7 @@
             </article>
             <article class="process__step" data-step="3">
               <div class="process__img">
-                <img src="https://hepplespirits.com/cdn/shop/files/KLJ_Hepple_May2022_Shot_02_423.jpg?v=1662457006&width=1400" alt="" loading="lazy" />
+                <img src="assets/gallery/hepple-070918-0256.jpg" alt="" loading="lazy" />
               </div>
               <div class="process__copy">
                 <span class="process__number">03</span>
@@ -453,7 +458,7 @@
             </article>
             <article class="process__step" data-step="4">
               <div class="process__img">
-                <img src="https://hepplespirits.com/cdn/shop/files/Screenshot_2024-11-14_at_11.05.27.png?v=1731582345&width=1400" alt="" loading="lazy" />
+                <img src="assets/lifestyle/founder-forest.jpg" alt="" loading="lazy" />
               </div>
               <div class="process__copy">
                 <span class="process__number">04</span>
@@ -463,7 +468,7 @@
             </article>
             <article class="process__step" data-step="5">
               <div class="process__img">
-                <img src="https://hepplespirits.com/cdn/shop/files/Screenshot_2024-11-14_at_11.10.48.png?v=1731582660&width=1400" alt="" loading="lazy" />
+                <img src="assets/gallery/cdx-00776.jpg" alt="" loading="lazy" />
               </div>
               <div class="process__copy">
                 <span class="process__number">05</span>
@@ -507,7 +512,7 @@
 
     <section class="story-hero story-hero--shorter">
       <div class="story-hero__img">
-        <img src="https://hepplespirits.com/cdn/shop/articles/KLJ_Hepple_May2022_Shot_09_206_working-v2_sRGB.jpg?v=1662390195&width=2000" alt="" loading="lazy" />
+        <img src="assets/gallery/klj-hepple-may2022-shot-02-465.jpg" alt="" loading="lazy" />
       </div>
       <div class="story-hero__title">
         <h1>LET'S MAKE<br>COCKTAILS</h1>
