@@ -3300,3 +3300,123 @@ video::-webkit-media-controls-start-playback-button{
     font-size: clamp(1.6rem, 1.3rem + 2vw, 2.4rem) !important;
   }
 }
+
+/* =========================================================
+   FEEDBACK V11 — FINAL polish: bigger scripts, hero layouts
+   ========================================================= */
+
+/* 1. STORY/ESTATE/CRAFT HERO — content in UPPER portion, not bottom */
+.story-hero__title{
+  bottom: auto !important;
+  top: clamp(4rem, 10vh, 7rem) !important;   /* upper portion, under nav */
+  transform: translateX(-50%) !important;
+}
+/* Make heroes shorter overall so the subject isn't pushed off-screen */
+.story-hero{
+  height: auto !important;
+  min-height: clamp(28rem, 56vh, 40rem) !important;
+  padding-top: 0 !important;
+  padding-bottom: clamp(3rem, 6vh, 5rem);
+}
+/* Script scripts bigger on these pages — they're the page title accent */
+.story-hero__title .script-accent--offset{
+  font-size: clamp(2.2rem, 1.5rem + 2.5vw, 3.6rem) !important;
+  color: var(--cream) !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  white-space: nowrap;
+}
+/* Big H1 centered below script */
+.story-hero__title h1{
+  font-size: clamp(2.6rem, 1.8rem + 3.5vw, 5rem) !important;
+  padding-top: clamp(2rem, 4vw, 3.5rem) !important;   /* room for script above */
+  margin: 0 !important;
+  text-align: center !important;
+  color: var(--cream) !important;
+  line-height: 1 !important;
+}
+
+/* 2. HOME "LET'S MAKE COCKTAILS" — bigger "Delicious drinks start here",
+   tight to the heading (same pattern as Welcome-to-Hepple)                 */
+.cocktails-home__head{
+  text-align: center;
+  position: relative;
+  padding-top: clamp(3.5rem, 5vw, 5rem) !important;
+}
+.cocktails-home__head h2{
+  font-size: clamp(2.6rem, 1.8rem + 3vw, 4.6rem);
+  line-height: 1;
+  margin: 0 0 .4em;
+  color: var(--hepple-blue);
+}
+.cocktails-home__head .cocktails-home__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  /* BIG — almost as big as the heading per Zach */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .1em auto 1.8rem !important;
+  max-width: 40ch;
+}
+
+/* 3. COCKTAILS PAGE — no duplicate head; just the SKU groups.
+   Remove the old dot style.                                          */
+.cocktails-group__dot{ display: none !important; }
+
+/* 4. COCKTAILS PAGE spacing so groups don't run into nav */
+.cocktails-page{
+  padding: clamp(3rem, 6vh, 5rem) 0;
+}
+.cocktails-group{
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+.cocktails-group__head{
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 3vh, 2.5rem);
+}
+.cocktails-group__head h3{
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+  letter-spacing: .04em;
+  color: var(--hepple-blue);
+  margin: 0 0 .3em;
+}
+.cocktails-group__tagline{
+  font-family: var(--sans);
+  font-size: .75rem;
+  letter-spacing: .25em;
+  font-weight: 700;
+  color: var(--hepple-blue);
+  opacity: .7;
+  text-transform: uppercase;
+}
+
+/* 5. COCKTAILS PAGE hero — same pattern as Estate/Craft but the script
+   is "Delicious drinks start here" above LET'S MAKE COCKTAILS          */
+/* Inherits from story-hero__title rules above — already correct */
+
+/* 6. Hide the old story-hero__sub style if any instance remains */
+.story-hero__sub{ display: none !important; }
+
+/* 7. HEPPLE ESTATE page & CRAFT page: image shows subject at center-top */
+.story-hero__img img{
+  object-position: center 35% !important;
+}
+
+/* 8. WELCOME-TO-HEPPLE — bigger once more for consistency */
+.welcome__copy .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+}
+
+/* 9. THIS IS OUR STORY (home, blue) — bigger, consistent */
+.founders-intro__inner .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+}
+
+/* 10. COME & SEE US — same consistent big sizing */
+.visit-slim .script-accent--offset{
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem) !important;
+}

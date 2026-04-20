@@ -651,9 +651,6 @@
       if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
     });
 
-    // When video ends, release the scroll lock
-    video.addEventListener('ended', markIntroComplete);
-
     // Seek to first frame ONLY — never play until user scrolls.
     // Mobile/iOS Safari may show a black frame until user interacts,
     // but that's fine — the poster image covers the video until play starts.
@@ -666,9 +663,9 @@
     fallbackToPoster('no video element');
   }
 
-  // First scroll on the intro triggers video playback. While the video is
-  // playing, scroll is effectively "locked" (via the sticky pin) — user
-  // continues to see intro until video completes.
+  // First scroll on the intro triggers video playback. Release the scroll
+  // lock ONLY when video nears its end (80%+), so scrolling feels natural
+  // as the video finishes — not a sudden cut when video ends or at 95%.
   function handleIntroScroll(){
     if (!intro || introComplete) return;
 
@@ -683,14 +680,23 @@
     if (!videoStarted && progress > 0.02){
       startVideoPlayback();
     }
-    // Text reveals as soon as video starts
-    // Video's own 'ended' event marks complete — but also a safety net:
-    // if they've scrolled all the way to the end of the 200vh track,
-    // release the lock manually.
-    if (progress > 0.95){
+
+    // Release scroll lock when either:
+    //  - video is 80%+ through (scroll can continue smoothly as it finishes)
+    //  - user has scrolled 95% of the 200vh track (safety fallback)
+    const videoProgress = video && videoDuration > 0
+      ? video.currentTime / videoDuration
+      : 0;
+    if (videoProgress > 0.80 || progress > 0.95){
       markIntroComplete();
     }
   }
+  // Also check periodically while video plays so release happens on time
+  setInterval(() => {
+    if (introComplete || !video || !videoStarted) return;
+    const vp = videoDuration > 0 ? video.currentTime / videoDuration : 0;
+    if (vp > 0.80) markIntroComplete();
+  }, 150);
 
   window.addEventListener('scroll', handleIntroScroll, { passive: true });
   setTimeout(handleIntroScroll, 100);
@@ -1123,18 +1129,9 @@
 
     root.innerHTML = `
       <div class="wrap">
-        <div class="cocktails-home__head">
-          <h2>LET'S MAKE<br>COCKTAILS</h2>
-          <p class="cocktails-home__sub">Delicious drinks start here</p>
-          <p class="cocktails-home__lede" style="max-width:52ch; margin:0 auto; font-size:.9rem; line-height:1.8; letter-spacing:.06em; opacity:.7;">
-            THREE SKUS, NINE WAYS TO ENJOY THEM. HOVER A CARD TO REVEAL THE RECIPE.
-          </p>
-        </div>
-
         ${groups.map(g => `
           <div class="cocktails-group">
             <div class="cocktails-group__head">
-              <span class="cocktails-group__dot" style="background:${g.color};"></span>
               <h3>${g.name}</h3>
               <span class="cocktails-group__tagline">${g.tagline}</span>
             </div>
