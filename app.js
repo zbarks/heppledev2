@@ -182,7 +182,7 @@
       id:       'gin-basil-smash',
       name:     'GIN BASIL SMASH',
       sku:      'hepple-wild-juniper-gin',
-      image:    'assets/gallery/fire-martini.jpg',
+      image:    'assets/cocktails/dirty-martini-clink.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/hepple-gin-basil-smash',
       ingredients: [
         '60ML HEPPLE WILD JUNIPER GIN',
@@ -196,7 +196,7 @@
       id:       'cherry-negroni',
       name:     'CHERRY NEGRONI',
       sku:      'hepple-wild-juniper-gin',
-      image:    'assets/gallery/klj-hepple-may2022-shot-02-465.jpg',
+      image:    'assets/products/negroni.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/cherry-and-chocolate-negroni',
       ingredients: [
         '30ML HEPPLE WILD JUNIPER GIN',
@@ -211,7 +211,7 @@
       id:       'bergamot-martini',
       name:     'BERGAMOT MARTINI',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'assets/gallery/hepple-gin-june22event-120.jpg',
+      image:    'assets/gallery/fire-martini.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/bergamot-martini',
       ingredients: [
         '60ML HEPPLE DOUGLAS FIR VODKA',
@@ -225,7 +225,7 @@
       id:       'shooting-star',
       name:     'SHOOTING STAR',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'assets/gallery/hepplegin-1-2-large.jpg',
+      image:    'assets/products/negroni.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/shooting-star-cocktail',
       ingredients: [
         '50ML HEPPLE DOUGLAS FIR VODKA',
@@ -239,7 +239,7 @@
       id:       'forest-sour',
       name:     'FOREST SOUR',
       sku:      'hepple-douglas-fir-vodka',
-      image:    'assets/gallery/fire-martini.jpg',
+      image:    'assets/cocktails/dirty-martini-clink.jpg',
       source:   'https://hepplespirits.com/blogs/cocktail-recipes/douglas-fir-sour',
       ingredients: [
         '60ML HEPPLE DOUGLAS FIR VODKA',
@@ -268,7 +268,7 @@
       id:       'moorland-cooler',
       name:     'MOORLAND COOLER',
       sku:      'hepple-moorland-vodka',
-      image:    'assets/gallery/hepplegin-71-large.jpg',
+      image:    'assets/gallery/fire-martini.jpg',
       source:   null,
       ingredients: [
         '50ML HEPPLE MOORLAND VODKA',
@@ -558,15 +558,21 @@
   }
 
   // =============================================
-  // INTRO — "play while scrolling" pattern per Zach's spec:
-  //   - Scroll down → video plays
-  //   - Stop scrolling → video pauses
-  //   - Scroll far enough → intro is "complete" and collapses
-  // This is more robust than frame-perfect seeking, especially on
-  // Windows where video.currentTime seeking can silently fail.
+  // INTRO — proper scroll-scrub per Zach:
+  //   - Video starts paused on page load (no text visible yet)
+  //   - Scrolling drives the video frame-by-frame (video.currentTime)
+  //   - Scroll up = video reverses
+  //   - Stop scrolling = video stops at that frame
+  //   - Once scroll progress passes threshold, intro "completes" and the
+  //     section collapses so scroll continues normally to next page
+  //   - No autoplay loop; video never plays on its own
   // =============================================
   let introComplete = false;
   let textRevealed  = false;
+  let videoDuration = 5.2;
+  let targetTime    = 0;
+  let smoothedTime  = 0;
+  let lastWriteTime = -1;
 
   const IS_TOUCH =
     (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
@@ -594,105 +600,103 @@
     }
     if (nav) nav.classList.add('is-visible');
     introComplete = true;
-    sessionStorage.setItem('hepple:seenIntro', '1');
   }
 
   if (video){
-    // Set all the autoplay-friendly attributes programmatically too
+    // Required attributes for scrub-style seeking
     video.muted = true;
     video.setAttribute('muted', '');
     video.playsInline = true;
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
-    video.loop = true;
-    video.setAttribute('loop', '');
+    // CRITICAL: remove loop + autoplay so the video doesn't play on its own
+    video.loop = false;
+    video.removeAttribute('loop');
+    video.removeAttribute('autoplay');
 
-    // 4-second safety net
+    // 4-second safety net — if video can't load, show poster
     const loadTimeout = setTimeout(() => {
-      if (video.readyState < 2) fallbackToPoster('4s timeout - video not playable');
+      if (video.readyState < 2) fallbackToPoster('4s timeout');
     }, 4000);
-    video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
     video.addEventListener('error', () => fallbackToPoster('video error'), { once: true });
 
-    // Kick the video into a playable state — try to play briefly then pause
-    // so first frame is visible. Catches autoplay-blocked browsers.
-    const primeVideo = () => {
-      const p = video.play();
-      if (p && typeof p.catch === 'function'){
-        p.catch(() => {
-          // Autoplay refused. Try again after first user interaction.
-          const resume = () => {
-            video.play().catch(()=>{});
-            document.removeEventListener('touchstart', resume);
-            document.removeEventListener('click', resume);
-            document.removeEventListener('scroll', resume);
-          };
-          document.addEventListener('touchstart', resume, { once:true, passive:true });
-          document.addEventListener('click',      resume, { once:true });
-          document.addEventListener('scroll',     resume, { once:true, passive:true });
-        });
+    video.addEventListener('loadedmetadata', () => {
+      if (isFinite(video.duration) && video.duration > 0) videoDuration = video.duration;
+    });
+    video.addEventListener('canplay', () => clearTimeout(loadTimeout), { once: true });
+
+    // Prime: play briefly, pause, seek to 0. Gets the first frame visible
+    // so the video element isn't black when page loads.
+    const prime = async () => {
+      try {
+        await video.play();
+        video.pause();
+        video.currentTime = 0;
+      } catch(err){
+        console.warn('[Hepple] Prime failed:', err.message);
       }
     };
-    if (video.readyState >= 2) primeVideo();
-    else video.addEventListener('loadeddata', primeVideo, { once:true });
+    if (video.readyState >= 2) prime();
+    else video.addEventListener('loadeddata', prime, { once: true });
   } else {
     fallbackToPoster('no video element');
   }
 
-  // Scroll-driven play/pause: video plays while the user is scrolling
-  // through the intro, pauses when they stop.
-  let scrollTimer = null;
-  let lastScrollY = window.scrollY;
-
+  // Scroll handler — compute progress, update target video time, reveal text,
+  // mark complete. Runs on every scroll event (passive, cheap).
   function handleIntroScroll(){
     if (!intro) return;
 
-    const rect = intro.getBoundingClientRect();
-    const introH = intro.offsetHeight;
-    const viewport = window.innerHeight;
+    const rect       = intro.getBoundingClientRect();
+    const introH     = intro.offsetHeight;
+    const viewport   = window.innerHeight;
     const scrollable = Math.max(1, introH - viewport);
-    const scrolled = Math.min(Math.max(-rect.top, 0), scrollable);
-    const progress = scrolled / scrollable;
+    const scrolled   = Math.min(Math.max(-rect.top, 0), scrollable);
+    const progress   = scrolled / scrollable;
 
-    // Reveal text once we're ~10% through
-    if (!textRevealed && progress > 0.08){
+    // Target video time proportional to scroll progress
+    targetTime = Math.max(0, Math.min(videoDuration * progress, videoDuration - 0.05));
+
+    // Reveal text once we're ~10% through the scroll
+    if (!textRevealed && progress > 0.10){
       textRevealed = true;
       intro.classList.add('is-text-revealed');
+    } else if (textRevealed && progress < 0.03){
+      // Hide again if scrolled back to very top
+      textRevealed = false;
+      intro.classList.remove('is-text-revealed');
     }
 
-    // Complete at 85% through
-    if (!introComplete && progress > 0.85){
+    // Mark complete at 92% — this collapses the pin via CSS so scroll
+    // continues naturally to the next section (no cut).
+    if (!introComplete && progress > 0.92){
       introComplete = true;
       intro.classList.add('is-complete');
       if (nav) nav.classList.add('is-visible');
       sessionStorage.setItem('hepple:seenIntro', '1');
     }
-
-    // Play-while-scrolling
-    if (video && !introComplete && rect.bottom > 0 && rect.top < viewport){
-      // We're scrolling while inside the intro — play the video
-      if (video.paused && video.readyState >= 2){
-        video.play().catch(()=>{});
-      }
-      // Set a timer to pause when scrolling stops
-      if (scrollTimer) clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        if (video && !video.paused && !introComplete){
-          video.pause();
-        }
-      }, 180);
-    }
   }
 
-  window.addEventListener('scroll', handleIntroScroll, { passive: true });
-  // Fallback: after 2s, reveal the text even if user hasn't scrolled
-  setTimeout(() => {
-    if (!textRevealed && intro){
-      intro.classList.add('is-text-revealed');
-      textRevealed = true;
+  // Animation-frame loop — smoothly lerp smoothedTime toward targetTime
+  // so scroll-to-video mapping feels fluid, and write it to video.currentTime.
+  const LERP = 0.22;
+  const WRITE_THRESHOLD = 1 / 20;
+  function scrubTick(){
+    const diff = targetTime - smoothedTime;
+    if (Math.abs(diff) > 0.002) smoothedTime += diff * LERP;
+    else smoothedTime = targetTime;
+    if (video && video.readyState >= 2 && isFinite(smoothedTime)){
+      if (Math.abs(smoothedTime - lastWriteTime) > WRITE_THRESHOLD){
+        try { video.currentTime = smoothedTime; lastWriteTime = smoothedTime; }
+        catch(_){}
+      }
     }
-  }, 1500);
-  // Initial check in case page loaded scrolled
+    requestAnimationFrame(scrubTick);
+  }
+  requestAnimationFrame(scrubTick);
+
+  window.addEventListener('scroll', handleIntroScroll, { passive: true });
+  // Initial check
   setTimeout(handleIntroScroll, 100);
 
   // DRAWERS
@@ -1227,9 +1231,7 @@
   // BOOT
   // =============================================
   renderCart();
-  requestAnimationFrame(tick);
   route();
-  computeScrollProgress();
   initProcess();
   initCounters();
   initAllEmbla();

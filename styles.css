@@ -2655,3 +2655,221 @@ video::-webkit-media-controls-start-playback-button{
   background: #000;
   display: block !important;
 }
+
+/* =========================================================
+   FEEDBACK V7 — FINAL: straight scripts (no tilt), consistent ratios,
+   fix all cutoffs, containerize flip cards
+   ========================================================= */
+
+/* 1. GLOBAL OFFSET SCRIPT — straight, not tilted.
+   Override all previous rotate() rules. Size is consistently
+   small relative to its heading.                               */
+.script-accent--offset{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  transform: translate(.1em, .15em) !important;   /* NO rotation */
+  transform-origin: left top;
+  font-family: var(--script);
+  /* Small, consistent across sections. ~40% of heading size. */
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem) !important;
+  line-height: 1;
+  color: var(--hepple-blue);
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  z-index: 3;
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* Hero variant for overlays on dark photos */
+.script-accent--offset.script-accent--hero{
+  font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.8rem) !important;
+}
+@media (max-width: 700px){
+  .script-accent--offset{
+    font-size: clamp(1.2rem, .9rem + 2vw, 1.8rem) !important;
+  }
+}
+
+/* 2. ALL offset-script containers need padding-top to host the script
+   and relative positioning. Consistent rule.                         */
+.welcome__copy,
+.founders-intro__inner,
+.estate-intro__inner,
+.story-hero__title,
+.cocktails-home__head,
+.estate-cta__inner,
+.visit-slim{
+  position: relative;
+  padding-top: clamp(2.4rem, 3.5vw, 3.6rem) !important;
+}
+
+/* 3. VISIT-SLIM — script is the same tight pattern, not offset left */
+.visit-slim .script-accent--offset{
+  top: clamp(1.4rem, 3vh, 2.2rem) !important;
+  left: 50% !important;
+  transform: translate(-50%, 0) !important;
+}
+.visit-slim h3{
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+  line-height: 1;
+  margin: .6rem 0 1.4rem;
+  color: var(--hepple-blue);
+}
+
+/* 4. FOUNDERS — "This is Our Story" INSIDE the photo with padding.
+   Keep overflow:hidden so it stays in frame. Center vertically.    */
+.founders-intro{
+  overflow: hidden !important;
+  min-height: auto;
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+.founders-intro__overlay{
+  min-height: auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gutter);
+  align-items: center;
+}
+.founders-intro--right .founders-intro__inner{
+  /* Keep the padding-top for the script, but ensure script doesn't escape
+     the right column.                                                   */
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.founders-intro__inner .script-accent--offset{
+  /* Sit top-left of heading. Same straight style as everywhere else. */
+  transform: translate(0, .15em) !important;
+}
+
+/* 5. FLIP CARDS — smaller, properly contained so flip doesn't get cut off */
+.flip-card{
+  /* Add margin so the 3D flip has room to breathe */
+  aspect-ratio: 3/4;   /* fix consistent shape */
+  perspective: 1200px;
+  overflow: visible;   /* allow shadow during flip */
+  transform-style: preserve-3d;
+}
+.flip-card__inner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .7s cubic-bezier(.16,1,.3,1);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card__inner,
+.flip-card:focus-within .flip-card__inner,
+.flip-card.is-flipped .flip-card__inner{
+  transform: rotateY(180deg);
+}
+.flip-card__face{
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.flip-card__back{
+  transform: rotateY(180deg);
+}
+/* Make sure the card's FRONT image fully fills the card */
+.flip-card__front img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.flip-row{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  /* Give vertical breathing room so hover-lift doesn't bleed */
+  padding: clamp(1rem, 2vw, 2rem) 0;
+}
+@media (max-width: 860px){
+  .flip-row{
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 3.5rem);
+    padding: 1rem;
+  }
+}
+
+/* 6. INTRO — text hidden on load, shown only when scrolling starts */
+.intro__eyebrow,
+.intro__headline{
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+  transform: translateY(14px);
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Override any leftover animation: keyframes from earlier */
+.intro__eyebrow{ animation: none !important; }
+.intro__headline{ animation: none !important; }
+/* Center content in intro */
+.intro__overlay{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.intro__center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* 7. STORY HERO pages (Our Story, Estate, Craft, Cocktails) — bring content
+   down so the hero image isn't getting clipped behind the nav */
+.story-hero{
+  padding-top: clamp(4rem, 8vh, 6rem) !important;
+}
+
+/* 8. CRAFT / ESTATE page story-intro — more vertical breathing room */
+.story-intro{
+  padding: clamp(3rem, 6vh, 5rem) 0 !important;
+}
+
+/* 9. Founders-intro (the home block): center the content vertically,
+   give it more padding so IN PURSUIT isn't hugging the nav.           */
+.founders-intro--right .founders-intro__inner{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* 10. Extra right-padding on founders overlay so text isn't flush with edge */
+.founders-intro--right .founders-intro__overlay{
+  padding-right: clamp(2rem, 4vw, 4rem);
+}
+
+/* 11. Explore the Range — make sure cards show */
+.range .product-card{
+  min-height: 520px;
+}
+.range .product-card__img{
+  min-height: 280px;
+}
+
+/* 12. Mobile intro — vertically center headline */
+@media (max-width: 700px){
+  .intro__center{
+    width: 90%;
+  }
+}
+
+/* 13. Cocktails home head padding so headline isn't too close to visit-slim above */
+.cocktails-home__head{
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+}
+.cocktails-home__head .script-accent--offset{
+  left: 50% !important;
+  top: clamp(.8rem, 2vh, 1.6rem) !important;
+  transform: translate(-50%, 0) !important;
+}
