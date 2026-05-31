@@ -5615,3 +5615,311 @@ body .intro__video{ display: none !important; }
     height: 110%;
   }
 }
+
+/* =================================================================
+   ============== MOBILE PHOTO/LAYOUT FIXES ========================
+   Site-wide cleanup of photos that got cropped weirdly or stretched
+   tall on phones. Strategy: let images drive their own aspect ratio
+   on mobile instead of being forced into 70-95vh tall frames.
+   ================================================================= */
+
+@media (max-width: 760px){
+
+  /* ── HOME HERO INTRO (the scroll-scrub canvas) ──────────────────
+     Keep its size but ensure the canvas covers properly without
+     stretching the frames vertically. */
+  body .intro,
+  body .intro__pin{
+    height: 100vh !important;
+  }
+  body .intro__canvas{
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  /* ── STORY HERO (top of /story, /estate, etc) ───────────────────
+     Was 80vh forcing landscape photos into tall narrow frames.
+     Drop to a natural ratio that shows the whole image. */
+  body .story-hero{
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    max-height: 90vh !important;
+  }
+  body .story-hero__img{
+    position: absolute !important;
+    inset: 0 !important;
+  }
+  body .story-hero__img img,
+  body .story-hero__video,
+  body .story-hero__fallback{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+  /* Estate hero specifically gets a 4:5 frame so the moor reads naturally */
+  body [data-page="/estate"] .story-hero{
+    aspect-ratio: 4 / 5 !important;
+  }
+  /* Cocktails / Story page heroes — slightly shorter */
+  body [data-page="/cocktails"] .story-hero,
+  body [data-page="/story"] .story-hero{
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  /* ── ESTATE BLOCKS (3 alternating offset blocks) ─────────────────
+     Was min-height: clamp(30rem, 70vh, 44rem) → tall on mobile.
+     Stack vertically with the photo at its natural ratio. */
+  body .estate-block,
+  body .estate-block.story-block{
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+  body .estate-block__bg{
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3 !important;
+    inset: auto !important;
+  }
+  body .estate-block__bg img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+  body .estate-block__bg::after{
+    display: none !important;   /* kill the side gradient washes on mobile */
+  }
+  body .estate-block__overlay{
+    position: relative !important;
+    width: 100% !important;
+    padding: clamp(1.5rem, 4vw, 2.5rem) !important;
+    background: var(--ground) !important;
+  }
+  body .estate-block__panel{
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* ── CRAFT INTRO (photo + text panel) ───────────────────────────
+     Same fix: stack photo above panel at natural ratio. */
+  body .craft-intro{
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+  body .craft-intro__bg{
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+  body .craft-intro__bg img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  body .craft-intro__bg::after{
+    display: none !important;
+  }
+  body .craft-intro__overlay{
+    position: relative !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(1.5rem, 4vw, 2.5rem) !important;
+    background: var(--ground) !important;
+  }
+  body .craft-intro__panel{
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* ── HOME SECTION 1 (founders bg + text panel) ──────────────────
+     Was a tall hero with offset-right text. Mobile: photo on top
+     at natural ratio, text below in cream. */
+  body .home-hero{
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+  }
+  body .home-hero__bg{
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+    height: auto !important;
+  }
+  body .home-hero__bg img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  body .home-hero__panel,
+  body .home-hero__overlay{
+    position: relative !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2rem) !important;
+    background: var(--ground) !important;
+    inset: auto !important;
+  }
+
+  /* ── ESTATE CTA / "HOW WE MAKE HEPPLE" CTA ──────────────────────
+     Was 95vh tall on desktop. Mobile: stack naturally. */
+  body .estate-cta,
+  body .estate-cta--overlay{
+    min-height: 0 !important;
+    height: auto !important;
+    display: block !important;
+  }
+  body .estate-cta__bg,
+  body .estate-cta .bg{
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+    height: auto !important;
+  }
+  body .estate-cta__bg img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  body .estate-cta__overlay,
+  body .estate-cta__inner{
+    position: relative !important;
+    max-width: 100% !important;
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2rem) !important;
+    background: var(--ground) !important;
+  }
+
+  /* ── SHOP THE RANGE (home page bottles section) ─────────────────
+     Already uses width:100% height:auto on img so it's fine, but
+     ensure overlay positioning is clean. */
+  body .shop-range__bg img{
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* ── COCKTAILS HERO (bottles photo with text at bottom) ─────────
+     Same approach: natural ratio image, text overlay sized properly. */
+  body .cocktails-hero__bg img{
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* ── STICKY GALLERY — collapse to single column on mobile ──────
+     (Probably already done but reinforce) */
+  body .sticky-gallery__grid{
+    grid-template-columns: 1fr !important;
+    gap: .75rem !important;
+  }
+  body .sticky-gallery__col{
+    gap: .75rem !important;
+  }
+  body .sticky-gallery__col img{
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+  body .sticky-gallery .mobile-hide{
+    display: none !important;
+  }
+
+  /* ── PROCESS STEPS (Craft timeline) ─────────────────────────────
+     Photo above text — keep consistent 4:3 frame for ALL step photos
+     so they don't stretch on portrait phones. */
+  body .process__img{
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+  body .process__img img,
+  body .process__img video,
+  body .process__video{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  /* ── PRODUCT CARDS / COCKTAIL CARDS — natural ratios ────────────
+     Cards already use aspect-ratio but force consistency. */
+  body .product-card__img,
+  body .flip-card__img,
+  body .cocktail-card__img{
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+  }
+  body .product-card__img img,
+  body .flip-card__img img,
+  body .cocktail-card__img img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  /* ── TEAM PHOTOS — already square but reinforce ─────────────────*/
+  body .team-card__photo img,
+  body .team-list__photo img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 30% !important;  /* show shoulders not just faces */
+  }
+
+  /* ── GENERIC FIX: any background-image fill img that's been
+     forced full-height on desktop — let it shrink naturally ───────*/
+  body [class*="hero__img"] img,
+  body [class*="hero__bg"] img,
+  body [class*="section__bg"] img{
+    object-position: center center !important;
+  }
+
+  /* ── PADDING: tighten huge section padding on mobile ────────────
+     Many sections use 5vw+ padding which adds up on small screens. */
+  body section{
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+  /* But not inside sections that already manage their own padding via children */
+  body .estate-block,
+  body .craft-intro,
+  body .home-hero,
+  body .estate-cta,
+  body .story-hero,
+  body .cocktails-hero,
+  body .shop-range,
+  body .intro{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ── EXTRA-SMALL PHONES (≤ 380px): even tighter spacing ───────── */
+@media (max-width: 380px){
+  body .estate-block__overlay,
+  body .craft-intro__overlay,
+  body .estate-cta__overlay,
+  body .home-hero__panel{
+    padding: 1.25rem 1rem !important;
+  }
+}
