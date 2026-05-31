@@ -514,127 +514,20 @@
   const content = $('#content');
   const canvas  = $('#heroCanvas');
 
-  // ---- Estate hero: HLS via hls.js (Safari plays HLS natively) ----
-  let estateHlsState = 'idle'; // idle | loading | ready | failed
-  let estateHlsScriptPromise = null;
-  let estateHlsInstance = null;
-  let estateVideoStarted = false;
-
-  function loadHlsScript(){
-    if (estateHlsScriptPromise) return estateHlsScriptPromise;
-    estateHlsScriptPromise = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js';
-      s.async = true;
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-    return estateHlsScriptPromise;
-  }
-
-  // Called ONCE on site load — silently fetches the top rendition into cache
-  // so by the time the user navigates to /estate, the video is fully buffered
-  // and plays at maximum quality from frame one.
-  function prebufferEstateVideo(){
-    if (estateHlsState !== 'idle') return;
-    const video = document.getElementById('estateHeroVideo');
-    if (!video) return;
-    const src = video.dataset.hls;
-    if (!src) return;
-    estateHlsState = 'loading';
-
-    // Safari (iOS/macOS) — native HLS, just set src and let it preload
-    if (video.canPlayType('application/vnd.apple.mpegurl')){
-      video.setAttribute('preload', 'auto');
-      video.src = src;
-      video.load();
-      // Pause it so it doesn't play in the background — it'll just buffer
-      const onLoaded = () => {
-        try { video.pause(); } catch(_){}
-        estateHlsState = 'ready';
-        video.removeEventListener('loadeddata', onLoaded);
-      };
-      video.addEventListener('loadeddata', onLoaded);
-      return;
-    }
-
-    // Other browsers — lazy-load hls.js, then attach to video and start fetching segments
-    loadHlsScript().then(() => {
-      if (typeof Hls === 'undefined' || !Hls.isSupported()){
-        estateHlsState = 'failed';
-        return;
-      }
-      const hls = new Hls({
-        capLevelToPlayerSize: false,
-        autoStartLoad: true,
-        startLevel: -1,
-        abrEwmaDefaultEstimate: 50_000_000,  // 50Mbps assumption → top tier picked instantly
-        abrBandWidthFactor: 1.0,
-        abrBandWidthUpFactor: 1.0,
-        maxBufferLength: 60,                  // bigger buffer for full prebuffer
-        maxMaxBufferLength: 120,
-        backBufferLength: 60,
-        testBandwidth: false                  // skip the cautious initial probe
-      });
-      estateHlsInstance = hls;
-      hls.loadSource(src);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        // Lock to the HIGHEST rendition Bunny provides — no step-down
-        if (hls.levels && hls.levels.length){
-          const top = hls.levels.length - 1;
-          hls.currentLevel = top;
-          hls.loadLevel = top;
-          hls.nextLevel = top;
-          hls.autoLevelCapping = top;
-        }
-        estateHlsState = 'ready';
-        // Do NOT auto-play yet — wait until user is on /estate.
-        // The browser will still buffer segments in the background.
-      });
-      hls.on(Hls.Events.ERROR, (e, data) => {
-        if (data && data.fatal){
-          estateHlsState = 'failed';
-          try { hls.destroy(); } catch(_){}
-          estateHlsInstance = null;
-        }
-      });
-    }).catch(() => {
-      estateHlsState = 'failed';
-    });
-  }
-
-  // Called when user navigates to /estate — just ensure the video is playing.
-  // No re-init needed; segments are already buffered from prebufferEstateVideo().
+  // ---- Estate hero: self-hosted MP4 (native <video>) ----
   function initEstateHeroVideo(){
     const video = document.getElementById('estateHeroVideo');
     if (!video) return;
-    // If prebuffer hasn't kicked off yet (e.g. direct navigation to /estate
-    // before site load finished), kick it off now
-    if (estateHlsState === 'idle') prebufferEstateVideo();
-    // Try to play (autoplay attribute should already trigger it, but be safe)
-    if (!estateVideoStarted){
-      const tryPlay = () => {
-        video.play().then(() => { estateVideoStarted = true; })
-                    .catch(() => { /* will retry on next interaction */ });
-      };
-      if (video.readyState >= 2){
-        tryPlay();
-      } else {
-        video.addEventListener('loadeddata', tryPlay, { once: true });
-      }
-    } else {
-      // Already started before — just resume
-      video.play().catch(()=>{});
-    }
+    // The autoplay attribute handles initial start; this just ensures playback
+    // resumes if user returned to /estate after navigating away (we pause on leave).
+    video.play().catch(()=>{});
   }
-
   function pauseEstateHeroVideo(){
     const video = document.getElementById('estateHeroVideo');
     if (!video) return;
     try { video.pause(); } catch(_){}
   }
+
 
   function getRoute(){
     const h = location.hash.replace(/^#/, '') || '/';
@@ -1565,14 +1458,4 @@
   initCounters();
   initAllEmbla();
 
-  // Prebuffer the estate HLS video silently so it's at top quality
-  // by the time the user navigates to /estate. Delay slightly to let
-  // the home page render and critical assets finish loading first.
-  if (typeof window !== 'undefined'){
-    if (document.readyState === 'complete'){
-      setTimeout(prebufferEstateVideo, 1200);
-    } else {
-      window.addEventListener('load', () => setTimeout(prebufferEstateVideo, 1200), { once: true });
-    }
-  }
 })();

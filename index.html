@@ -426,17 +426,17 @@
     <section class="story-hero">
       <div class="story-hero__img story-hero__img--video">
         <!-- =================================================================
-             ESTATE HERO VIDEO — Bunny Stream HLS via hls.js
-             Native <video> element, no Bunny chrome, full background-video feel.
-             Safari plays HLS natively; other browsers use the hls.js library
-             (loaded below, ~50KB, only fetched on this page when needed).
+             ESTATE HERO VIDEO — self-hosted MP4, fixed quality, no streaming.
+             720p source for mobile, 1080p for desktop. Browser auto-selects.
              ================================================================= -->
         <video class="story-hero__video"
                id="estateHeroVideo"
-               muted loop playsinline preload="auto"
+               autoplay muted loop playsinline preload="auto"
                poster="assets/estate/estate-hero-poster.jpg"
-               aria-label="The Hepple Estate"
-               data-hls="https://vz-eee013c0-8e3.b-cdn.net/3fc41c55-c934-445d-bb23-c0e85e96ef27/playlist.m3u8"></video>
+               aria-label="The Hepple Estate">
+          <source src="assets/estate/estate-hero-720p.mp4" type="video/mp4" media="(max-width: 860px)" />
+          <source src="assets/estate/estate-hero-1080p.mp4" type="video/mp4" />
+        </video>
         <!-- Poster as a fallback (also poster on the video for instant render) -->
         <img src="assets/estate/estate-hero-poster.jpg" alt="The Hepple Estate" loading="eager" class="story-hero__fallback" />
       </div>
