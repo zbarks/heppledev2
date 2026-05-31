@@ -562,19 +562,25 @@
         // Quality config — drive to the HIGHEST available rendition
         capLevelToPlayerSize: false,   // do NOT downscale to player CSS size
         autoStartLoad: true,
-        startLevel: -1,                // start with auto pick; we force max on manifest parse
+        startLevel: -1,                // we override on manifest parse
+        abrEwmaDefaultEstimate: 50_000_000,  // pretend bandwidth is 50Mbps so hls.js picks top tier instantly
         abrBandWidthFactor: 1.0,
         abrBandWidthUpFactor: 1.0,
         maxBufferLength: 30,
-        maxMaxBufferLength: 60
+        maxMaxBufferLength: 60,
+        backBufferLength: 30,
+        testBandwidth: false           // skip the initial bandwidth probe
       });
       hls.loadSource(src);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         // Lock to the highest rendition Bunny provides (no ABR step-down)
         if (hls.levels && hls.levels.length){
-          hls.currentLevel = hls.levels.length - 1;
-          hls.loadLevel = hls.levels.length - 1;
+          const top = hls.levels.length - 1;
+          hls.currentLevel = top;
+          hls.loadLevel = top;
+          hls.nextLevel = top;
+          hls.autoLevelCapping = top;
         }
         estateHlsState = 'ready';
         video.play().catch(()=>{});
@@ -712,28 +718,42 @@
     if (isBrand) sessionStorage.removeItem('hepple:seenIntro');
 
     if (location.hash === '#' + target){
-      showPageTransition();
-      route(isBrand);
+      transitionThen(() => route(isBrand));
     } else {
       if (isBrand) window._hepple_forceIntro = true;
       location.hash = '#' + target;
     }
   });
 
-  // Page transition loader — brief flash on every navigation
-  function showPageTransition(){
+  // Page transition: show loader → wait for cover → swap page → wait → fade out
+  // This guarantees the user never sees the old/new pages flash through;
+  // the swap happens entirely BEHIND the loader.
+  let _transitionInFlight = false;
+  function transitionThen(work){
     const t = document.getElementById('pageTransition');
-    if (!t) return;
+    if (!t || _transitionInFlight){
+      // Already mid-transition — just do the work
+      work && work();
+      return;
+    }
+    _transitionInFlight = true;
     t.classList.add('is-active');
-    // Always show for at least 500ms for consistency
-    setTimeout(() => { t.classList.remove('is-active'); }, 500);
+    // Wait for loader to fully cover (matches CSS fade-in .15s + small margin)
+    setTimeout(() => {
+      work && work();
+      // Hold the loader visible for a beat so the swap is invisible
+      setTimeout(() => {
+        t.classList.remove('is-active');
+        // Match CSS fade-out duration
+        setTimeout(() => { _transitionInFlight = false; }, 250);
+      }, 350);
+    }, 200);
   }
 
   window.addEventListener('hashchange', () => {
     const force = !!window._hepple_forceIntro;
     window._hepple_forceIntro = false;
-    showPageTransition();
-    route(force);
+    transitionThen(() => route(force));
   });
 
   function closeDrawers(){
