@@ -1,0 +1,5617 @@
+/* ==========================================================
+   HEPPLE — fonts
+   ========================================================== */
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Thin.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/ProximaNova-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/ProximaNova-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Extrabold.otf") format("opentype");font-weight:800;font-style:normal;font-display:swap;}
+@font-face{font-family:"Proxima Nova";src:url("assets/fonts/Proxima_Nova_Black.otf") format("opentype");font-weight:900;font-style:normal;font-display:swap;}
+@font-face{font-family:"Maristella";src:url("assets/fonts/Maristella.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;}
+
+/* ==========================================================
+   BRAND TOKENS — per feedback doc
+   ========================================================== */
+:root{
+  /* Primary */
+  --hepple-blue:       #003087;   /* PMS 287C — logo + headings */
+  --hepple-ink:        #1b1a2e;   /* PMS 5255C — body text (dark blue) */
+
+  /* Ground */
+  --ground:            #EDE8E0;   /* PMS 11-4201 TCX — off-white background */
+  --ground-warm:       #E3DDD1;
+  --ground-deeper:     #d7d0c3;
+  --cream:             #f6f2ea;
+
+  /* ACCENT PALETTE — per feedback, only these names, used as flairs */
+  --mist:              #CFE0DE;   /* PMS 621U */
+  --sage:              #A8C3A0;   /* PMS 558U */
+  --stone:             #6C8AA3;   /* PMS 5415U */
+  --juniper:           #84BD00;   /* PMS 376C */
+
+  /* SKU COLOURS — only for tiny accents / cocktail section dots */
+  --juniper-pink:      #EC008C;   /* Wild Juniper Gin */
+  --doug-fir-green:    #007A53;   /* Douglas Fir Vodka */
+  --moorland-teal:     #0a6b80;   /* Moorland Vodka */
+
+  /* Fonts */
+  --sans:   "Proxima Nova", "Helvetica Neue", Arial, sans-serif;
+  --script: "Maristella", "Proxima Nova", cursive;
+
+  /* Normalised heading scale */
+  --h-xxl: clamp(3rem, 2.2rem + 4.5vw, 6rem);
+  --h-xl:  clamp(2.4rem, 1.9rem + 2.8vw, 4.4rem);
+  --h-lg:  clamp(1.8rem, 1.5rem + 1.5vw, 2.8rem);
+  --h-md:  clamp(1.3rem, 1.15rem + .8vw, 1.8rem);
+  --h-sm:  clamp(1rem, .9rem + .4vw, 1.15rem);
+
+  /* Maristella — big & readable per feedback, tight to header */
+  --script-md: clamp(2.8rem, 2.2rem + 3vw, 5rem);
+  --script-lg: clamp(3.6rem, 2.6rem + 4.5vw, 7rem);
+
+  --body:    clamp(.9rem, .85rem + .2vw, 1rem);
+  --body-lg: clamp(1rem, .9rem + .3vw, 1.15rem);
+  --micro:   .72rem;
+
+  --gutter: clamp(1.2rem, 4vw, 3rem);
+  --max:    1440px;
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+html, body{ margin:0; padding:0; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior: smooth; }
+body{
+  font-family:var(--sans);
+  font-weight:400;
+  color:var(--hepple-ink);
+  background:var(--ground);
+  line-height:1.55;
+  font-size:var(--body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+@supports not (overflow: clip){ body{ overflow-x: hidden; } }
+body.age-gated{ overflow:hidden; }
+
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; transition:opacity .2s ease, color .2s ease; }
+a:hover{ opacity:.75; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; padding:0; }
+::selection{ background:var(--hepple-blue); color:var(--ground); }
+
+em{ font-family:var(--sans); font-style:italic; font-weight:inherit; color: var(--hepple-blue); }
+
+h1, h2, h3, h4{
+  font-family:var(--sans);
+  font-weight:700;
+  letter-spacing:-.015em;
+  line-height:1;
+  margin:0;
+  color: var(--hepple-blue);
+}
+
+/* Script accent — Maristella, big & close to header */
+.script-accent{
+  font-family:var(--script);
+  font-size:var(--script-md);
+  color:var(--hepple-blue);
+  line-height:.95;
+  margin:0 0 .15em;
+  font-weight:400;
+}
+.script-accent--hero{ font-size:var(--script-lg); }
+.script-accent--light{ color: var(--cream); }
+
+/* =========================================================
+   AGE GATE
+   ========================================================= */
+.age-gate{
+  position:fixed; inset:0; z-index:100;
+  background: var(--ground);
+  display:flex; align-items:center; justify-content:center;
+  padding: 1.5rem;
+  opacity:1;
+  transition: opacity .6s ease;
+}
+.age-gate.is-hidden{ opacity:0; pointer-events:none; }
+.age-gate__panel{
+  max-width: 500px; width:100%;
+  text-align:center;
+  background: var(--cream);
+  padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid rgba(27,26,46,.1);
+}
+.age-gate__logo{ height: 30px; width:auto; margin: 0 auto 1.5rem; display:block; }
+.age-gate__eyebrow{
+  font-family:var(--script);
+  font-size:var(--script-md);
+  color:var(--hepple-blue);
+  margin: 0 0 .2em;
+  line-height:1;
+}
+.age-gate__title{ font-size:var(--h-lg); line-height:1.05; margin: 0 0 1.3rem; }
+.age-gate__body{
+  font-size: .75rem; line-height: 1.7; letter-spacing:.12em;
+  color:var(--hepple-ink); opacity:.75;
+  margin: 0 auto 2rem; max-width: 36ch; font-weight:500;
+}
+.age-gate__actions{ display:flex; flex-direction:column; gap:.8rem; margin-bottom:1.8rem; }
+.age-gate__foot{ font-size:.65rem; letter-spacing:.22em; font-weight:600; opacity:.55; margin:0; }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  padding:.9rem 1.9rem;
+  border-radius:999px;
+  font-family:var(--sans);
+  font-size:var(--micro);
+  letter-spacing:.24em;
+  font-weight:700;
+  transition: background .3s ease, color .3s ease, border-color .3s ease;
+  cursor:pointer;
+  text-align:center;
+}
+.btn--outline-dark{ border:1.5px solid var(--hepple-ink); color:var(--hepple-ink); }
+.btn--outline-dark:hover{ background:var(--hepple-ink); color:var(--ground); opacity:1; }
+.btn--outline-light{ border:1.5px solid var(--cream); color:var(--cream); }
+.btn--outline-light:hover{ background:var(--cream); color:var(--hepple-blue); opacity:1; }
+.btn--solid-blue{
+  background:var(--hepple-blue);
+  color:var(--ground);
+  border:1.5px solid var(--hepple-blue);
+}
+.btn--solid-blue:hover{ background:var(--hepple-ink); border-color:var(--hepple-ink); opacity:1; }
+/* JUNIPER shop button — per feedback */
+.btn--juniper{
+  background:var(--juniper);
+  color:var(--hepple-ink);
+  border:1.5px solid var(--juniper);
+}
+.btn--juniper:hover{ background:var(--hepple-ink); color:var(--juniper); border-color:var(--hepple-ink); opacity:1; }
+.btn--tiny{
+  padding:.55rem 1.1rem;
+  font-size:.66rem;
+  letter-spacing:.24em;
+  font-weight:700;
+  background:var(--hepple-ink);
+  color:var(--ground);
+}
+
+/* =========================================================
+   INTRO — hero video
+   ========================================================= */
+.intro{
+  position:relative;
+  height:200vh;
+  background:#000;
+  z-index:1;
+}
+/* Once complete (i.e. user has scrubbed past the video) the section
+   collapses to a single viewport so the rest of the page is reachable
+   normally. This is the safety hatch that fixed the Windows lock-up. */
+/* Once complete, leave the section's full height alone — collapsing it
+   to 100vh caused a visible "snap" / teleport effect mid-scroll.
+   The video naturally pauses at its last frame; nav becomes visible. */
+.intro.is-complete{ height: 200vh; }
+.intro__pin{
+  position:sticky; top:0;
+  height:100vh; width:100%;
+  overflow:hidden;
+}
+.intro__stage{ position:absolute; inset:0; background:#000; }
+.intro__video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  filter: saturate(1.05) contrast(1.02);
+  /* Hide the default play button on iOS Safari */
+  pointer-events: none;
+}
+.intro__video::-webkit-media-controls{ display: none !important; }
+.intro__video::-webkit-media-controls-overlay-play-button{ display: none !important; }
+.intro__video::-webkit-media-controls-start-playback-button{ display: none !important; }
+.intro__vignette{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 55%, transparent 35%, rgba(0,0,0,.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.25) 0%, transparent 25%, transparent 75%, rgba(0,0,0,.55) 100%);
+  pointer-events:none;
+}
+.intro__overlay{
+  position:absolute; inset:0;
+  display:grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items:center;
+  padding:clamp(1.5rem,4vw,3rem);
+  color:var(--ground);
+  pointer-events:none;
+}
+.intro__center{ align-self:center; text-align:center; max-width:44rem; }
+.intro__eyebrow{
+  font-family:var(--script);
+  font-size: clamp(2.2rem, 1.6rem + 2.8vw, 4rem);
+  color:var(--cream);
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity 1.2s ease, transform 1.2s ease;
+  margin:0 0 .15em;
+  line-height:1;
+}
+.intro__headline{
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem);
+  line-height:1.02;
+  color:var(--cream);
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity 1.2s ease .15s, transform 1.2s ease .15s;
+  letter-spacing:-.015em;
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity:1; transform:translateY(0);
+}
+@keyframes introFade{
+  from{ opacity:0; transform:translateY(14px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+.intro__hint{
+  align-self:end;
+  display:flex; flex-direction:column; align-items:center;
+  gap:.8rem;
+  font-size:.7rem;
+  letter-spacing:.3em;
+  font-weight:600;
+  opacity:.82;
+  color:var(--cream);
+  transition:opacity .5s ease;
+}
+.intro.is-complete .intro__hint{ opacity:0; }
+.intro__hint-line{
+  width:1px; height:44px;
+  background:linear-gradient(to bottom, var(--cream) 0%, transparent 100%);
+  animation: lineDrop 2.2s ease-in-out infinite;
+}
+@keyframes lineDrop{
+  0%{ transform:scaleY(0); transform-origin:top; opacity:.2; }
+  50%{ transform:scaleY(1); opacity:1; }
+  100%{ transform:scaleY(1); transform-origin:bottom; opacity:0; }
+}
+
+/* =========================================================
+   NAV — Hepple blue accents
+   ========================================================= */
+.nav{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:40;
+  padding: 1rem var(--gutter);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  transform:translateY(-100%);
+  transition: transform .7s cubic-bezier(.16,1,.3,1), background .4s ease;
+  pointer-events:none;
+  color:var(--hepple-ink);
+}
+.nav.is-visible{
+  transform:translateY(0);
+  pointer-events:auto;
+  background: rgba(237,232,224,.9);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border-bottom:1px solid rgba(0,48,135,.12);
+}
+.nav__brand{ display:inline-flex; align-items:center; }
+.nav__brand img{ height:26px; width:auto; object-fit:contain; }
+.nav__links{
+  display:flex;
+  gap: clamp(1rem, 2vw, 2rem);
+  list-style:none;
+  margin:0; padding:0;
+  font-size:.7rem;
+  letter-spacing:.22em;
+  font-weight:700;
+}
+.nav__links a{ color:var(--hepple-blue); position:relative; padding:.4rem 0; }
+.nav__links a::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-2px;
+  height:1.5px;
+  background:var(--hepple-blue);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .35s ease;
+}
+.nav__links a:hover{ opacity:1; }
+.nav__links a:hover::after, .nav__links a.is-active::after{ transform:scaleX(1); }
+.nav__right{ display:flex; align-items:center; gap:.8rem; }
+.nav__cta{
+  font-size:.7rem;
+  letter-spacing:.22em;
+  font-weight:800;
+  padding:.55rem 1.1rem;
+  background: var(--juniper);
+  color:var(--hepple-ink);
+  border-radius:999px;
+  transition: background .25s ease, color .25s ease;
+  border: 1.5px solid var(--juniper);
+}
+.nav__cta:hover{ background:var(--hepple-ink); color:var(--juniper); border-color:var(--hepple-ink); opacity:1; }
+.nav__cart{ position:relative; display:inline-flex; align-items:center; color:var(--hepple-blue); padding:.4rem; }
+.nav__cart-count{
+  position:absolute;
+  top:-2px; right:-4px;
+  background:var(--juniper);
+  color:var(--hepple-ink);
+  font-size:.6rem;
+  font-weight:800;
+  width:16px; height:16px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0;
+  transform:scale(.6);
+  transition: opacity .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.nav__cart.has-items .nav__cart-count{ opacity:1; transform:scale(1); }
+.nav__menu-btn{ display:none; }
+@media (max-width: 960px){
+  .nav__links{ display:none; }
+  .nav__cta{ display:none; }
+  .nav__menu-btn{ display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; color:var(--hepple-blue); }
+  .nav__menu-btn span{ position:relative; width:22px; height:1.5px; background:currentColor; display:inline-block; }
+  .nav__menu-btn span::before, .nav__menu-btn span::after{ content:""; position:absolute; left:0; right:0; height:1.5px; background:currentColor; }
+  .nav__menu-btn span::before{ top:-6px; }
+  .nav__menu-btn span::after{ top:6px; }
+}
+
+/* Drawer */
+.drawer{
+  position:fixed; inset:0; z-index:60;
+  background:var(--ground);
+  transform:translateX(100%);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+  display:flex; flex-direction:column;
+  padding: 5rem var(--gutter) 2rem;
+  gap:1.2rem;
+}
+.drawer.is-open{ transform:translateX(0); }
+.drawer a{ font-size:var(--h-lg); font-weight:700; color:var(--hepple-blue); }
+.drawer__close{
+  position:absolute; top:1.3rem; right:var(--gutter);
+  font-size:.7rem; letter-spacing:.22em; color:var(--hepple-ink); font-weight:700;
+}
+
+/* Cart */
+.cart-panel{
+  position:fixed; top:0; right:0; bottom:0;
+  width:min(420px, 100vw);
+  background:var(--ground);
+  z-index:70;
+  transform:translateX(100%);
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+  display:flex; flex-direction:column;
+  box-shadow: -10px 0 40px rgba(27,26,46,.1);
+}
+.cart-panel.is-open{ transform:translateX(0); }
+.cart-panel__head{
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 1.2rem var(--gutter);
+  border-bottom:1px solid rgba(0,48,135,.12);
+}
+.cart-panel__head h3{ font-size:.85rem; font-weight:700; letter-spacing:.22em; color: var(--hepple-ink); }
+.cart-panel__close{ font-size:1.2rem; color:var(--hepple-ink); padding:.4rem; }
+.cart-panel__body{ flex:1; overflow-y:auto; padding: 1rem var(--gutter); }
+.cart-panel__empty{ text-align:center; padding:3rem 0; opacity:.55; font-size:.8rem; letter-spacing:.15em; }
+.cart-item{
+  display:grid;
+  grid-template-columns:72px 1fr auto;
+  gap:1rem;
+  padding:1rem 0;
+  border-bottom:1px solid rgba(0,48,135,.08);
+  align-items:center;
+}
+.cart-item__img{
+  width:72px; height:72px;
+  background: var(--cream);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.cart-item__img img{ width:100%; height:100%; object-fit:contain; }
+.cart-item__info h4{ font-size:.78rem; font-weight:700; letter-spacing:.1em; margin:0 0 .2rem; color: var(--hepple-ink); }
+.cart-item__info .qty{ font-size:.7rem; opacity:.6; letter-spacing:.12em; }
+.cart-item__price{ font-weight:700; font-size:.85rem; }
+.cart-item__remove{
+  display:block;
+  font-size:.65rem; letter-spacing:.2em;
+  color:var(--juniper-pink);
+  margin-top:.3rem;
+  font-weight:700;
+}
+.cart-panel__foot{
+  padding: 1rem var(--gutter) 1.5rem;
+  border-top:1px solid rgba(0,48,135,.1);
+  background:var(--cream);
+}
+.cart-panel__total{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:.85rem; letter-spacing:.2em;
+  margin-bottom:1rem;
+  font-weight:700;
+  color: var(--hepple-ink);
+}
+.cart-panel__total strong{ font-size:1.2rem; letter-spacing:0; }
+.cart-panel__checkout{
+  width:100%;
+  padding:.95rem;
+  background:var(--juniper);
+  color:var(--hepple-ink);
+  border-radius:999px;
+  font-size:.72rem; letter-spacing:.24em;
+  font-weight:800;
+  transition: background .25s ease, color .25s ease;
+}
+.cart-panel__checkout:hover{ background:var(--hepple-ink); color: var(--juniper); }
+.cart-panel__note{
+  text-align:center;
+  font-size:.62rem;
+  opacity:.55;
+  margin:.8rem 0 0;
+  letter-spacing:.18em;
+  font-weight:600;
+}
+.overlay{
+  position:fixed; inset:0;
+  background:rgba(27,26,46,.4);
+  z-index:55;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+.overlay.is-active{ opacity:1; pointer-events:auto; }
+
+/* Content */
+.content{ position:relative; z-index:2; background:var(--ground); }
+.page{ display:none; }
+.page.is-active{ display:block; }
+.wrap{ max-width:var(--max); margin:0 auto; padding: 0 var(--gutter); }
+
+/* =========================================================
+   WELCOME — 2-col grid with fireside image
+   ========================================================= */
+.welcome{
+  padding: clamp(5rem, 12vh, 9rem) 0 clamp(4rem, 8vh, 6rem);
+  background: var(--ground);
+}
+.welcome__grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items:center;
+}
+@media (max-width: 860px){ .welcome__grid{ grid-template-columns:1fr; gap: 2rem; } }
+.welcome__headline{
+  font-size:var(--h-xl);
+  line-height:1;
+  letter-spacing:-.02em;
+  margin: 0 0 1.4rem;
+  max-width: 20ch;
+}
+.welcome__lede{
+  font-size: var(--body-lg);
+  line-height:1.75;
+  letter-spacing:.06em;
+  max-width:44ch;
+  margin: 0 0 1.8rem;
+  font-weight:400;
+  color: var(--hepple-ink);
+}
+.welcome__actions{
+  display:flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+}
+.welcome__img{
+  aspect-ratio: 3/2;
+  overflow:hidden;
+  background: var(--ground-deeper);
+  border-radius: 4px;
+}
+.welcome__img img{
+  width:100%; height:100%;
+  object-fit:cover;
+  transition: transform 1.5s cubic-bezier(.16,1,.3,1);
+}
+.welcome__img:hover img{ transform: scale(1.03); }
+
+/* =========================================================
+   FOUNDERS INTRO STRIP — text over 4-founders image
+   ========================================================= */
+.founders-intro{
+  position:relative;
+  min-height: 70vh;
+  overflow:hidden;
+  margin: clamp(2rem, 4vw, 3rem) 0;
+  background: var(--hepple-ink);
+}
+.founders-intro__img{
+  position:absolute; inset:0;
+}
+.founders-intro__img img{
+  width:100%; height:100%;
+  object-fit: cover;
+  filter: brightness(.55) saturate(1.05);
+}
+.founders-intro__overlay{
+  position:relative;
+  z-index:2;
+  min-height:70vh;
+  display:flex;
+  align-items:center;
+  padding: clamp(3rem, 8vh, 6rem) var(--gutter);
+}
+.founders-intro__inner{
+  max-width: 60ch;
+  color: var(--cream);
+}
+.founders-intro__body{
+  font-size: var(--body-lg);
+  line-height: 1.7;
+  letter-spacing: .06em;
+  margin: 0 0 1.2rem;
+  font-weight: 500;
+}
+.founders-intro__inner .btn{
+  margin-top: 1.2rem;
+}
+
+/* =========================================================
+   RANGE / embla
+   ========================================================= */
+.range{
+  padding: clamp(4rem,8vh,6rem) 0;
+  background: var(--ground);
+}
+.range--related{
+  padding-top: clamp(3rem, 6vh, 5rem);
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+  background: var(--ground-warm);
+}
+.range__head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:2rem;
+  margin-bottom:clamp(2rem,4vh,3rem);
+}
+.range__head h2{ font-size:var(--h-xl); line-height:1; margin-top:.3rem; }
+.range__seeall{
+  font-size:.7rem;
+  letter-spacing:.22em;
+  color:var(--hepple-blue);
+  border-bottom:1px solid currentColor;
+  padding-bottom:3px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.embla{ position:relative; max-width: 680px; margin: 0 auto; padding: 0 var(--gutter); }
+.embla__viewport{ overflow:hidden; border-radius: 6px; }
+.embla__container{ display:flex; touch-action: pan-y pinch-zoom; }
+.embla__slide{ flex: 0 0 100%; min-width: 0; padding: 0 .5rem; }
+
+.product-card{
+  display:flex;
+  flex-direction:column;
+  background: var(--cream);
+  padding: 2.5rem 2rem 2rem;
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  border-radius: 4px;
+}
+.product-card__img{
+  height: 380px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom: 1.5rem;
+}
+.product-card__img img{
+  max-height: 100%;
+  max-width:100%;
+  object-fit:contain;
+  filter: drop-shadow(0 20px 30px rgba(27,26,46,.15));
+  transition: transform .7s cubic-bezier(.16,1,.3,1);
+}
+.product-card:hover .product-card__img img{ transform: translateY(-8px) scale(1.03); }
+.product-card__body{ display:flex; flex-direction:column; gap:.6rem; align-items:center; }
+.product-card__body h3{
+  font-size:var(--h-sm);
+  letter-spacing:.08em;
+  line-height:1.2;
+}
+.product-card__tagline{
+  font-family: var(--sans);
+  font-size: .7rem;
+  letter-spacing: .22em;
+  font-weight: 700;
+  opacity: .8;
+}
+.product-card__price{
+  font-size:.95rem;
+  letter-spacing:.1em;
+  font-weight:700;
+  color: var(--hepple-ink);
+}
+.product-card__actions{
+  display:flex; align-items:center; justify-content:center;
+  gap:1rem;
+  margin-top:.5rem;
+}
+
+.embla__controls{
+  display:flex; align-items:center; justify-content:center;
+  gap: 1.4rem;
+  margin-top: 1.5rem;
+}
+.embla__btn{
+  width:46px; height:46px;
+  border-radius:50%;
+  background: var(--cream);
+  color: var(--hepple-blue);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 8px 24px rgba(0,48,135,.12);
+  border:1px solid rgba(0,48,135,.1);
+  transition: background .25s ease, color .25s ease, transform .25s ease;
+}
+.embla__btn:hover{ background:var(--hepple-blue); color:var(--ground); transform:scale(1.06); }
+.embla__btn[disabled]{ opacity:.3; cursor:default; transform:none; }
+.embla__dots{ display:flex; align-items:center; gap: .6rem; }
+.embla__dot{
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(0,48,135,.2);
+  transition: background .25s ease, transform .25s ease, width .25s ease;
+}
+.embla__dot.is-active{ background: var(--hepple-blue); width: 24px; border-radius: 4px; }
+
+/* =========================================================
+   ESTATE INTRO — above sticky gallery
+   ========================================================= */
+.estate-intro{
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(2rem, 4vh, 3rem);
+  text-align: center;
+}
+.estate-intro__h2{
+  font-size: var(--h-xl);
+  line-height: 1.05;
+  max-width: 26ch;
+  margin: 0 auto;
+  letter-spacing: -.01em;
+}
+
+/* Sticky image gallery */
+.sticky-gallery{
+  padding: 0 0 clamp(4rem, 8vh, 6rem);
+  background: var(--ground);
+}
+.sticky-gallery__grid{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: .5rem;
+  padding: 0;
+  max-width: none;
+  margin: 0 auto;
+}
+.sticky-gallery__col{
+  display: grid;
+  gap: .5rem;
+  min-width: 0;
+}
+.sticky-gallery__col--scroll{ grid-column: span 4; }
+.sticky-gallery__col--sticky{
+  grid-column: span 4;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  grid-template-rows: repeat(3, 1fr);
+  align-self: start;
+}
+.sticky-gallery__col figure{
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ground-warm);
+  border-radius: 4px;
+  min-width: 0;
+}
+.sticky-gallery__col--scroll figure{ height: 24rem; }
+.sticky-gallery__col--sticky figure{ width:100%; height:100%; min-height:0; }
+.sticky-gallery__col img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(.16,1,.3,1);
+}
+.sticky-gallery__col figure:hover img{ transform: scale(1.04); }
+
+@media (max-width: 900px){
+  .sticky-gallery__col--scroll figure{ height: 16rem; }
+  .sticky-gallery__col--sticky{ height: 75vh; top: 12vh; }
+}
+@media (max-width: 640px){
+  .sticky-gallery__grid{ gap: .35rem; }
+  .sticky-gallery__col--scroll:first-of-type{ grid-column: span 7; }
+  .sticky-gallery__col--scroll:last-of-type{ display:none; }
+  .sticky-gallery__col--scroll figure{ height: 11rem; }
+  .sticky-gallery__col--scroll figure:nth-child(n+4){ display:none; }
+  .sticky-gallery__col--sticky{
+    grid-column: span 5;
+    position: sticky;
+    top: 10vh;
+    height: 80vh;
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+/* =========================================================
+   CRAFT CTA
+   ========================================================= */
+.craft-cta{
+  padding: clamp(4rem,8vh,6rem) 0;
+  background: var(--ground);
+}
+.craft-cta__grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items:center;
+}
+@media (max-width: 860px){ .craft-cta__grid{ grid-template-columns:1fr; } }
+.craft-cta__img{
+  aspect-ratio: 4/5;
+  overflow:hidden;
+  background: var(--ground-deeper);
+  border-radius: 4px;
+}
+.craft-cta__img img{
+  width:100%; height:100%;
+  object-fit:cover;
+  transition: transform 1.2s cubic-bezier(.16,1,.3,1);
+}
+.craft-cta:hover .craft-cta__img img{ transform:scale(1.03); }
+.craft-cta__copy h2{
+  font-size:var(--h-xl);
+  line-height:1;
+  margin:.3rem 0 1.2rem;
+}
+.craft-cta__copy p{
+  font-size: var(--body-lg);
+  line-height:1.75;
+  letter-spacing:.05em;
+  max-width:44ch;
+  margin:0 0 1.6rem;
+}
+
+/* =========================================================
+   COCKTAILS — flip cards
+   ========================================================= */
+.cocktails-home, .cocktails-page{
+  padding: clamp(4rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
+  background: var(--ground);
+}
+.shop-cocktails{
+  padding-top: clamp(3rem, 6vh, 5rem);
+  background: var(--ground-warm);
+}
+.cocktails-home__head{
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+.cocktails-home__head h1,
+.cocktails-home__head h2{
+  font-size: var(--h-xl);
+  line-height: 1;
+  margin: .4rem 0 1rem;
+}
+
+.cocktails-group{ margin-bottom: clamp(3rem, 6vh, 5rem); }
+.cocktails-group:last-child{ margin-bottom: 0; }
+.cocktails-group__head{
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+}
+.cocktails-group__dot{
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex: 0 0 10px;
+}
+.cocktails-group__head h3{
+  font-size: var(--h-md);
+  letter-spacing: .02em;
+  line-height: 1.1;
+  color: var(--hepple-ink);
+}
+.cocktails-group__tagline{
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: .85rem;
+  color: var(--hepple-blue);
+  letter-spacing: .04em;
+}
+@media (max-width: 640px){
+  .cocktails-group__head h3{ font-size: 1rem; }
+  .cocktails-group__tagline{ flex: 1 0 100%; font-size: .75rem; }
+}
+
+/* Flip card row */
+.flip-row{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.8rem);
+}
+@media (max-width: 860px){
+  .flip-row{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px){
+  .flip-row{ grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+}
+
+.flip-card{
+  position: relative;
+  aspect-ratio: 3/4;
+  perspective: 1000px;
+  cursor: pointer;
+}
+.flip-card__inner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(.16, 1, .3, 1);
+  transform-style: preserve-3d;
+  transform: rotateY(0deg) translateY(0);
+}
+.flip-card:hover .flip-card__inner,
+.flip-card.is-flipped .flip-card__inner{
+  transform: rotateY(180deg) translateY(-20px);
+}
+.flip-card__face{
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -20px rgba(27,26,46,.3);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card__front{ background: var(--cream); }
+.flip-card__front img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.flip-card__front-label{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 1.2rem 1rem 1rem;
+  background: linear-gradient(to top, rgba(27,26,46,.9), transparent);
+  color: var(--cream);
+  text-align: center;
+}
+.flip-card__front-label h4{
+  color: var(--cream);
+  font-size: .9rem;
+  letter-spacing: .1em;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0;
+}
+.flip-card__front-hint{
+  display: block;
+  margin-top: .4rem;
+  font-size: .6rem;
+  letter-spacing: .3em;
+  opacity: .75;
+  font-weight: 600;
+}
+.flip-card__back{
+  background: var(--hepple-blue);
+  color: var(--cream);
+  transform: rotateY(180deg);
+  padding: 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.flip-card__back h4{
+  color: var(--cream);
+  font-size: .9rem;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  margin: 0 0 .8rem;
+  font-weight: 700;
+}
+.flip-card__back h5{
+  color: var(--juniper);
+  font-size: .6rem;
+  letter-spacing: .26em;
+  margin: 1rem 0 .4rem;
+  font-weight: 700;
+}
+.flip-card__back h5:first-of-type{ margin-top: 0; }
+.flip-card__back ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: .7rem;
+  line-height: 1.6;
+  letter-spacing: .04em;
+}
+.flip-card__back ul li{ margin-bottom: .2rem; }
+.flip-card__back p{
+  margin: 0;
+  font-size: .7rem;
+  line-height: 1.65;
+  letter-spacing: .03em;
+  opacity: .92;
+}
+
+/* =========================================================
+   VISIT SLIM — bottom of home, per feedback
+   ========================================================= */
+.visit-slim{
+  padding: clamp(3rem, 6vh, 5rem) var(--gutter);
+  background: var(--mist);
+  text-align: center;
+}
+.visit-slim h3{
+  font-size: var(--h-lg);
+  line-height: 1;
+  margin: .3rem 0 1.4rem;
+}
+
+/* =========================================================
+   PLACEHOLDERS
+   ========================================================= */
+.placeholder{
+  min-height: calc(100vh - 80px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: clamp(6rem,12vh,10rem) var(--gutter) clamp(4rem,8vh,6rem);
+  background: radial-gradient(ellipse at 50% 40%, var(--cream), var(--ground) 60%);
+  text-align:center;
+}
+.placeholder__inner{ max-width: 48rem; }
+.placeholder h1{ font-size:var(--h-xxl); line-height:1; margin: 0 0 1.5rem; }
+.placeholder__status{
+  display:inline-flex;
+  align-items:center;
+  gap:.8rem;
+  padding: .6rem 1.2rem;
+  border:1.5px solid var(--hepple-blue);
+  color:var(--hepple-blue);
+  border-radius:999px;
+  font-size:.68rem; letter-spacing:.24em;
+  font-weight:700;
+  margin-bottom:2rem;
+}
+.placeholder__status::before{
+  content:"";
+  width:6px; height:6px;
+  border-radius:50%;
+  background: var(--juniper);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+.placeholder__latin{
+  font-size:.9rem;
+  line-height:1.8;
+  letter-spacing:.06em;
+  opacity:.7;
+  max-width: 46ch;
+  margin: 0 auto 2.5rem;
+  font-weight:500;
+}
+.placeholder__back{
+  font-size:.7rem;
+  letter-spacing:.24em;
+  color:var(--hepple-blue);
+  border-bottom:1px solid currentColor;
+  padding-bottom:3px;
+  font-weight:700;
+}
+
+/* =========================================================
+   OUR STORY NEW HERO
+   ========================================================= */
+.story-new-hero{
+  position:relative;
+  height: 80vh;
+  min-height: 500px;
+  overflow:hidden;
+  background: var(--hepple-ink);
+  margin-top: 60px;
+}
+.story-new-hero__img{ position:absolute; inset:0; }
+.story-new-hero__img img{
+  width:100%; height:100%;
+  object-fit:cover;
+  filter: brightness(.65) saturate(1.05);
+}
+.story-new-hero__title{
+  position:absolute;
+  left:50%; bottom: clamp(2rem, 8vh, 5rem);
+  transform:translateX(-50%);
+  width:100%;
+  text-align:center;
+  padding: 0 var(--gutter);
+  color: var(--cream);
+}
+.story-new-hero__title h1{
+  font-size:var(--h-xxl);
+  color:var(--cream);
+  line-height:.95;
+}
+.story-new-body{
+  padding: clamp(4rem, 10vh, 7rem) 0 clamp(2rem, 5vh, 4rem);
+  text-align: center;
+}
+.story-new-body__lede{
+  max-width: 60ch;
+  margin: 0 auto;
+  font-size: var(--body-lg);
+  line-height: 1.8;
+  letter-spacing: .05em;
+  font-weight: 500;
+}
+
+/* =========================================================
+   THE PEOPLE OF HEPPLE — team grid
+   ========================================================= */
+.team{
+  padding: clamp(3rem, 6vh, 5rem) 0 clamp(5rem, 10vh, 8rem);
+  background: var(--ground);
+}
+.team__head{
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+.team__head h2{
+  font-size: var(--h-xl);
+  line-height: 1;
+  margin: .4rem 0 1.2rem;
+}
+.team__lede{
+  max-width: 46ch;
+  margin: 0 auto;
+  font-size: .9rem;
+  line-height: 1.8;
+  letter-spacing: .06em;
+  opacity: .7;
+}
+.team__showcase{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+@media (max-width: 760px){
+  .team__showcase{ grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* Photo grid — 3 staggered columns */
+.team__grid{
+  display: flex;
+  gap: .6rem;
+  flex-shrink: 0;
+}
+.team__col{
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.team__col--2{ margin-top: 2.8rem; }
+.team__col--3{ margin-top: 1.4rem; }
+
+.team-photo{
+  width: clamp(90px, 14vw, 165px);
+  aspect-ratio: 6/7;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity .4s ease;
+  flex-shrink: 0;
+  background: var(--ground-deeper);
+}
+.team-photo img{
+  width:100%; height:100%;
+  object-fit: cover;
+  filter: grayscale(1) brightness(.8);
+  transition: filter .5s ease;
+}
+.team-photo.is-active img{
+  filter: grayscale(0) brightness(1);
+}
+.team__showcase.has-active .team-photo:not(.is-active){
+  opacity: .6;
+}
+.team__showcase.has-active .team-photo.is-active{
+  opacity: 1;
+}
+
+/* Name list */
+.team__list{
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  flex: 1;
+  padding-top: .5rem;
+}
+.team-row{
+  cursor: pointer;
+  transition: opacity .3s ease;
+}
+.team__showcase.has-active .team-row:not(.is-active){ opacity: .5; }
+.team__showcase.has-active .team-row.is-active{ opacity: 1; }
+.team-row__line{
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.team-row__dash{
+  width: 14px; height: 10px;
+  border-radius: 4px;
+  background: rgba(27,26,46,.25);
+  flex-shrink: 0;
+  transition: background .3s ease, width .3s ease;
+}
+.team-row.is-active .team-row__dash{
+  background: var(--hepple-blue);
+  width: 22px;
+}
+.team-row__name{
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--hepple-ink);
+  transition: color .3s ease;
+}
+.team-row.is-active .team-row__name{ color: var(--hepple-blue); }
+.team-row__role{
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin: .3rem 0 0 24px;
+  opacity: .55;
+}
+
+/* =========================================================
+   STORY (now only used for Estate page)
+   ========================================================= */
+.story-hero{
+  position:relative;
+  margin-top: 60px;
+  height: 70vh;
+  min-height: 400px;
+  overflow:hidden;
+  background: var(--hepple-ink);
+}
+.story-hero__img{ position:absolute; inset:0; }
+.story-hero__img img{
+  width:100%; height:100%;
+  object-fit:cover;
+  filter: brightness(.72) saturate(.95);
+}
+.story-hero__title{
+  position:absolute;
+  left:50%; bottom: clamp(2rem, 8vh, 5rem);
+  transform:translateX(-50%);
+  width:100%;
+  text-align:center;
+  padding: 0 var(--gutter);
+}
+.story-hero__title h1{ font-size:var(--h-xxl); color:var(--cream); line-height:.95; }
+
+.story-intro{ padding: clamp(4rem,10vh,7rem) 0 clamp(2rem,5vh,4rem); text-align:center; }
+.story-intro__lede{
+  max-width: 58ch;
+  margin: 1rem auto 0;
+  font-size: var(--body-lg);
+  line-height:1.8;
+  letter-spacing:.05em;
+  font-weight:500;
+}
+
+.estate-body{
+  padding: clamp(3rem,6vh,5rem) 0 clamp(5rem,10vh,8rem);
+  text-align: center;
+}
+.estate-body h2{
+  font-size: var(--h-xl);
+  line-height: 1;
+  margin: .3rem 0 1.4rem;
+}
+.estate-body__text{
+  max-width: 60ch;
+  margin: 0 auto;
+  font-size: var(--body-lg);
+  line-height: 1.8;
+  letter-spacing: .05em;
+}
+
+.stats{
+  padding: clamp(4rem,10vh,8rem) 0;
+  background: var(--ground);
+  border-top:1px solid rgba(0,48,135,.08);
+  border-bottom:1px solid rgba(0,48,135,.08);
+}
+.stats__grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(3rem, 8vw, 8rem);
+  text-align:center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+@media (max-width: 860px){ .stats__grid{ grid-template-columns: 1fr; gap:3.5rem; } }
+.stat{ padding: 1rem; }
+.stat__number{
+  font-family:var(--sans);
+  font-weight:800;
+  font-size: clamp(4rem, 2.5rem + 8vw, 9rem);
+  line-height:.9;
+  letter-spacing:-.04em;
+  color:var(--hepple-blue);
+  font-variant-numeric: tabular-nums;
+  margin-bottom:1.2rem;
+}
+.stat__label{
+  font-size: .72rem;
+  letter-spacing:.22em;
+  color:var(--hepple-ink);
+  opacity:.75;
+  font-weight:700;
+  max-width: 22ch;
+  margin: 0 auto;
+  line-height:1.6;
+}
+
+/* =========================================================
+   PROCESS — now on OUR CRAFT page
+   ========================================================= */
+.process{
+  padding: clamp(3rem,8vh,6rem) 0 clamp(5rem,10vh,8rem);
+  background: var(--ground);
+}
+.process__head{ text-align:center; margin-bottom:clamp(2.5rem,5vh,4rem); }
+.process__head h2{ font-size:var(--h-xl); margin:.4rem auto 0; line-height:1; max-width: 24ch; }
+.process__viewer{ position:relative; }
+.process__steps{ position:relative; min-height: 520px; }
+.process__step{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transform: translateX(40px);
+  transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+}
+.process__step.is-active{ opacity:1; pointer-events:auto; transform: translateX(0); }
+.process__step.is-prev{ transform: translateX(-40px); }
+@media (max-width: 860px){
+  .process__step{ grid-template-columns: 1fr; }
+  .process__steps{ min-height: 680px; }
+}
+.process__img{ aspect-ratio: 4/3; overflow:hidden; background: var(--ground-deeper); border-radius: 4px; }
+.process__img img{ width:100%; height:100%; object-fit:cover; }
+.process__number{
+  display:block;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size: var(--h-lg);
+  color:var(--hepple-blue);
+  margin-bottom: .8rem;
+  letter-spacing:-.02em;
+  line-height:1;
+}
+.process__copy h3{ font-size:var(--h-lg); line-height:1.05; margin:0 0 1.2rem; color: var(--hepple-ink); }
+.process__copy p{
+  font-size: var(--body-lg);
+  line-height:1.75;
+  letter-spacing:.04em;
+  max-width:44ch;
+  margin:0;
+}
+.process__nav{
+  margin-top: 2.5rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+.process__btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  font-size:.7rem; letter-spacing:.22em;
+  color:var(--hepple-ink);
+  font-weight:700;
+  padding:.8rem 1.4rem;
+  border:1.5px solid var(--hepple-ink);
+  border-radius:999px;
+  transition: background .25s ease, color .25s ease;
+}
+.process__btn:hover{ background:var(--hepple-ink); color:var(--ground); }
+.process__btn[disabled]{ opacity:.3; cursor:default; }
+.process__btn[disabled]:hover{ background:transparent; color:var(--hepple-ink); }
+.process__dots{
+  display:flex;
+  gap: clamp(.5rem, 1.2vw, 1.2rem);
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.process__dot{
+  font-size:.62rem;
+  letter-spacing:.2em;
+  color:var(--hepple-ink);
+  opacity:.4;
+  font-weight:700;
+  padding:.4rem .6rem;
+  border-bottom: 2px solid transparent;
+  transition: opacity .25s ease, border-color .25s ease, color .25s ease;
+  white-space:nowrap;
+}
+.process__dot span{ display:inline-block; margin-right:.3rem; font-weight:800; }
+.process__dot.is-active, .process__dot:hover{
+  opacity:1;
+  color:var(--hepple-blue);
+  border-bottom-color: var(--hepple-blue);
+}
+@media (max-width: 700px){
+  .process__dots{ order:3; width:100%; justify-content:center; }
+}
+
+/* =========================================================
+   SHOP
+   ========================================================= */
+.shop-hero{
+  padding: clamp(5rem, 12vh, 9rem) 0 clamp(2rem, 5vh, 4rem);
+  text-align:center;
+  margin-top: 60px;
+}
+.shop-hero h1{ font-size:var(--h-xxl); margin:.3rem 0 1rem; line-height:1; }
+.shop-hero__lede{
+  max-width:42ch;
+  margin:0 auto;
+  font-size: var(--body-lg);
+  line-height:1.75;
+  letter-spacing:.05em;
+  opacity:.7;
+  font-weight:500;
+}
+.shop-grid-sec{ padding: 2rem 0 clamp(4rem, 8vh, 6rem); }
+.shop-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+@media (max-width: 960px){ .shop-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px){ .shop-grid{ grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; } }
+
+.shop-card{
+  display:flex;
+  flex-direction:column;
+  background: var(--cream);
+  padding: 2rem 1.5rem 1.5rem;
+  text-align:center;
+  position:relative;
+  transition: transform .5s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+  overflow:hidden;
+  min-height: 540px;
+  border-radius: 4px;
+}
+.shop-card:hover{
+  transform:translateY(-4px);
+  box-shadow: 0 25px 50px -30px rgba(0,48,135,.22);
+  opacity:1;
+}
+.shop-card__img{
+  height:340px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:1.5rem;
+}
+.shop-card__img img{
+  max-height:100%;
+  max-width:100%;
+  object-fit:contain;
+  filter: drop-shadow(0 20px 30px rgba(27,26,46,.15));
+  transition: transform .7s cubic-bezier(.16,1,.3,1);
+}
+.shop-card:hover .shop-card__img img{ transform: translateY(-6px) scale(1.04); }
+.shop-card h3{ font-size: var(--h-sm); letter-spacing:.08em; margin:0 0 .3rem; line-height:1.25; }
+.shop-card__tagline{
+  font-style: italic;
+  font-size: .78rem;
+  color: var(--hepple-blue);
+  margin-bottom: .5rem;
+  letter-spacing: .04em;
+}
+.shop-card__meta{
+  font-size:.65rem; letter-spacing:.22em;
+  opacity:.55;
+  margin-bottom:.6rem;
+  font-weight:700;
+}
+.shop-card__price{
+  font-weight:700;
+  font-size:1.05rem;
+  color:var(--hepple-ink);
+  margin-bottom:1rem;
+}
+.shop-card__actions{ margin-top:auto; display:flex; gap:.6rem; justify-content:center; }
+
+/* =========================================================
+   PRODUCT DETAIL
+   ========================================================= */
+.product-detail{ padding: clamp(5rem,10vh,8rem) 0 clamp(3rem,6vh,5rem); margin-top: 60px; }
+.product-detail__grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items:flex-start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+@media (max-width: 860px){ .product-detail__grid{ grid-template-columns:1fr; gap:2rem; } }
+
+.pd-gallery{ position:relative; background: var(--cream); overflow:hidden; border-radius: 4px; }
+.pd-gallery__stage{
+  position:relative;
+  aspect-ratio: 4/5;
+  display:flex; align-items:center; justify-content:center;
+  padding: 2rem;
+  overflow:hidden;
+}
+.pd-gallery__slide{
+  position:absolute;
+  inset:0;
+  display:flex; align-items:center; justify-content:center;
+  padding: 2rem;
+  opacity:0;
+  transform: scale(.96);
+  transition: opacity .5s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+}
+.pd-gallery__slide.is-active{ opacity:1; transform: scale(1); }
+.pd-gallery__slide img{
+  max-height:100%;
+  max-width:100%;
+  object-fit:contain;
+  filter: drop-shadow(0 30px 40px rgba(27,26,46,.15));
+}
+.pd-gallery__btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:3;
+  width:42px; height:42px;
+  border-radius:50%;
+  background: var(--ground);
+  color: var(--hepple-blue);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 8px 24px rgba(0,48,135,.15);
+  border:1px solid rgba(0,48,135,.1);
+  transition: background .25s ease, color .25s ease;
+}
+.pd-gallery__btn:hover{ background:var(--hepple-blue); color:var(--ground); }
+.pd-gallery__btn--prev{ left:.8rem; }
+.pd-gallery__btn--next{ right:.8rem; }
+.pd-gallery__dots{
+  position:absolute;
+  bottom: 1rem;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:.5rem;
+  z-index:2;
+}
+.pd-gallery__dot{
+  width:8px; height:8px;
+  border-radius:50%;
+  background: rgba(0,48,135,.25);
+  transition: background .25s ease, transform .25s ease;
+}
+.pd-gallery__dot.is-active{ background: var(--hepple-blue); transform:scale(1.25); }
+
+.product-detail__body{ padding-top: 1rem; }
+.product-detail__crumbs{
+  font-size:.65rem;
+  letter-spacing:.22em;
+  opacity:.55;
+  margin-bottom:1rem;
+  font-weight:700;
+}
+.product-detail__crumbs a{ border-bottom:1px solid currentColor; }
+.product-detail__kicker{
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: 1.05rem;
+  margin-bottom: .8rem;
+}
+.product-detail__title{ font-size:var(--h-xl); line-height:1; margin:0 0 .8rem; }
+.product-detail__price{
+  font-size:var(--h-md);
+  font-weight:700;
+  color:var(--hepple-ink);
+  margin-bottom:1.3rem;
+}
+.product-detail__desc{
+  font-size: var(--body-lg);
+  line-height:1.75;
+  letter-spacing:.04em;
+  margin: 0 0 1.6rem;
+}
+.product-detail__desc p{ margin: 0 0 1em; }
+
+.product-detail__notes{
+  background: var(--cream);
+  padding: 1.6rem 1.4rem;
+  border-radius: 4px;
+  margin-bottom: 1.6rem;
+}
+.product-detail__notes h4{
+  font-size: .72rem;
+  letter-spacing: .26em;
+  margin: 0 0 1rem;
+  color: var(--hepple-blue);
+  font-weight: 800;
+}
+.product-detail__notes dl{
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: .6rem 1rem;
+  margin: 0;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+.product-detail__notes dt{
+  font-weight: 800;
+  font-size: .62rem;
+  letter-spacing: .26em;
+  padding-top: 2px;
+  color: var(--hepple-blue);
+}
+.product-detail__notes dd{ margin: 0; letter-spacing: .04em; }
+
+.product-detail__meta{
+  display:grid;
+  grid-template-columns: repeat(3, auto);
+  gap:1rem 2rem;
+  font-size:.65rem; letter-spacing:.22em;
+  font-weight:700;
+  opacity:.85;
+  margin-bottom:1.8rem;
+  padding: 1.2rem 0;
+  border-top:1px solid rgba(0,48,135,.12);
+  border-bottom:1px solid rgba(0,48,135,.12);
+}
+.product-detail__meta strong{
+  display:block;
+  color:var(--hepple-blue);
+  font-weight:800;
+  opacity:1;
+  font-size:1.1rem;
+  margin-bottom:.2rem;
+  letter-spacing:-.01em;
+}
+
+.gift-addon{
+  background: var(--ground-warm);
+  border: 1.5px solid rgba(0,48,135,.12);
+  border-radius:6px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.4rem;
+  display:flex;
+  align-items:center;
+  gap: 1rem;
+  cursor:pointer;
+  transition: border-color .25s ease, background .25s ease;
+  user-select:none;
+  position:relative;
+}
+.gift-addon:hover{ border-color: var(--hepple-blue); }
+.gift-addon__check{
+  width:20px; height:20px;
+  border-radius:50%;
+  border:1.5px solid rgba(0,48,135,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 20px;
+  transition: border-color .25s ease, background .25s ease;
+}
+.gift-addon input[type="checkbox"]{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.gift-addon.is-checked{
+  border-color: var(--hepple-blue);
+  background: rgba(0, 48, 135, 0.05);
+}
+.gift-addon.is-checked .gift-addon__check{
+  background: var(--hepple-blue);
+  border-color: var(--hepple-blue);
+}
+.gift-addon.is-checked .gift-addon__check::after{
+  content:"";
+  width:10px; height:6px;
+  border:2px solid white;
+  border-top:0; border-right:0;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+.gift-addon__body{ flex:1; }
+.gift-addon__title{
+  font-size:.8rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  color:var(--hepple-ink);
+  display:block;
+  margin-bottom:.1rem;
+}
+.gift-addon__sub{
+  font-size:.68rem;
+  letter-spacing:.15em;
+  opacity:.65;
+  font-weight:500;
+}
+.gift-addon__price{
+  font-weight:700;
+  color:var(--hepple-blue);
+  font-size:.85rem;
+  letter-spacing:.06em;
+}
+
+.product-detail__qty{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1.4rem;
+}
+.product-detail__qty label{
+  font-size:.7rem;
+  letter-spacing:.22em;
+  font-weight:700;
+  opacity:.75;
+}
+.qty-stepper{
+  display:flex;
+  align-items:center;
+  border:1.5px solid var(--hepple-ink);
+  border-radius:999px;
+  overflow:hidden;
+}
+.qty-stepper button{
+  width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem;
+  color:var(--hepple-ink);
+  font-weight:700;
+}
+.qty-stepper input{
+  width:40px;
+  border:0;
+  background:transparent;
+  text-align:center;
+  font:inherit;
+  font-weight:700;
+  color:var(--hepple-ink);
+  -moz-appearance:textfield;
+}
+.qty-stepper input::-webkit-outer-spin-button,
+.qty-stepper input::-webkit-inner-spin-button{ -webkit-appearance:none; }
+
+.product-detail__add{
+  padding: 1rem 2.2rem;
+  background: var(--juniper);
+  color:var(--hepple-ink);
+  border-radius:999px;
+  font-family:var(--sans);
+  font-size:.72rem;
+  letter-spacing:.24em;
+  font-weight:800;
+  transition: background .25s ease, transform .25s ease, color .25s ease;
+  width:100%;
+  max-width: 420px;
+  border: 1.5px solid var(--juniper);
+}
+.product-detail__add:hover{ background:var(--hepple-ink); color: var(--juniper); border-color: var(--hepple-ink); }
+.product-detail__add.is-added{ background:var(--doug-fir-green); border-color: var(--doug-fir-green); color: var(--cream); transform: scale(.98); }
+
+.toast{
+  position:fixed;
+  bottom: 2rem;
+  left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background: var(--hepple-ink);
+  color:var(--cream);
+  padding: .9rem 1.5rem;
+  border-radius:999px;
+  font-size:.7rem;
+  letter-spacing:.22em;
+  font-weight:700;
+  z-index:100;
+  opacity:0;
+  transition: opacity .4s ease, transform .4s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+  box-shadow: 0 20px 40px rgba(0,48,135,.3);
+}
+.toast.is-visible{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer{
+  background: var(--ground);
+  padding: clamp(3rem,6vh,5rem) var(--gutter) 2rem;
+  border-top:1px solid rgba(0,48,135,.12);
+}
+.footer__grid{
+  max-width: var(--max);
+  margin: 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+  padding-bottom: clamp(2rem, 4vh, 3rem);
+}
+.footer__brand-link{ display:inline-flex; align-items:center; }
+.footer__logo{ height:28px; width:auto; }
+.footer__nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  font-size:.72rem;
+  letter-spacing:.22em;
+  font-weight:700;
+}
+.footer__nav a{
+  color:var(--hepple-blue);
+  border-bottom:1px solid transparent;
+  padding-bottom:2px;
+  transition: border-color .2s ease;
+}
+.footer__nav a:hover{
+  opacity:1;
+  border-bottom-color: currentColor;
+}
+.footer__email{
+  font-size: .8rem;
+  letter-spacing: .18em;
+  font-weight:600;
+  color:var(--hepple-blue);
+  border-bottom:1px solid currentColor;
+  padding-bottom:3px;
+}
+.footer__bar{
+  max-width: var(--max);
+  margin: 0 auto;
+  border-top: 1px solid rgba(0,48,135,.12);
+  padding-top: 1.4rem;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  font-size: .65rem;
+  letter-spacing:.22em;
+  color: var(--hepple-ink);
+  opacity:.6;
+  flex-wrap:wrap;
+  gap:1rem;
+  font-weight:600;
+}
+.footer__bar a{ border-bottom: 1px solid transparent; transition: border-color .2s ease; }
+.footer__bar a:hover{ border-color: currentColor; opacity:1; }
+.footer__barker{ font-size:.6rem; letter-spacing:.26em; }
+@media (max-width: 600px){
+  .footer__bar{ justify-content:center; text-align:center; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .intro{ height:100vh; }
+  .intro__video{ display:none; }
+  .intro__stage{ background: var(--hepple-ink); }
+  .sticky-gallery__col--sticky{ position:static; height:auto; }
+  .flip-card:hover .flip-card__inner{ transform: none; }
+}
+
+/* =========================================================
+   PRODUCT DETAIL — sections added in JS render
+   ========================================================= */
+.product-detail__tagline{
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: var(--body-lg);
+  color: var(--hepple-blue);
+  letter-spacing: .03em;
+  margin: 0 0 1.2rem;
+  font-weight: 500;
+}
+.product-detail__body-copy{
+  margin: 0 0 1.8rem;
+}
+.product-detail__body-copy p{
+  font-size: .88rem;
+  line-height: 1.8;
+  letter-spacing: .05em;
+  max-width: 52ch;
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.product-detail__body-copy p:last-child{ margin-bottom: 0; }
+
+.product-detail__section{
+  margin: 0 0 1.8rem;
+  padding: 1.2rem 0 0;
+  border-top: 1px solid rgba(27,26,46,.12);
+}
+.product-detail__section h4{
+  font-size: .7rem;
+  letter-spacing: .24em;
+  color: var(--hepple-blue);
+  font-weight: 800;
+  margin: 0 0 .9rem;
+}
+.product-detail__section p{
+  font-size: .85rem;
+  line-height: 1.75;
+  letter-spacing: .05em;
+  margin: 0 0 .8rem;
+  max-width: 52ch;
+  font-weight: 500;
+}
+.product-detail__section p:last-child{ margin-bottom: 0; }
+.product-detail__section ul{
+  list-style: none;
+  margin: 0 0 .8rem;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid var(--hepple-blue);
+}
+.product-detail__section ul li{
+  font-size: .78rem;
+  line-height: 1.7;
+  letter-spacing: .06em;
+  margin: 0 0 .3rem;
+  font-weight: 600;
+}
+
+.product-detail__tasting{
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+.product-detail__tasting > div{
+  font-size: .82rem;
+  line-height: 1.7;
+  letter-spacing: .05em;
+  font-weight: 500;
+}
+.product-detail__tasting strong{
+  display: inline-block;
+  min-width: 70px;
+  font-size: .64rem;
+  letter-spacing: .24em;
+  color: var(--hepple-blue);
+  font-weight: 800;
+  margin-right: .6rem;
+}
+
+/* =========================================================
+   MINOR HELPERS added for this build
+   ========================================================= */
+.cocktails-home__lede{
+  max-width: 48ch;
+  margin: 0 auto;
+  font-size: .9rem;
+  line-height: 1.8;
+  letter-spacing: .06em;
+  opacity: .7;
+  font-weight: 500;
+}
+.cocktails-home__foot{
+  text-align: center;
+  margin-top: clamp(2rem, 5vh, 3.5rem);
+}
+
+/* Welcome holder variant — image takes the LEFT, copy RIGHT, both sides get breathing room */
+.welcome--holder .welcome__grid{ gap: clamp(2rem, 5vw, 5rem); }
+.welcome--holder .welcome__img{ aspect-ratio: 4/5; }
+@media (max-width: 860px){
+  .welcome--holder .welcome__img{ aspect-ratio: 4/3; }
+}
+
+/* =========================================================
+   FEEDBACK V4 — EVERYTHING in Hepple blue + 15° tilts
+   + bigger scripts positioned above the first letter
+   ========================================================= */
+
+/* Override the --light variant — Zach wants ALL scripts in Hepple blue */
+.script-accent--light{
+  color: var(--hepple-blue) !important;
+}
+
+/* ─────────────────────────────────────────────────────────
+   SCRIPT ABOVE HEADER — straight, big, close, no offset/rotation per feedback
+   ───────────────────────────────────────────────────────── */
+.script-accent--offset{
+  position: static;
+  transform: none;
+  display: block;
+
+  font-family: var(--script);
+  font-size: clamp(2.8rem, 2.2rem + 3vw, 5rem);
+  line-height: .95;
+  color: var(--hepple-blue);
+  font-weight: 400;
+
+  margin: 0 0 .15em;
+  padding: 0;
+  white-space: normal;
+}
+/* Hero variant — bigger again for the big section headers */
+.script-accent--offset.script-accent--hero{
+  font-size: clamp(3.6rem, 2.6rem + 4.5vw, 7rem);
+}
+@media (max-width: 700px){
+  .script-accent--offset{
+    font-size: clamp(2.4rem, 2rem + 3vw, 3.6rem);
+    transform: none;
+  }
+  .script-accent--offset.script-accent--hero{
+    font-size: clamp(3rem, 2.2rem + 4vw, 4.4rem);
+  }
+}
+
+/* Every wrapper that contains an offset script needs:
+   - position: relative (so absolute-positioned script anchors to it)
+   - enough padding-top for the script to sit within the section       */
+.welcome__copy,
+.founders-intro__inner,
+.estate-intro__inner,
+.story-hero__title,
+.cocktails-home__head,
+.estate-cta__inner,
+.visit-slim{
+  position: relative;
+  padding-top: clamp(2.8rem, 5vw, 4.5rem);
+}
+
+/* Visit-slim — the script is centered above the heading (not left) */
+.visit-slim{
+  padding-top: clamp(4rem, 8vh, 6rem);
+  padding-bottom: clamp(3rem, 6vh, 5rem);
+  text-align: center;
+}
+.visit-slim .script-accent--offset{
+  top: clamp(.8rem, 2.5vh, 1.8rem);
+  left: 50%;
+  /* Centered and tilted — translate both X and Y then rotate */
+  transform: translate(-50%, 0) rotate(-15deg);
+  transform-origin: center bottom;
+}
+
+/* Cocktails-home head is centered too */
+.cocktails-home__head{
+  padding-top: clamp(3.5rem, 6vw, 5rem);
+  text-align: center;
+}
+.cocktails-home__head .script-accent--offset{
+  top: clamp(.5rem, 1.5vh, 1.2rem);
+  left: 50%;
+  transform: translate(-50%, 0) rotate(-15deg);
+  transform-origin: center bottom;
+}
+
+/* ─────────────────────────────────────────────────────────
+   HERO INTRO — "Come in" bigger, tilted, over the "W"
+   ───────────────────────────────────────────────────────── */
+.intro__center{
+  /* Make room for the big tilted eyebrow above the headline */
+  position: relative;
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+.intro__eyebrow{
+  /* Bigger than before, 15° tilt, positioned above-left of the "W" */
+  font-size: clamp(3.8rem, 2.6rem + 4.5vw, 6rem);
+  color: var(--cream);  /* stays cream on the dark hero video */
+  display: inline-block;
+  transform: translate(-1em, .4em) rotate(-15deg);
+  transform-origin: left bottom;
+  margin: 0;
+  line-height: .9;
+  position: relative;
+  z-index: 3;
+}
+@media (max-width: 700px){
+  .intro__eyebrow{
+    font-size: clamp(2.8rem, 2rem + 5vw, 4.2rem);
+    transform: translate(-.6em, .35em) rotate(-15deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   WELCOME PANEL — bigger headline, tight spacing
+   ───────────────────────────────────────────────────────── */
+.welcome__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 1.2rem;
+  max-width: 22ch;
+}
+/* Position "Welcome to Hepple" above-left of the "A" in "AN INDEPENDENT".
+   Nudge it slightly right to clear the fireside image gutter.           */
+.welcome__copy .script-accent--offset{
+  transform: translate(.1em, -.55em) rotate(-15deg);
+}
+@media (max-width: 860px){
+  .welcome__copy .script-accent--offset{
+    transform: translate(-.05em, -.45em) rotate(-15deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   FOUNDERS INTRO — taller + script in Hepple blue + right-aligned
+   + image lightened so blue text reads over it
+   ───────────────────────────────────────────────────────── */
+.founders-intro{
+  overflow: visible;   /* let script poke outside if needed */
+  min-height: 80vh;    /* taller so "This is Our Story" doesn't clip */
+  margin: clamp(3rem, 5vw, 5rem) 0;
+  background: var(--ground);
+}
+.founders-intro__img img{
+  /* Lighten the image so Hepple blue text is readable over it */
+  filter: brightness(1) saturate(1);
+}
+.founders-intro__overlay{
+  min-height: 80vh;
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter);
+}
+.founders-intro__inner{
+  color: var(--hepple-blue);
+}
+.founders-intro__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  letter-spacing: -.02em;
+  color: var(--hepple-blue);
+  margin: 0 0 1.4rem;
+  max-width: 18ch;
+}
+.founders-intro__body{
+  color: var(--hepple-ink);
+  font-weight: 600;
+  /* subtle cream drop-behind for legibility over image */
+  background: rgba(246, 242, 234, .85);
+  padding: .6em .8em;
+  border-radius: 4px;
+  max-width: 50ch;
+}
+.founders-intro--right .founders-intro__overlay{
+  justify-content: flex-end;
+}
+.founders-intro--right .founders-intro__inner{
+  margin-right: 0;
+  margin-left: auto;
+  max-width: 54ch;
+  text-align: left;
+}
+@media (max-width: 700px){
+  .founders-intro--right .founders-intro__inner{
+    margin: 0;
+    max-width: none;
+  }
+}
+/* Make sure "This is Our Story" sits above the "I" of "IN PURSUIT".
+   Founders column is right-aligned so we anchor the script to the
+   left edge of the heading but slightly smaller so it doesn't
+   overflow beyond the section on wide screens. */
+.founders-intro__inner .script-accent--offset{
+  left: 0;
+  top: 0;
+  transform: translate(-.05em, -.5em) rotate(-15deg);
+  transform-origin: left bottom;
+  /* ~20% smaller in this context so it fits */
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 3.6rem);
+}
+/* Use a solid dark outline button so it's readable on the lighter image */
+.founders-intro__inner .btn--outline-light{
+  border-color: var(--hepple-blue);
+  color: var(--hepple-blue);
+  background: rgba(246, 242, 234, .85);
+}
+.founders-intro__inner .btn--outline-light:hover{
+  background: var(--hepple-blue);
+  color: var(--cream);
+}
+
+/* ─────────────────────────────────────────────────────────
+   ESTATE INTRO — LEFT-aligned, script above-left of "T"
+   per Zach: "needs to be to the left above the text"
+   ───────────────────────────────────────────────────────── */
+.estate-intro--centered{
+  text-align: left;
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
+}
+.estate-intro--centered .wrap{
+  /* keep wrap default — content flows from left gutter */
+}
+.estate-intro--centered .estate-intro__inner{
+  margin: 0;
+  max-width: 60ch;
+  padding-top: clamp(2.8rem, 5vw, 4.5rem);
+  text-align: left;
+}
+.estate-intro--centered .estate-intro__inner .script-accent--offset{
+  /* Sit above-left of the "T" of THE ESTATE — left-anchored, tilted */
+  left: 0;
+  top: 0;
+  transform: translate(-.05em, -.5em) rotate(-15deg);
+  transform-origin: left bottom;
+}
+.estate-intro__h2{
+  font-size: var(--h-xl);
+  line-height: 1;
+  margin: 0;
+  max-width: 34ch;
+  color: var(--hepple-blue);
+  text-align: left;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ESTATE CTA OVERLAY — text OVER photo, all in Hepple blue
+   Image gets lightened so blue reads over it
+   ───────────────────────────────────────────────────────── */
+.estate-cta--overlay{
+  position: relative;
+  min-height: clamp(32rem, 70vh, 48rem);
+  overflow: visible;
+  background: var(--ground);
+  margin: clamp(3rem, 5vw, 5rem) 0;
+}
+.estate-cta--overlay .estate-cta__bg{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.estate-cta--overlay .estate-cta__bg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Brighten + cream tint so Hepple blue text reads */
+  filter: brightness(1.08) saturate(.9);
+}
+/* Cream overlay on top of image for text contrast */
+.estate-cta--overlay .estate-cta__bg::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(237, 232, 224, 0) 0%,
+    rgba(237, 232, 224, .15) 40%,
+    rgba(237, 232, 224, .75) 100%);
+  pointer-events: none;
+}
+.estate-cta--overlay .estate-cta__overlay{
+  position: relative;
+  z-index: 2;
+  min-height: clamp(32rem, 70vh, 48rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter);
+  text-align: center;
+}
+.estate-cta--overlay .estate-cta__inner{
+  max-width: 44rem;
+  color: var(--hepple-blue);
+  /* Cream panel behind text for guaranteed readability */
+  background: rgba(246, 242, 234, .75);
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: 6px;
+}
+.estate-cta__headline{
+  font-size: var(--h-xl);
+  line-height: .95;
+  color: var(--hepple-blue);
+  margin: 0 0 1rem;
+  letter-spacing: -.015em;
+}
+.estate-cta__sub{
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--h-md);
+  letter-spacing: .02em;
+  line-height: 1.2;
+  color: var(--hepple-blue);
+  margin: 0 0 1.8rem;
+  text-transform: uppercase;
+}
+.estate-cta__sub em{
+  color: var(--hepple-blue);
+  font-style: italic;
+}
+/* Estate CTA uses dark outline button now (it's on cream) */
+.estate-cta--overlay .btn--outline-light{
+  /* force dark variant since we're on a cream panel */
+  border-color: var(--hepple-blue);
+  color: var(--hepple-blue);
+}
+.estate-cta--overlay .btn--outline-light:hover{
+  background: var(--hepple-blue);
+  color: var(--cream);
+}
+
+/* ─────────────────────────────────────────────────────────
+   STORY HERO — Our Inspiration / Our Craft etc. above H1
+   ───────────────────────────────────────────────────────── */
+.story-hero__title h1{
+  white-space: normal;
+  color: var(--cream);
+}
+/* Script over story-hero images — tints cream because it's on a dark image */
+.story-hero__title .script-accent--offset{
+  color: var(--cream);  /* legibility over dark images */
+}
+
+/* ─────────────────────────────────────────────────────────
+   COCKTAILS HEADING — bring down from nav bar
+   ───────────────────────────────────────────────────────── */
+.cocktails-home{
+  padding-top: clamp(6rem, 12vh, 10rem);
+}
+.cocktails-home__head h2{
+  margin-top: 0;
+  color: var(--hepple-blue);
+}
+/* The "DELICIOUS DRINKS START HERE" should be script-style, Hepple blue */
+.cocktails-home__sub,
+.shop-cocktails__sub{
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  letter-spacing: 0;
+  line-height: 1.2;
+  color: var(--hepple-blue);
+  margin: .8rem auto 1.2rem;
+  text-transform: none;
+  max-width: 32ch;
+}
+.story-hero__sub{
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--h-md);
+  letter-spacing: .02em;
+  line-height: 1.2;
+  color: var(--cream);
+  margin: .8rem 0 1.2rem;
+  text-transform: uppercase;
+}
+
+/* Visit slim line break */
+.visit-slim h3 br{ display: inline; }
+.visit-slim h3{ color: var(--hepple-blue); }
+
+/* ─────────────────────────────────────────────────────────
+   COCKTAIL CARDS — more mobile spacing + safe lift room
+   ───────────────────────────────────────────────────────── */
+.flip-row{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+@media (max-width: 860px){
+  .flip-row{
+    grid-template-columns: 1fr;
+    /* Extra vertical space so lifted card doesn't bleed into next */
+    gap: clamp(2.5rem, 6vw, 3.5rem);
+    padding: 0 1rem;
+  }
+}
+/* Disable the lift on mobile (tap = flip, no lift) so cards don't collide */
+@media (max-width: 860px) and (hover: none){
+  .flip-card:hover .flip-card__inner,
+  .flip-card:focus-within .flip-card__inner{
+    transform: none;
+  }
+  .flip-card.is-flipped .flip-card__inner{
+    transform: rotateY(180deg);  /* keep the flip, lose the lift */
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   PRODUCT CARDS — two-line title
+   ───────────────────────────────────────────────────────── */
+.product-card__title,
+.shop-card__title,
+.product-detail__title{
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  margin: 0;
+}
+.product-card__brand,
+.shop-card__brand,
+.product-detail__brand{
+  font-weight: 700;
+  letter-spacing: -.01em;
+  display: block;
+}
+.product-card__variant,
+.shop-card__variant,
+.product-detail__variant{
+  font-weight: 700;
+  letter-spacing: -.01em;
+  display: block;
+  margin-top: .12em;
+}
+.product-card__kicker,
+.shop-card__kicker{
+  font-family: var(--sans);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+  margin: 0 0 .5rem;
+  opacity: .75;
+}
+.product-detail__kicker{
+  font-family: var(--sans);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .24em;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+  margin: 0 0 .8rem;
+  opacity: .85;
+}
+
+/* Tiny niggles */
+.range__head h2{ color: var(--hepple-blue); }
+.cocktails-home__foot{ text-align: center; margin-top: clamp(2rem, 5vh, 3.5rem); }
+
+/* =========================================================
+   FEEDBACK V5 — final round of Zach's fixes
+   - Welcome script tighter to heading + nudge left, mobile clearance
+   - Founders script visible (no clip)
+   - Sticky gallery: hide entirely on mobile
+   - Cocktail sub: regular sans not script
+   - Visit-slim: bigger, no overlap
+   - Mobile product card: kill any black box
+   - Remove flip card hover lift on PC for the small problematic case
+   ========================================================= */
+
+/* 1. WELCOME PANEL — tighter spacing, nudge script LEFT of "A"
+   On mobile, script must clear the Hepple Gin photo above. */
+.welcome__copy{
+  padding-top: clamp(1.8rem, 3.5vw, 3rem);   /* was 2.8/5/4.5 — tighter */
+}
+.welcome__copy .script-accent--offset{
+  /* Above-left of "A" in "AN INDEPENDENT" */
+  left: 0;
+  top: 0;
+  transform: translate(-.5em, -.3em) rotate(-15deg);
+  transform-origin: left bottom;
+}
+@media (max-width: 860px){
+  .welcome__copy{
+    /* On mobile the image is ABOVE the copy; give script room */
+    padding-top: clamp(2.5rem, 8vw, 4rem);
+  }
+  .welcome__copy .script-accent--offset{
+    /* On mobile shift slightly right so it doesn't clip viewport edge */
+    transform: translate(.1em, -.3em) rotate(-15deg);
+  }
+}
+
+/* 2. FOUNDERS — keep "This is Our Story" inside the visible frame.
+   Anchor it to the right column (which is right-aligned), and
+   make sure it never overflows the section.                       */
+.founders-intro{
+  overflow: hidden;   /* contain anything that tries to escape */
+}
+.founders-intro__inner{
+  position: relative;
+  /* Need padding-top large enough to host the script */
+  padding-top: clamp(3.5rem, 6vw, 5.5rem);
+}
+.founders-intro__inner .script-accent--offset{
+  left: 0;
+  top: 0;
+  /* Smaller font + smaller offset so it fits cleanly */
+  font-size: clamp(1.8rem, 1.4rem + 2vw, 3rem);
+  transform: translate(0, -.3em) rotate(-15deg);
+  transform-origin: left bottom;
+}
+@media (max-width: 700px){
+  .founders-intro__inner .script-accent--offset{
+    font-size: clamp(1.6rem, 1.2rem + 3vw, 2.4rem);
+    transform: translate(0, -.25em) rotate(-15deg);
+  }
+}
+
+/* 3. STICKY GALLERY — show on desktop only.
+   Replace with simple stacked images on mobile.                    */
+@media (max-width: 860px){
+  .sticky-gallery__col--sticky{
+    position: static !important;
+    height: auto !important;
+    display: none;   /* hide the middle sticky column on mobile */
+  }
+  .sticky-gallery__col--scroll{
+    grid-column: span 12 !important;
+  }
+  .sticky-gallery__col--scroll:last-of-type{
+    display: grid !important;   /* re-enable hidden column */
+  }
+  .sticky-gallery__col--scroll figure{
+    height: 14rem !important;
+  }
+  .sticky-gallery__col--scroll figure:nth-child(n+4){
+    display: block !important;
+  }
+  .sticky-gallery__grid{
+    gap: .5rem;
+    padding: 0 var(--gutter);
+  }
+}
+
+/* 4. COCKTAILS SUB — regular bold sans, NOT script.
+   Override the v4 script-style I'd added. */
+.cocktails-home__sub,
+.shop-cocktails__sub{
+  font-family: var(--sans) !important;
+  font-weight: 700 !important;
+  font-size: clamp(.9rem, .75rem + .5vw, 1.15rem) !important;
+  letter-spacing: .18em !important;
+  line-height: 1.4 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: uppercase !important;
+  margin: .6rem auto 1.4rem !important;
+  max-width: 36ch;
+}
+
+/* 5. VISIT-SLIM — bigger panel, more padding so script has clearance */
+.visit-slim{
+  padding-top: clamp(5rem, 10vh, 7.5rem) !important;
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+}
+.visit-slim .script-accent--offset{
+  /* Sit higher and to the LEFT of THE HEPPLE EXPERIENCE per Zach */
+  top: clamp(.8rem, 2.5vh, 2rem);
+  left: 50%;
+  transform: translate(-65%, 0) rotate(-15deg);  /* shift left of center */
+  transform-origin: center bottom;
+}
+.visit-slim h3{
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.4rem);
+  line-height: 1;
+  margin: 1rem 0 1.6rem;
+  color: var(--hepple-blue);
+}
+
+/* 6. MOBILE PRODUCT CARD — kill any rogue dark element
+   The "weird black box top-left" Zach reported. Most likely culprits:
+   - Old broken alt-text rendering when img fails
+   - A pseudo-element or focus ring
+   We make the image container guaranteed transparent and ensure
+   no children get inherited dark backgrounds.                   */
+@media (max-width: 700px){
+  .product-card,
+  .shop-card{
+    background: var(--cream) !important;
+    overflow: hidden;
+  }
+  .product-card__img,
+  .shop-card__img{
+    background: transparent !important;
+    position: relative;
+  }
+  .product-card__img::before,
+  .product-card__img::after,
+  .shop-card__img::before,
+  .shop-card__img::after{
+    display: none !important;
+    content: none !important;
+  }
+  /* Hide alt text if image fails (visually replace with empty space) */
+  .product-card__img img,
+  .shop-card__img img{
+    color: transparent;
+  }
+  /* If first slide of Embla has an extra control overlay on mobile,
+     make sure the prev arrow doesn't show as a black square           */
+  .embla__controls{
+    margin-top: 1rem;
+  }
+}
+
+/* 7. INTRO HEADLINE — make sure no full stop wraps in awkwardly */
+.intro__headline{
+  white-space: nowrap;
+}
+@media (max-width: 700px){
+  .intro__headline{
+    white-space: normal;
+  }
+}
+
+/* =========================================================
+   FEEDBACK V6 — Windows video scrub + polish round
+   ========================================================= */
+
+/* 1. Mobile sticky gallery — only show the ~6 curated keepers */
+@media (max-width: 700px){
+  .sticky-gallery .mobile-hide,
+  .sticky-gallery figure.mobile-hide{
+    display: none !important;
+  }
+}
+
+/* 2. iOS Safari — kill the default video overlay play button entirely */
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button{
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+.intro__video{
+  pointer-events: none;   /* user can't trigger controls */
+}
+
+/* 3. FOUNDERS — "This is Our Story" TOUCHING "IN PURSUIT".
+   Bring the script down so it sits snug against the heading top edge. */
+.founders-intro__inner{
+  padding-top: clamp(2.2rem, 3.5vw, 3.2rem) !important;
+}
+.founders-intro__inner .script-accent--offset{
+  /* Sit directly above the heading, touching its top */
+  transform: translate(0, .1em) rotate(-15deg) !important;
+}
+
+/* 4. VISIT-SLIM — ensure script fully visible, not cut off */
+.visit-slim{
+  padding-top: clamp(6rem, 12vh, 9rem) !important;
+  overflow: visible !important;
+}
+.visit-slim .script-accent--offset{
+  top: clamp(1.5rem, 4vh, 3rem) !important;
+  /* Centered horizontally — not offset left, since the panel is centered */
+  left: 50% !important;
+  transform: translate(-50%, 0) rotate(-15deg) !important;
+  transform-origin: center bottom !important;
+}
+
+/* 5. WELCOME panel — consistent with V5 but verify script touches heading */
+.welcome__copy{
+  padding-top: clamp(2rem, 4vw, 3.5rem) !important;
+}
+.welcome__copy .script-accent--offset{
+  transform: translate(-.3em, .1em) rotate(-15deg) !important;
+}
+
+/* 6. ESTATE INTRO — make script visibly offset from heading (not cut on left) */
+.estate-intro--centered .estate-intro__inner{
+  padding-top: clamp(2.2rem, 4.5vw, 3.6rem) !important;
+}
+.estate-intro--centered .estate-intro__inner .script-accent--offset{
+  transform: translate(0, .1em) rotate(-15deg) !important;
+}
+
+/* 7. Intro hero — make sure headline is actually centered in the stage */
+.intro__center{
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+.intro__eyebrow,
+.intro__headline{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 8. Intro video — make sure Safari gets it visible and playable */
+.intro__video{
+  background: #000;
+  display: block !important;
+}
+
+/* =========================================================
+   FEEDBACK V7 — FINAL: straight scripts (no tilt), consistent ratios,
+   fix all cutoffs, containerize flip cards
+   ========================================================= */
+
+/* 1. GLOBAL OFFSET SCRIPT — straight, not tilted.
+   Override all previous rotate() rules. Size is consistently
+   small relative to its heading.                               */
+.script-accent--offset{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  transform: translate(.1em, .15em) !important;   /* NO rotation */
+  transform-origin: left top;
+  font-family: var(--script);
+  /* Small, consistent across sections. ~40% of heading size. */
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem) !important;
+  line-height: 1;
+  color: var(--hepple-blue);
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  z-index: 3;
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* Hero variant for overlays on dark photos */
+.script-accent--offset.script-accent--hero{
+  font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.8rem) !important;
+}
+@media (max-width: 700px){
+  .script-accent--offset{
+    font-size: clamp(1.2rem, .9rem + 2vw, 1.8rem) !important;
+  }
+}
+
+/* 2. ALL offset-script containers need padding-top to host the script
+   and relative positioning. Consistent rule.                         */
+.welcome__copy,
+.founders-intro__inner,
+.estate-intro__inner,
+.story-hero__title,
+.cocktails-home__head,
+.estate-cta__inner,
+.visit-slim{
+  position: relative;
+  padding-top: clamp(2.4rem, 3.5vw, 3.6rem) !important;
+}
+
+/* 3. VISIT-SLIM — script is the same tight pattern, not offset left */
+.visit-slim .script-accent--offset{
+  top: clamp(1.4rem, 3vh, 2.2rem) !important;
+  left: 50% !important;
+  transform: translate(-50%, 0) !important;
+}
+.visit-slim h3{
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+  line-height: 1;
+  margin: .6rem 0 1.4rem;
+  color: var(--hepple-blue);
+}
+
+/* 4. FOUNDERS — "This is Our Story" INSIDE the photo with padding.
+   Keep overflow:hidden so it stays in frame. Center vertically.    */
+.founders-intro{
+  overflow: hidden !important;
+  min-height: auto;
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+.founders-intro__overlay{
+  min-height: auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gutter);
+  align-items: center;
+}
+.founders-intro--right .founders-intro__inner{
+  /* Keep the padding-top for the script, but ensure script doesn't escape
+     the right column.                                                   */
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.founders-intro__inner .script-accent--offset{
+  /* Sit top-left of heading. Same straight style as everywhere else. */
+  transform: translate(0, .15em) !important;
+}
+
+/* 5. FLIP CARDS — smaller, properly contained so flip doesn't get cut off */
+.flip-card{
+  /* Add margin so the 3D flip has room to breathe */
+  aspect-ratio: 3/4;   /* fix consistent shape */
+  perspective: 1200px;
+  overflow: visible;   /* allow shadow during flip */
+  transform-style: preserve-3d;
+}
+.flip-card__inner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .7s cubic-bezier(.16,1,.3,1);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card__inner,
+.flip-card:focus-within .flip-card__inner,
+.flip-card.is-flipped .flip-card__inner{
+  transform: rotateY(180deg);
+}
+.flip-card__face{
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.flip-card__back{
+  transform: rotateY(180deg);
+}
+/* Make sure the card's FRONT image fully fills the card */
+.flip-card__front img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.flip-row{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  /* Give vertical breathing room so hover-lift doesn't bleed */
+  padding: clamp(1rem, 2vw, 2rem) 0;
+}
+@media (max-width: 860px){
+  .flip-row{
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 3.5rem);
+    padding: 1rem;
+  }
+}
+
+/* 6. INTRO — text hidden on load, shown only when scrolling starts */
+.intro__eyebrow,
+.intro__headline{
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s ease;
+  transform: translateY(14px);
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Override any leftover animation: keyframes from earlier */
+.intro__eyebrow{ animation: none !important; }
+.intro__headline{ animation: none !important; }
+/* Center content in intro */
+.intro__overlay{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.intro__center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* 7. STORY HERO pages (Our Story, Estate, Craft, Cocktails) — bring content
+   down so the hero image isn't getting clipped behind the nav */
+.story-hero{
+  padding-top: clamp(4rem, 8vh, 6rem) !important;
+}
+
+/* 8. CRAFT / ESTATE page story-intro — more vertical breathing room */
+.story-intro{
+  padding: clamp(3rem, 6vh, 5rem) 0 !important;
+}
+
+/* 9. Founders-intro (the home block): center the content vertically,
+   give it more padding so IN PURSUIT isn't hugging the nav.           */
+.founders-intro--right .founders-intro__inner{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* 10. Extra right-padding on founders overlay so text isn't flush with edge */
+.founders-intro--right .founders-intro__overlay{
+  padding-right: clamp(2rem, 4vw, 4rem);
+}
+
+/* 11. Explore the Range — make sure cards show */
+.range .product-card{
+  min-height: 520px;
+}
+.range .product-card__img{
+  min-height: 280px;
+}
+
+/* 12. Mobile intro — vertically center headline */
+@media (max-width: 700px){
+  .intro__center{
+    width: 90%;
+  }
+}
+
+/* 13. Cocktails home head padding so headline isn't too close to visit-slim above */
+.cocktails-home__head{
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+}
+.cocktails-home__head .script-accent--offset{
+  left: 50% !important;
+  top: clamp(.8rem, 2vh, 1.6rem) !important;
+  transform: translate(-50%, 0) !important;
+}
+
+/* =========================================================
+   FEEDBACK V8 — final polish round
+   - Intro text: upper half, properly centered
+   - Welcome-to-Hepple: straight (not tilted), bigger, close to heading
+   - Welcome-to-Eden: big like Welcome-to-Hepple, over sticky gallery
+   - Story-hero text: white, "Our Story/Inspiration/Craft" above H1
+   - Story-hero images: shift up so faces visible
+   - Process timeline photos
+   ========================================================= */
+
+/* 1. INTRO TEXT — upper portion of hero, properly centered.
+   Kill the translate-50-50 which conflicts with reveal-animation transform. */
+.intro__overlay{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start !important;   /* top half */
+  padding-top: 22vh !important;              /* pushes text into upper half */
+  text-align: center;
+}
+.intro__center{
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  width: 100%;
+  max-width: 44rem;
+}
+.intro__eyebrow,
+.intro__headline{
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  display: block !important;
+}
+/* Proper text reveal — use only opacity, no transform conflict */
+.intro__eyebrow,
+.intro__headline{
+  opacity: 0 !important;
+  transform: none !important;
+  transition: opacity 1s ease !important;
+}
+.intro.is-text-revealed .intro__eyebrow,
+.intro.is-text-revealed .intro__headline{
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* 2. WELCOME-TO-HEPPLE — straight (not tilted), bigger, tight to heading */
+.welcome__copy{
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.welcome__copy .script-accent--offset{
+  transform: translate(0, .4em) !important;  /* straight, no rotation */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  top: 0 !important;
+  left: .1em !important;
+}
+
+/* 3. WELCOME-TO-EDEN — BIG like Welcome-to-Hepple, over the sticky gallery */
+.estate-intro--centered .estate-intro__inner{
+  padding-top: clamp(2rem, 3vw, 3rem) !important;
+}
+.estate-intro--centered .estate-intro__inner .script-accent--offset{
+  transform: translate(0, .4em) !important;   /* straight, big */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* Move estate intro OVER the sticky gallery — overlay pattern */
+.estate-intro--centered{
+  position: relative;
+  z-index: 3;
+  padding-bottom: 0 !important;   /* connects directly to gallery below */
+  margin-bottom: -2rem;            /* small overlap */
+}
+
+/* 4. STORY-HERO (Our Story, Estate, Craft, Cocktails pages) — accent scripts
+   in WHITE sitting above the H1. Script=small, H1=big, consistent ratio.  */
+.story-hero__title{
+  position: relative;
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+}
+.story-hero__title .script-accent--offset{
+  color: var(--cream) !important;        /* WHITE on dark photos */
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 3rem) !important;
+  transform: translate(0, .3em) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+.story-hero__title h1{
+  color: var(--cream);
+  margin-top: .2em;
+}
+
+/* 5. STORY-HERO image crops — shift down so subject's face is visible.
+   Object-position: center top pulls the top of the photo into view. */
+.story-hero__img img{
+  object-position: center 30% !important;   /* was default 50% */
+}
+
+/* 6. STORY-HERO padding so text starts further from nav */
+.story-hero{
+  padding-top: clamp(4rem, 8vh, 6rem) !important;
+  min-height: clamp(24rem, 50vh, 36rem);
+}
+
+/* 7. DELICIOUS DRINKS START HERE — script accent style, Hepple blue
+   (not on dark bg, stays blue) */
+.cocktails-home__sub,
+.shop-cocktails__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .4rem auto 1.4rem !important;
+  max-width: 40ch;
+}
+
+/* 8. FOUNDERS — "This is Our Story" is already working per Zach */
+
+/* 9. VISIT-SLIM — kept as-is (already correct per Zach) */
+
+/* 10. ESTATE-INTRO no longer centered across full width — left-aligned
+    and positioned as overlay on top of sticky gallery.                */
+.estate-intro--centered{
+  text-align: left;
+}
+.estate-intro--centered .wrap{
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+.estate-intro__h2{
+  color: var(--hepple-blue);
+  max-width: 34ch;
+}
+
+/* =========================================================
+   ESTATE-INTRO OVER STICKY GALLERY (V8 continued)
+   Text sits above the sticky gallery section then overlaps
+   the top edge of the gallery slightly for visual tie-in.
+   ========================================================= */
+.estate-gallery-combo{
+  position: relative;
+}
+.estate-intro--over-gallery{
+  position: relative;
+  z-index: 2;
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(3rem, 5vh, 4rem) !important;
+  background: var(--ground);
+  text-align: left;
+  margin-bottom: -3rem;   /* small overlap into gallery */
+}
+.estate-intro--over-gallery .wrap{
+  position: relative;
+}
+.estate-intro--over-gallery .estate-intro__inner{
+  max-width: 60ch;
+  padding-top: clamp(2.5rem, 4vw, 4rem) !important;
+}
+.estate-intro--over-gallery .script-accent--offset{
+  color: var(--hepple-blue) !important;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  transform: translate(0, .4em) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* =========================================================
+   FEEDBACK V9 — final lockdown round
+   ========================================================= */
+
+/* 1. STORY-HERO title — make container INLINE-BLOCK so the accent script
+   sits above-left of the actual H1 text, not above-left of the page. */
+.story-hero__title{
+  display: inline-block !important;
+  left: 50% !important;
+  bottom: clamp(2rem, 8vh, 5rem) !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: min(92vw, 44rem);
+  padding: 0 !important;
+  text-align: center;
+}
+.story-hero__title h1{
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 0;
+}
+/* The script sits above-left of the H1, inside the H1's bounding box */
+.story-hero__title .script-accent--offset{
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  transform: translate(-.1em, -.9em) !important;
+  transform-origin: left bottom;
+  color: var(--cream) !important;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem) !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+/* Move the script OUT of story-hero__title (which was its parent) and INTO
+   the h1 bounding box so it anchors correctly. We handle this via the
+   selector below — the script is the FIRST-CHILD of story-hero__title
+   and H1 is the SECOND-CHILD. We use this structure in HTML.             */
+.story-hero__title{
+  position: absolute;
+}
+/* Ensure the H1 has space ABOVE it for the accent to float into */
+.story-hero__title h1{
+  padding-top: clamp(1.4rem, 2.5vw, 2.4rem);
+}
+/* Now position the script ABOVE the H1 within the title container */
+.story-hero__title > .script-accent--offset{
+  top: 0 !important;
+  left: 0 !important;
+  transform: translate(.1em, 0) !important;   /* straight, nudge right slightly */
+}
+
+/* 2. HERO INTRO — NO autoplay under any circumstance. Video is paused
+   until user scrolls. Remove any leftover animation-driven reveal. */
+.intro__video{
+  /* Visible until play() is called by scroll handler */
+  display: block;
+}
+
+/* 3. HERO TEXT — bigger "Come in" with clear gap from "WE'RE MAKING DRINKS" */
+.intro__eyebrow{
+  font-size: clamp(2.8rem, 2rem + 3.5vw, 5rem) !important;
+  margin-bottom: .5em !important;
+  line-height: 1;
+}
+.intro__headline{
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem) !important;
+  line-height: 1.05 !important;
+  margin: 0;
+}
+
+/* 4. WELCOME-TO-HEPPLE — bigger script, clear gap */
+.welcome__copy{
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;   /* more room for script */
+}
+.welcome__copy .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: translate(0, 0) !important;   /* straight, no overlap */
+  margin-bottom: .3em;
+}
+/* Add spacing below the script so it doesn't touch the headline */
+.welcome__copy .script-accent--offset + h2,
+.welcome__copy h2{
+  margin-top: .5rem;
+}
+
+/* 5. ALL other section scripts — same pattern: bigger, straight, above the
+   heading with clear gap.                                               */
+.founders-intro__inner .script-accent--offset,
+.estate-intro__inner .script-accent--offset{
+  font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.4rem) !important;
+  transform: translate(0, 0) !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* 6. VISIT-SLIM — same pattern */
+.visit-slim .script-accent--offset{
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem) !important;
+  transform: translate(-50%, 0) !important;
+  top: clamp(1.2rem, 3vh, 2rem) !important;
+  left: 50% !important;
+}
+
+/* 7. COCKTAILS HOME sub — sentence case (we'll change the text in HTML);
+   here we just re-affirm the script styling in Hepple blue */
+.cocktails-home__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .4rem auto 1.4rem !important;
+  max-width: 40ch;
+}
+
+/* =========================================================
+   V9 — ESTATE INTRO OVER STICKY GALLERY (the background IS the gallery)
+   Per Zach: "The background is the sticky scroll, not a white panel"
+   ========================================================= */
+.estate-gallery-combo{
+  position: relative;
+}
+/* Push the sticky gallery UP behind the intro so intro sits ON TOP */
+.estate-gallery-combo .sticky-gallery{
+  margin-top: calc(-1 * clamp(10rem, 22vh, 16rem));
+  padding-top: clamp(10rem, 22vh, 16rem);
+  position: relative;
+  z-index: 1;
+}
+/* The intro text sits in front — give it a translucent panel so it's
+   readable over the gallery images */
+.estate-intro--over-gallery{
+  position: relative;
+  z-index: 2;
+  background: transparent !important;
+  padding: clamp(4rem, 8vh, 6rem) 0 clamp(2rem, 4vh, 3rem) !important;
+  margin-bottom: 0 !important;
+}
+.estate-intro--over-gallery .estate-intro__inner{
+  background: rgba(246, 242, 234, .90);   /* cream translucent for contrast */
+  padding: clamp(1.8rem, 3.5vw, 2.8rem) clamp(1.6rem, 3vw, 2.4rem);
+  border-radius: 4px;
+  display: inline-block;
+  max-width: 60ch;
+}
+
+/* =========================================================
+   FEEDBACK V10 — FINAL pattern per Zach's spec
+   HOME page blue scripts = LEFT-aligned above-left of heading
+   STORY/ESTATE/CRAFT page white scripts = CENTERED above heading
+   All bigger, tight spacing, no touching, consistent ratio
+   ========================================================= */
+
+/* ─────────── HOME PAGE BLUE SCRIPTS — LEFT-ALIGNED ─────────── */
+.welcome__copy,
+.founders-intro__inner,
+.estate-intro--over-gallery .estate-intro__inner{
+  position: relative;
+  /* Enough room for script to sit above without touching heading */
+  padding-top: clamp(3.5rem, 5vw, 5rem) !important;
+}
+.welcome__copy .script-accent--offset,
+.founders-intro__inner .script-accent--offset,
+.estate-intro--over-gallery .script-accent--offset{
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;   /* straight, no rotation */
+  font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.6rem) !important;
+  color: var(--hepple-blue) !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* ─────────── VISIT-SLIM — centered blue (panel is centered) ─────────── */
+.visit-slim{
+  padding-top: clamp(4rem, 7vh, 6rem) !important;
+  padding-bottom: clamp(4rem, 7vh, 6rem);
+  position: relative;
+}
+.visit-slim .script-accent--offset{
+  position: absolute !important;
+  top: clamp(1.2rem, 3vh, 2rem) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3.2rem) !important;
+  color: var(--hepple-blue) !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+}
+
+/* ─────────── STORY/ESTATE/CRAFT page white scripts — CENTERED ─────────── */
+/* Reset whatever prior rules said, then reposition centered */
+.story-hero__title{
+  display: inline-block !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(2rem, 8vh, 5rem) !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: min(92vw, 44rem);
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+  text-align: center !important;
+}
+.story-hero__title .script-accent--offset{
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;   /* CENTERED, not left */
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 3rem) !important;
+  color: var(--cream) !important;           /* WHITE on photo */
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  z-index: 3;
+}
+.story-hero__title h1{
+  color: var(--cream);
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* ─────────── Mobile adjustments — slightly smaller but still readable ─────────── */
+@media (max-width: 700px){
+  .welcome__copy,
+  .founders-intro__inner,
+  .estate-intro--over-gallery .estate-intro__inner{
+    padding-top: clamp(2.8rem, 6vw, 3.8rem) !important;
+  }
+  .welcome__copy .script-accent--offset,
+  .founders-intro__inner .script-accent--offset,
+  .estate-intro--over-gallery .script-accent--offset{
+    font-size: clamp(1.8rem, 1.4rem + 3vw, 2.6rem) !important;
+  }
+  .story-hero__title .script-accent--offset{
+    font-size: clamp(1.5rem, 1.2rem + 2vw, 2.2rem) !important;
+  }
+  .visit-slim .script-accent--offset{
+    font-size: clamp(1.6rem, 1.3rem + 2vw, 2.4rem) !important;
+  }
+}
+
+/* =========================================================
+   FEEDBACK V11 — FINAL polish: bigger scripts, hero layouts
+   ========================================================= */
+
+/* 1. STORY/ESTATE/CRAFT HERO — content in UPPER portion, not bottom */
+.story-hero__title{
+  bottom: auto !important;
+  top: clamp(4rem, 10vh, 7rem) !important;   /* upper portion, under nav */
+  transform: translateX(-50%) !important;
+}
+/* Make heroes shorter overall so the subject isn't pushed off-screen */
+.story-hero{
+  height: auto !important;
+  min-height: clamp(28rem, 56vh, 40rem) !important;
+  padding-top: 0 !important;
+  padding-bottom: clamp(3rem, 6vh, 5rem);
+}
+/* Script scripts bigger on these pages — they're the page title accent */
+.story-hero__title .script-accent--offset{
+  font-size: clamp(2.2rem, 1.5rem + 2.5vw, 3.6rem) !important;
+  color: var(--cream) !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  white-space: nowrap;
+}
+/* Big H1 centered below script */
+.story-hero__title h1{
+  font-size: clamp(2.6rem, 1.8rem + 3.5vw, 5rem) !important;
+  padding-top: clamp(2rem, 4vw, 3.5rem) !important;   /* room for script above */
+  margin: 0 !important;
+  text-align: center !important;
+  color: var(--cream) !important;
+  line-height: 1 !important;
+}
+
+/* 2. HOME "LET'S MAKE COCKTAILS" — bigger "Delicious drinks start here",
+   tight to the heading (same pattern as Welcome-to-Hepple)                 */
+.cocktails-home__head{
+  text-align: center;
+  position: relative;
+  padding-top: clamp(3.5rem, 5vw, 5rem) !important;
+}
+.cocktails-home__head h2{
+  font-size: clamp(2.6rem, 1.8rem + 3vw, 4.6rem);
+  line-height: 1;
+  margin: 0 0 .4em;
+  color: var(--hepple-blue);
+}
+.cocktails-home__head .cocktails-home__sub{
+  font-family: var(--script) !important;
+  font-weight: 400 !important;
+  /* BIG — almost as big as the heading per Zach */
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem) !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  color: var(--hepple-blue) !important;
+  text-transform: none !important;
+  margin: .1em auto 1.8rem !important;
+  max-width: 40ch;
+}
+
+/* 3. COCKTAILS PAGE — no duplicate head; just the SKU groups.
+   Remove the old dot style.                                          */
+.cocktails-group__dot{ display: none !important; }
+
+/* 4. COCKTAILS PAGE spacing so groups don't run into nav */
+.cocktails-page{
+  padding: clamp(3rem, 6vh, 5rem) 0;
+}
+.cocktails-group{
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+.cocktails-group__head{
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 3vh, 2.5rem);
+}
+.cocktails-group__head h3{
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+  letter-spacing: .04em;
+  color: var(--hepple-blue);
+  margin: 0 0 .3em;
+}
+.cocktails-group__tagline{
+  font-family: var(--sans);
+  font-size: .75rem;
+  letter-spacing: .25em;
+  font-weight: 700;
+  color: var(--hepple-blue);
+  opacity: .7;
+  text-transform: uppercase;
+}
+
+/* 5. COCKTAILS PAGE hero — same pattern as Estate/Craft but the script
+   is "Delicious drinks start here" above LET'S MAKE COCKTAILS          */
+/* Inherits from story-hero__title rules above — already correct */
+
+/* 6. Hide the old story-hero__sub style if any instance remains */
+.story-hero__sub{ display: none !important; }
+
+/* 7. HEPPLE ESTATE page & CRAFT page: image shows subject at center-top */
+.story-hero__img img{
+  object-position: center 35% !important;
+}
+
+/* 8. WELCOME-TO-HEPPLE — bigger once more for consistency */
+.welcome__copy .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+}
+
+/* 9. THIS IS OUR STORY (home, blue) — bigger, consistent */
+.founders-intro__inner .script-accent--offset{
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.8rem) !important;
+}
+
+/* 10. COME & SEE US — same consistent big sizing */
+.visit-slim .script-accent--offset{
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem) !important;
+}
+
+/* =========================================================
+   MASTER OVERRIDE — feedback round 2
+   - Maristella stays for script accents, NO slant/rotation/offset
+   - Big & visible, but tight to header
+   - Stays within section bounds on desktop AND mobile
+   - This block must remain at the END of the file
+   ========================================================= */
+body .script-accent--offset,
+body .script-accent--offset.script-accent--hero,
+body .visit-slim .script-accent--offset,
+body .cocktails-home__head .script-accent--offset,
+body .welcome__copy .script-accent--offset,
+body .founders-intro__inner .script-accent--offset,
+body .estate-intro--centered .estate-intro__inner .script-accent--offset,
+body .estate-intro--over-gallery .script-accent--offset,
+body .story-hero__title .script-accent--offset,
+body .story-hero__title > .script-accent--offset{
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform-origin: initial !important;
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  font-family: var(--script) !important;
+  font-size: clamp(3rem, 2.2rem + 3.4vw, 5.6rem) !important;
+  line-height: .95 !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 400 !important;
+  margin: 0 0 .18em !important;
+  padding: 0 !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  text-align: inherit !important;
+  z-index: auto !important;
+  pointer-events: auto !important;
+}
+/* Hero variant — slightly bigger again */
+body .script-accent--offset.script-accent--hero{
+  font-size: clamp(3.6rem, 2.6rem + 4.5vw, 7rem) !important;
+}
+/* Light variant — back to cream over dark hero videos */
+body .script-accent--offset.script-accent--light{
+  color: var(--cream) !important;
+}
+
+/* Section wrappers no longer need extra padding-top for an absolute eyebrow */
+body .welcome__copy,
+body .founders-intro__inner,
+body .estate-intro--centered .estate-intro__inner,
+body .story-hero__title,
+body .visit-slim,
+body .cocktails-home__head{
+  padding-top: 0 !important;
+}
+/* Restore sensible top padding to sections (not the inner heading wrappers) */
+body .cocktails-home__head{ text-align: center; }
+
+/* Hero intro eyebrow (Come in) — also flat, big, centered, no rotate */
+body .intro__eyebrow{
+  transform: none !important;
+  display: block !important;
+  margin: 0 auto .25em !important;
+  line-height: .95 !important;
+  font-size: clamp(3.6rem, 2.6rem + 4.5vw, 7rem) !important;
+  text-align: center !important;
+  color: var(--cream) !important;
+  white-space: normal !important;
+  position: relative !important;
+}
+
+/* Make sure intro center wrapper doesn't have absurd padding-top now */
+body .intro__center{ padding-top: 0 !important; }
+
+/* Mobile safety — script accents must NEVER overflow the section */
+@media (max-width: 700px){
+  body .script-accent--offset,
+  body .script-accent--offset.script-accent--hero{
+    font-size: clamp(2.4rem, 1.8rem + 3.5vw, 3.8rem) !important;
+    margin-bottom: .15em !important;
+  }
+  body .intro__eyebrow{
+    font-size: clamp(2.6rem, 2rem + 4vw, 4rem) !important;
+  }
+  /* Headings respect viewport width on mobile */
+  body h1, body h2, body h3{
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    hyphens: auto;
+  }
+}
+
+/* =========================================================
+   SHOP CTA — same shape as visit-slim, on every page except Estate
+   ========================================================= */
+.shop-cta{
+  padding: clamp(3rem, 6vh, 5rem) var(--gutter);
+  background: var(--mist);
+  text-align: center;
+}
+.shop-cta h3{
+  font-size: var(--h-lg);
+  line-height: 1;
+  margin: .3rem 0 1.4rem;
+  color: var(--hepple-blue);
+}
+.shop-cta .btn{ display: inline-block; }
+
+/* =========================================================
+   HERO VIDEO — smoother playback per feedback
+   ========================================================= */
+.intro__video{
+  will-change: transform, opacity !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  /* longer, smoother transitions for any opacity/text reveal */
+  transition: opacity .9s cubic-bezier(.4, 0, .2, 1) !important;
+}
+.intro__stage{
+  will-change: transform;
+  transform: translateZ(0);
+}
+.intro__center,
+.intro__eyebrow,
+.intro__center h2{
+  transition: opacity .9s cubic-bezier(.4, 0, .2, 1),
+              transform .9s cubic-bezier(.4, 0, .2, 1) !important;
+}
+
+/* =========================================================
+   MERGED HOME HERO — section 1 + 2 combined
+   Single bg image (founders on the hill), single text panel
+   No second box, all-in-one content with cream backdrop
+   ========================================================= */
+.home-hero{
+  position: relative;
+  min-height: clamp(40rem, 92vh, 56rem);
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(237,232,224,0)   0%,
+      rgba(237,232,224,0)  45%,
+      rgba(237,232,224,.35) 65%,
+      rgba(237,232,224,.55) 100%
+    ),
+    url("assets/gallery/klj-hepple-may2022-shot-09-468.jpg");
+  background-size: cover, cover;
+  background-position: center 35%, left 35%;
+  background-repeat: no-repeat, no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: clamp(3rem, 8vh, 6rem) clamp(2rem, 6vw, 5rem);
+  margin: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Hide the inner <img> + ::after — we use background-image now */
+.home-hero__bg{ display: none !important; }
+.home-hero__overlay{
+  position: relative;
+  z-index: 2;
+  width: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+.home-hero__panel{
+  background: rgba(237, 232, 224, 0.95);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: clamp(1.8rem, 3vw, 2.6rem) clamp(1.8rem, 3vw, 2.8rem);
+  border-radius: 4px;
+  max-width: 560px;
+  width: 100%;
+  text-align: left;
+  color: var(--hepple-blue);
+  box-shadow: 0 10px 40px rgba(0, 48, 135, 0.1);
+}
+.home-hero__eyebrow{
+  margin: 0 0 .1em !important;
+  color: var(--hepple-blue) !important;
+}
+.home-hero__headline{
+  font-family: var(--sans);
+  font-size: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 1.1rem;
+  color: var(--hepple-blue);
+}
+.home-hero__body{
+  font-size: var(--body-lg);
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  color: var(--hepple-blue);
+  max-width: 52ch;
+}
+.home-hero__actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+.home-hero__actions .btn{ flex: 1 1 auto; min-width: 8rem; }
+@media (max-width: 860px){
+  .home-hero{
+    align-items: flex-end;
+    justify-content: center;
+    padding: clamp(2rem, 5vh, 4rem) 1rem;
+    /* On mobile, switch to a top-down gradient so panel reads at the bottom */
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(237,232,224,0)   0%,
+        rgba(237,232,224,.15) 50%,
+        rgba(237,232,224,.6)  85%,
+        rgba(237,232,224,.85) 100%
+      ),
+      url("assets/gallery/klj-hepple-may2022-shot-09-468.jpg");
+    background-position: center 30%, center 30%;
+  }
+  .home-hero__overlay{ width: 100%; justify-content: center; }
+  .home-hero__panel{
+    padding: 1.4rem 1.2rem;
+    max-width: 100%;
+  }
+  .home-hero__actions .btn{ flex: 1 1 100%; }
+}
+
+/* =========================================================
+   SHOP THE RANGE — full-bleed product image + big button
+   Replaces the carousel on the home page
+   ========================================================= */
+.shop-range{
+  position: relative;
+  min-height: clamp(38rem, 90vh, 56rem);
+  background-color: var(--hepple-ink);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(237,232,224,0)   0%,
+      rgba(237,232,224,.05) 40%,
+      rgba(237,232,224,.55) 80%,
+      rgba(237,232,224,.85) 100%
+    ),
+    url("assets/products/group-shot-hero.jpg");
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: clamp(3rem, 8vh, 6rem) var(--gutter) clamp(3rem, 6vh, 5rem);
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Hide the inner img + ::after — we use background-image now */
+.shop-range__bg{ display: none !important; }
+.shop-range__overlay{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.shop-range__eyebrow{
+  color: var(--hepple-blue) !important;
+  margin: 0 0 .1em !important;
+}
+.shop-range__headline{
+  font-family: var(--sans);
+  font-size: clamp(2.8rem, 1.8rem + 4vw, 5.6rem);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 1.6rem;
+  color: var(--hepple-blue);
+}
+.btn--huge{
+  font-size: clamp(1rem, .9rem + .4vw, 1.15rem);
+  padding: 1.2rem 3.2rem;
+  letter-spacing: .12em;
+}
+@media (max-width: 700px){
+  .shop-range{
+    min-height: 80vh;
+    padding-bottom: 2rem;
+  }
+  .btn--huge{ padding: 1rem 2.4rem; }
+}
+
+/* =========================================================
+   CONSISTENCY — script accent always matches the heading next to it
+   Override any white/cream variants where headline is blue
+   ========================================================= */
+/* The default rule: script accent IS the same colour as the heading
+   below it. If the heading uses blue (default), the script is blue.
+   If the heading uses cream (e.g. on a dark hero), the script is cream. */
+body .script-accent{ color: inherit; }
+body .home-hero .script-accent,
+body .home-hero__eyebrow,
+body .shop-range .script-accent,
+body .shop-range__eyebrow,
+body .story-intro .script-accent,
+body .team .script-accent,
+body .cocktails-home .script-accent,
+body .shop-cta .script-accent,
+body .visit-slim .script-accent{
+  color: var(--hepple-blue) !important;
+}
+/* Dark hero headers where the H1 is forced cream — script matches cream */
+body .story-hero .story-hero__title h1{ color: var(--cream) !important; }
+body .story-hero .story-hero__title .script-accent{ color: var(--cream) !important; }
+body .intro .intro__eyebrow{ color: var(--cream) !important; }
+body .intro .intro__headline{ color: var(--cream) !important; }
+
+/* =========================================================
+   FINAL FIXES (round N)
+   - Hero intro text centred horizontally and vertically
+   - Nav SHOP button forced to Hepple blue (not green)
+   - Home-hero panel reaffirmed to the RIGHT (overrides any later cascade)
+   ========================================================= */
+
+/* 1. CENTRE the hero text both axes */
+body .intro__overlay{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+body .intro__center{
+  align-self: center !important;
+  margin: auto !important;
+  text-align: center !important;
+  max-width: min(44rem, 92vw) !important;
+}
+body .intro__eyebrow,
+body .intro__headline{
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+body .intro__hint{
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(1.5rem, 4vh, 3rem) !important;
+  transform: translateX(-50%) !important;
+}
+
+/* 2. NAV SHOP button — Hepple blue, not green */
+body .nav__cta,
+body .nav__cta--juniper{
+  background: var(--hepple-blue) !important;
+  color: var(--cream) !important;
+  border-color: var(--hepple-blue) !important;
+}
+body .nav__cta:hover,
+body .nav__cta--juniper:hover{
+  background: var(--hepple-ink) !important;
+  border-color: var(--hepple-ink) !important;
+  color: var(--cream) !important;
+  opacity: 1 !important;
+}
+
+/* 3. HOME-HERO panel — OFFSET RIGHT, no override past this point */
+body .home-hero{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding-left: clamp(2rem, 6vw, 5rem) !important;
+  padding-right: clamp(2rem, 6vw, 5rem) !important;
+}
+body .home-hero__overlay{
+  width: auto !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  justify-content: flex-end !important;
+}
+body .home-hero__panel{
+  max-width: 560px !important;
+  margin-right: 0 !important;
+}
+@media (max-width: 860px){
+  body .home-hero{
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  body .home-hero__overlay{
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    justify-content: center !important;
+  }
+  body .home-hero__panel{ max-width: 100% !important; }
+}
+
+/* =========================================================
+   SECTION 1 BUTTONS — all on one row, equal width, equal height
+   ========================================================= */
+body .home-hero__actions{
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: .6rem !important;
+  width: 100% !important;
+  align-items: stretch !important;
+}
+body .home-hero__actions .btn{
+  flex: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 1rem .6rem !important;
+  font-size: .75rem !important;
+  letter-spacing: .14em !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  line-height: 1.1 !important;
+}
+/* On narrow widths, allow wrap inside button but keep 3-column grid */
+@media (max-width: 520px){
+  body .home-hero__actions .btn{
+    white-space: normal !important;
+    font-size: .68rem !important;
+    padding: .9rem .4rem !important;
+  }
+}
+
+/* =========================================================
+   COCKTAIL FLIP CARD — refined back design with full recipe
+   ========================================================= */
+
+/* Make the cards a touch taller so the recipe fits properly */
+body .flip-card{
+  aspect-ratio: 3 / 4.4 !important;
+}
+
+/* Only flip on click/tap (or focus), not on mere hover — recipe content is too long to be twitchy */
+body .flip-card:hover .flip-card__inner{
+  transform: rotateY(0deg) translateY(0) !important;
+}
+body .flip-card.is-flipped .flip-card__inner,
+body .flip-card:focus-within .flip-card__inner{
+  transform: rotateY(180deg) translateY(0) !important;
+}
+
+/* The refined back face */
+body .flip-card__back{
+  background: var(--cream) !important;
+  color: var(--hepple-blue) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(0, 48, 135, .12);
+}
+.flip-card__back-inner{
+  width: 100%;
+  height: 100%;
+  padding: 1.4rem 1.3rem 1.6rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,48,135,.3) transparent;
+}
+.flip-card__back-inner::-webkit-scrollbar{ width: 4px; }
+.flip-card__back-inner::-webkit-scrollbar-thumb{
+  background: rgba(0,48,135,.3);
+  border-radius: 2px;
+}
+
+.flip-card__back-head{
+  border-bottom: 1px solid rgba(0, 48, 135, .15);
+  padding-bottom: .7rem;
+  margin-bottom: .2rem;
+}
+body .flip-card__back-head h4{
+  color: var(--hepple-blue) !important;
+  font-family: var(--sans);
+  font-size: 1rem !important;
+  letter-spacing: .08em !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+  font-weight: 700 !important;
+}
+.flip-card__tagline{
+  margin: .35rem 0 0 !important;
+  font-size: .62rem !important;
+  letter-spacing: .14em !important;
+  color: var(--hepple-blue) !important;
+  opacity: .7 !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  text-transform: uppercase;
+}
+.flip-card__blurb{
+  margin: 0 !important;
+  font-size: .7rem !important;
+  line-height: 1.55 !important;
+  color: var(--hepple-blue) !important;
+  opacity: .85 !important;
+  letter-spacing: 0 !important;
+  font-style: italic;
+}
+
+.flip-card__meta{
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .7rem .8rem;
+  background: rgba(0, 48, 135, .055);
+  border-radius: 4px;
+  border-left: 2px solid var(--hepple-blue);
+}
+.flip-card__meta-row{
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  font-size: .58rem;
+  line-height: 1.3;
+}
+.flip-card__meta-label{
+  flex: 0 0 auto;
+  letter-spacing: .2em;
+  font-weight: 700;
+  color: var(--hepple-blue);
+  opacity: .55;
+  min-width: 4.6rem;
+}
+.flip-card__meta-val{
+  flex: 1;
+  letter-spacing: .04em;
+  font-weight: 600;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+}
+
+.flip-card__cols{
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+.flip-card__col h5{
+  color: var(--hepple-blue) !important;
+  font-size: .58rem !important;
+  letter-spacing: .26em !important;
+  margin: 0 0 .45rem !important;
+  font-weight: 700 !important;
+  opacity: .65;
+  border-bottom: 1px solid rgba(0,48,135,.12);
+  padding-bottom: .3rem;
+}
+body .flip-card__ingredients{
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: .68rem !important;
+  letter-spacing: .04em !important;
+  line-height: 1.6 !important;
+  color: var(--hepple-blue) !important;
+  opacity: 1 !important;
+}
+body .flip-card__ingredients li{
+  position: relative;
+  padding-left: .8rem;
+  margin-bottom: .25rem !important;
+}
+body .flip-card__ingredients li::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55rem;
+  width: 4px;
+  height: 1px;
+  background: var(--hepple-blue);
+  opacity: .5;
+}
+body .flip-card__steps{
+  list-style: none !important;
+  counter-reset: stepcount;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: .68rem !important;
+  letter-spacing: 0 !important;
+  line-height: 1.5 !important;
+  color: var(--hepple-blue) !important;
+}
+body .flip-card__steps li{
+  counter-increment: stepcount;
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: .55rem !important;
+}
+body .flip-card__steps li::before{
+  content: counter(stepcount, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: .55rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--hepple-blue);
+  opacity: .55;
+  top: .1rem;
+}
+
+.flip-card__note{
+  background: var(--hepple-blue);
+  color: var(--cream);
+  padding: .7rem .8rem;
+  border-radius: 4px;
+  margin-top: .3rem;
+}
+.flip-card__note-label{
+  display: block;
+  font-size: .55rem;
+  letter-spacing: .3em;
+  font-weight: 700;
+  color: var(--cream);
+  opacity: .7;
+  margin-bottom: .3rem;
+}
+body .flip-card__note p{
+  margin: 0 !important;
+  color: var(--cream) !important;
+  font-size: .65rem !important;
+  line-height: 1.55 !important;
+  font-style: italic;
+  letter-spacing: 0 !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 700px){
+  body .flip-card{ aspect-ratio: 3 / 4.6 !important; }
+  .flip-card__back-inner{ padding: 1.1rem 1rem 1.2rem; gap: .7rem; }
+}
+
+/* =========================================================
+   VISIT US page — force proper Hepple blue throughout
+   ========================================================= */
+body [data-page="/visit"] .placeholder h1,
+body [data-page="/visit"] .placeholder h1 em,
+body [data-page="/visit"] .placeholder__latin,
+body [data-page="/visit"] .placeholder__back,
+body [data-page="/visit"] .script-accent{
+  color: var(--hepple-blue) !important;
+}
+body [data-page="/visit"] .placeholder__latin{
+  opacity: .85 !important;
+}
+
+/* =========================================================
+   SECTION 3 — SHOP THE RANGE: text below bottles, not on top of them
+   ========================================================= */
+body .shop-range{
+  min-height: clamp(42rem, 95vh, 64rem) !important;
+  /* No gradient overlay — image sits up top, text in its own strip below */
+  background-image: url("assets/products/group-shot-hero.jpg") !important;
+  background-size: auto 65% !important;          /* photo takes top ~65% of section */
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-color: var(--ground) !important;    /* cream fills around / below photo */
+  justify-content: flex-end !important;
+  /* No bottom padding crowding the text on the bottles — text sits at very bottom */
+  padding-top: 0 !important;
+  padding-bottom: clamp(2.5rem, 5vh, 4rem) !important;
+}
+/* The text overlay floats in the bottom band (below the photo) */
+body .shop-range__overlay{
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  padding-top: clamp(1rem, 2vh, 2rem) !important;
+}
+/* On narrower viewports, image scales to width so bottles always visible */
+@media (max-width: 900px){
+  body .shop-range{
+    background-size: contain !important;
+    background-position: center top !important;
+    min-height: clamp(36rem, 85vh, 56rem) !important;
+  }
+}
+@media (max-width: 600px){
+  body .shop-range{
+    background-size: 130% auto !important;
+    min-height: 80vh !important;
+  }
+}
+
+/* =========================================================
+   SECTION 5 — HOW WE MAKE HEPPLE: text offset LEFT so founder is visible
+   ========================================================= */
+body .estate-cta--overlay .estate-cta__bg img{
+  /* Position image so the figure (right side of frame) stays visible */
+  object-position: right center !important;
+}
+body .estate-cta--overlay .estate-cta__bg::after{
+  /* Gradient now runs LEFT-heavy: dark cream on left for text panel,
+     transparent on right so the founder is fully visible */
+  background: linear-gradient(90deg,
+    rgba(237, 232, 224, .85) 0%,
+    rgba(237, 232, 224, .55) 35%,
+    rgba(237, 232, 224, .1)  65%,
+    rgba(237, 232, 224, 0)   100%) !important;
+}
+body .estate-cta--overlay .estate-cta__overlay{
+  justify-content: flex-start !important;
+  padding-left: clamp(2rem, 6vw, 5rem) !important;
+  padding-right: clamp(2rem, 6vw, 5rem) !important;
+}
+body .estate-cta--overlay .estate-cta__inner{
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  max-width: 30rem !important;
+  text-align: left !important;
+}
+body .estate-cta--overlay .estate-cta__headline{
+  text-align: left !important;
+}
+body .estate-cta--overlay .estate-cta__sub{
+  text-align: left !important;
+}
+
+@media (max-width: 760px){
+  /* On mobile, return to centered layout with a top→bottom cream wash */
+  body .estate-cta--overlay .estate-cta__bg::after{
+    background: linear-gradient(180deg,
+      rgba(237, 232, 224, 0)   0%,
+      rgba(237, 232, 224, .15) 40%,
+      rgba(237, 232, 224, .8)  100%) !important;
+  }
+  body .estate-cta--overlay .estate-cta__bg img{
+    object-position: center center !important;
+  }
+  body .estate-cta--overlay .estate-cta__overlay{
+    justify-content: center !important;
+    align-items: flex-end !important;
+    padding-bottom: clamp(2rem, 5vh, 4rem) !important;
+  }
+  body .estate-cta--overlay .estate-cta__inner{
+    margin: 0 auto !important;
+    text-align: center !important;
+    max-width: 100% !important;
+  }
+  body .estate-cta--overlay .estate-cta__headline,
+  body .estate-cta--overlay .estate-cta__sub{
+    text-align: center !important;
+  }
+}
+
+/* =========================================================
+   SECTION 3 — SHOP THE RANGE: photo fills width, NEVER cropped
+   This block overrides all previous shop-range overrides.
+   ========================================================= */
+body .shop-range{
+  /* Section height adapts to photo + text content, not a fixed viewport % */
+  min-height: 0 !important;
+  /* No background image on the section itself — use the inner <img> */
+  background-image: none !important;
+  background-color: var(--ground) !important;
+  display: block !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+/* Show the inner __bg block again — we ARE using <img> now */
+body .shop-range__bg{
+  display: block !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--ground) !important;
+}
+body .shop-range__bg img{
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;        /* never crop, never stretch */
+  max-width: 100% !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+}
+body .shop-range__bg::after{ display: none !important; }
+/* Text overlay now sits BELOW the photo, in its own cream strip */
+body .shop-range__overlay{
+  position: relative !important;
+  z-index: auto !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: clamp(2rem, 5vh, 4rem) var(--gutter) clamp(2.5rem, 5vh, 4rem) !important;
+  text-align: center !important;
+  background: var(--ground) !important;
+}
+
+/* =========================================================
+   BIO MODAL — click a team member to read their full bio
+   ========================================================= */
+.no-scroll{ overflow: hidden; }
+.bio-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vh, 3rem);
+}
+.bio-modal.is-open{
+  display: flex;
+  animation: bioFadeIn .25s ease;
+}
+.bio-modal__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 48, 135, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+.bio-modal__panel{
+  position: relative;
+  z-index: 2;
+  background: var(--cream);
+  color: var(--hepple-blue);
+  border-radius: 6px;
+  max-width: 760px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 80px -20px rgba(0, 48, 135, 0.35);
+  animation: bioSlideUp .35s cubic-bezier(.16, 1, .3, 1);
+}
+.bio-modal__close{
+  position: absolute;
+  top: .8rem;
+  right: .8rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 48, 135, .25);
+  background: rgba(237, 232, 224, .9);
+  color: var(--hepple-blue);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+  font-weight: 600;
+}
+.bio-modal__close:hover{
+  background: var(--hepple-blue);
+  color: var(--cream);
+  transform: scale(1.05);
+}
+.bio-modal__body{
+  display: grid;
+  grid-template-columns: minmax(0, 280px) 1fr;
+  gap: 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+.bio-modal__photo{
+  background: var(--ground);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+.bio-modal__photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  min-height: 280px;
+}
+.bio-modal__content{
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.bio-modal__role{
+  margin: 0;
+  font-size: .65rem;
+  letter-spacing: .28em;
+  font-weight: 700;
+  color: var(--hepple-blue);
+  opacity: .55;
+  text-transform: uppercase;
+}
+.bio-modal__name{
+  margin: 0 0 .4rem;
+  font-family: var(--sans);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem);
+  letter-spacing: -.01em;
+  line-height: 1;
+  color: var(--hepple-blue);
+  font-weight: 700;
+}
+.bio-modal__text{
+  margin: 0;
+  font-size: .92rem;
+  line-height: 1.65;
+  color: var(--hepple-blue);
+  letter-spacing: .005em;
+}
+
+@keyframes bioFadeIn{
+  from{ opacity: 0; }
+  to  { opacity: 1; }
+}
+@keyframes bioSlideUp{
+  from{ opacity: 0; transform: translateY(20px) scale(.98); }
+  to  { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Mobile: stack photo above content */
+@media (max-width: 640px){
+  .bio-modal__body{
+    grid-template-columns: 1fr;
+  }
+  .bio-modal__photo img{
+    height: 240px;
+    min-height: 240px;
+  }
+  .bio-modal__content{
+    padding: 1.4rem 1.2rem 1.6rem;
+  }
+}
+
+/* Visual hint: team photos are clickable */
+body .team-photo{
+  cursor: pointer;
+}
+body .team-row{
+  cursor: pointer;
+}
+
+/* =========================================================
+   SECTION 3 — SHOP THE RANGE: photo fills width, NEVER cropped
+   Text overlays the BOTTOM of the photo per latest feedback.
+   This block must remain the LAST shop-range rule in the file.
+   ========================================================= */
+body .shop-range{
+  position: relative !important;
+  min-height: 0 !important;
+  background: var(--ground) !important;
+  background-image: none !important;
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+/* The photo container is the ONLY block; text is absolutely positioned on top of it */
+body .shop-range__bg{
+  display: block !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--ground) !important;
+}
+body .shop-range__bg img{
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body .shop-range__bg::after{ display: none !important; }
+
+/* Text overlay sits absolutely on the bottom of the photo */
+body .shop-range__overlay{
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 3 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding: clamp(2rem, 10vh, 6rem) var(--gutter) clamp(1.5rem, 4vh, 3rem) !important;
+  text-align: center !important;
+  background: linear-gradient(
+    180deg,
+    rgba(237, 232, 224, 0)    0%,
+    rgba(237, 232, 224, .25) 35%,
+    rgba(237, 232, 224, .75) 70%,
+    rgba(237, 232, 224, .95) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+/* Re-enable clicks on actual content (button) */
+body .shop-range__overlay > *{ pointer-events: auto !important; }
+
+/* =========================================================
+   NO ITALICS — Zach feedback: remove ALL italics across site
+   ========================================================= */
+body em,
+body i,
+body .flip-card__blurb,
+body .flip-card__note p,
+body [class*="italic"]{
+  font-style: normal !important;
+}
+
+/* =========================================================
+   HERO INTRO — push "Come in" + "We're making drinks" to LOWER third
+   so it doesn't sit over the bottles in the product video
+   ========================================================= */
+body .intro__overlay{
+  justify-content: flex-end !important;
+  align-items: center !important;
+  padding-bottom: clamp(6rem, 18vh, 12rem) !important;
+}
+body .intro__center{
+  margin: 0 auto !important;
+  align-self: center !important;
+}
+
+/* =========================================================
+   VISIT-SLIM (Come & See Us on Estate page) — stay inside section
+   ========================================================= */
+body .visit-slim{
+  overflow: hidden !important;
+  padding: clamp(3rem, 6vh, 5rem) clamp(1rem, 4vw, 3rem) !important;
+  text-align: center !important;
+  background: var(--mist) !important;
+}
+body .visit-slim .script-accent,
+body .visit-slim .script-accent--offset{
+  position: static !important;
+  transform: none !important;
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 auto .2em !important;
+  font-size: clamp(2.4rem, 1.8rem + 2.5vw, 4.4rem) !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  text-align: center !important;
+}
+body .visit-slim h3{
+  margin: 0 auto 1.4rem !important;
+  max-width: 100% !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+}
+@media (max-width: 700px){
+  body .visit-slim .script-accent,
+  body .visit-slim .script-accent--offset{
+    font-size: clamp(2rem, 1.6rem + 2vw, 2.8rem) !important;
+  }
+}
+
+/* =========================================================
+   CRAFT INTRO — photo with text overlay, exact PDF copy
+   ========================================================= */
+.craft-intro{
+  position: relative;
+  min-height: clamp(40rem, 92vh, 60rem);
+  background-color: var(--ground);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: clamp(3rem, 8vh, 6rem) clamp(2rem, 6vw, 5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.craft-intro__bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.craft-intro__bg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.craft-intro__bg::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(237,232,224,0)   0%,
+    rgba(237,232,224,0)  35%,
+    rgba(237,232,224,.45) 60%,
+    rgba(237,232,224,.85) 100%
+  );
+}
+.craft-intro__overlay{
+  position: relative;
+  z-index: 2;
+  width: auto;
+  max-width: 580px;
+  margin-left: auto;
+}
+.craft-intro__panel{
+  background: rgba(237, 232, 224, 0.94);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: clamp(1.8rem, 3vw, 2.6rem);
+  border-radius: 4px;
+  color: var(--hepple-blue);
+  box-shadow: 0 10px 40px rgba(0, 48, 135, 0.1);
+}
+.craft-intro__eyebrow{
+  margin: 0 0 .1em !important;
+  color: var(--hepple-blue) !important;
+}
+.craft-intro__headline{
+  font-family: var(--sans);
+  font-size: clamp(2rem, 1.6rem + 2vw, 3.4rem);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 1.2rem;
+  color: var(--hepple-blue);
+  font-weight: 700;
+}
+.craft-intro__body p{
+  margin: 0 0 .9rem;
+  font-size: .92rem;
+  line-height: 1.55;
+  color: var(--hepple-blue);
+}
+.craft-intro__body p:last-child{ margin-bottom: 0; }
+.craft-intro__closer{
+  font-weight: 700;
+  margin-top: 1.2rem !important;
+}
+@media (max-width: 860px){
+  .craft-intro{
+    align-items: flex-end;
+    justify-content: center;
+    padding: clamp(2rem, 5vh, 4rem) 1rem;
+  }
+  .craft-intro__bg::after{
+    background: linear-gradient(
+      180deg,
+      rgba(237,232,224,0)   0%,
+      rgba(237,232,224,.15) 40%,
+      rgba(237,232,224,.65) 75%,
+      rgba(237,232,224,.9)  100%
+    );
+  }
+  .craft-intro__overlay{
+    margin: 0;
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   PROCESS STEP SUB-HEADING — Maristella, big, tight to H3
+   ========================================================= */
+body .process__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(2.2rem, 1.6rem + 2.2vw, 3.6rem) !important;
+  line-height: .95 !important;
+  color: var(--hepple-blue) !important;
+  margin: .4rem 0 .15em !important;
+  font-weight: 400 !important;
+  display: block !important;
+  text-align: left !important;
+}
+
+/* =========================================================
+   STORY INTRO — sub-heading (Maristella) + body, used by Story & Estate
+   ========================================================= */
+.story-intro__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(2.4rem, 1.8rem + 2.5vw, 4.4rem) !important;
+  line-height: .95 !important;
+  color: var(--hepple-blue) !important;
+  margin: 0 0 1.2rem !important;
+  font-weight: 400 !important;
+  text-align: center;
+}
+.story-intro__body{
+  max-width: 56rem;
+  margin: 0 auto;
+}
+.story-intro__body p{
+  margin: 0 0 1.2rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--hepple-blue);
+}
+.story-intro__body p:last-child{ margin-bottom: 0; }
+.story-intro__closer{
+  font-weight: 700;
+  margin-top: 1.6rem !important;
+}
+
+/* =========================================================
+   INGREDIENTS VIDEO — fills the process step image slot
+   ========================================================= */
+.process__img--video{
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.process__video{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--hepple-ink);
+}
+
+/* =========================================================
+   PROCESS STEPPER — COMPLETE REWRITE
+   - Photos & video: identical aspect ratio, identical sizing
+   - Container height adapts to content (no fixed min-height clipping)
+   - Steps stack cleanly so nav buttons are always below
+   - Long text paragraphs don't get clipped
+   ========================================================= */
+
+/* Re-anchor everything */
+body .process{
+  padding: clamp(3rem, 6vh, 5rem) 0 clamp(4rem, 8vh, 6rem) !important;
+}
+body .process__head{
+  margin-bottom: clamp(2rem, 4vh, 3rem) !important;
+}
+
+/* Viewer: stacks vertically — step content, then nav, no overlap */
+body .process__viewer{
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: clamp(1.5rem, 3vh, 2.5rem) !important;
+}
+
+/* Steps wrapper grows with its active child instead of fixed min-height */
+body .process__steps{
+  position: relative !important;
+  min-height: 0 !important;
+  display: grid !important;
+}
+
+/* All steps occupy the SAME grid cell — only the active one is visible */
+body .process__step{
+  position: relative !important;
+  grid-row: 1 !important;
+  grid-column: 1 !important;
+  inset: auto !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: clamp(2rem, 4vw, 4rem) !important;
+  align-items: start !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: none !important;
+  transition: opacity .4s ease !important;
+}
+body .process__step.is-active{
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+}
+body .process__step:not(.is-active){
+  /* Inactive steps take no document height — only the active one drives layout */
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+body .process__step.is-prev{
+  transform: none !important;
+}
+
+/* Photos & video — IDENTICAL aspect ratio, IDENTICAL frame */
+body .process__img{
+  aspect-ratio: 4 / 3 !important;
+  width: 100% !important;
+  height: auto !important;
+  overflow: hidden !important;
+  background: var(--ground-deeper) !important;
+  border-radius: 6px !important;
+  position: relative !important;
+}
+body .process__img img,
+body .process__img video,
+body .process__video{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* Copy column */
+body .process__copy{
+  align-self: start !important;
+  padding-top: .4rem;
+}
+body .process__number{
+  display: block !important;
+  font-size: .9rem !important;
+  font-weight: 800 !important;
+  letter-spacing: .2em !important;
+  color: var(--hepple-blue) !important;
+  margin: 0 0 .8rem !important;
+  opacity: .55;
+  line-height: 1 !important;
+}
+body .process__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.4rem) !important;
+  line-height: .95 !important;
+  color: var(--hepple-blue) !important;
+  margin: 0 0 .1em !important;
+  font-weight: 400 !important;
+  display: block !important;
+  text-align: left !important;
+}
+body .process__copy h3{
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.4rem) !important;
+  line-height: 1 !important;
+  margin: 0 0 1rem !important;
+  color: var(--hepple-blue) !important;
+  letter-spacing: -.01em !important;
+}
+body .process__copy p{
+  font-size: .95rem !important;
+  line-height: 1.65 !important;
+  letter-spacing: .005em !important;
+  max-width: 50ch !important;
+  margin: 0 0 .8rem !important;
+  color: var(--hepple-blue) !important;
+}
+body .process__copy p:last-child{ margin-bottom: 0 !important; }
+
+/* Nav — sits BELOW the steps, full width, never overlapping */
+body .process__nav{
+  position: relative !important;
+  z-index: 5 !important;
+  margin: 0 !important;
+  padding: clamp(1.5rem, 3vh, 2rem) 0 0 !important;
+  border-top: 1px solid rgba(0, 48, 135, .12) !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  gap: 1.5rem !important;
+  align-items: center !important;
+}
+body .process__btn{
+  border: 1.5px solid var(--hepple-blue) !important;
+  color: var(--hepple-blue) !important;
+  background: transparent !important;
+  border-radius: 999px !important;
+  padding: .75rem 1.4rem !important;
+  font-size: .7rem !important;
+  letter-spacing: .22em !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
+  cursor: pointer !important;
+}
+body .process__btn:hover{
+  background: var(--hepple-blue) !important;
+  color: var(--cream) !important;
+}
+body .process__btn[disabled]{ opacity: .3 !important; cursor: default !important; }
+body .process__dots{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: clamp(.4rem, 1vw, 1rem) !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+body .process__dot{
+  font-size: .6rem !important;
+  letter-spacing: .18em !important;
+  color: var(--hepple-blue) !important;
+  opacity: .4 !important;
+  font-weight: 700 !important;
+  padding: .35rem .55rem !important;
+  border-bottom: 2px solid transparent !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+body .process__dot.is-active,
+body .process__dot:hover{
+  opacity: 1 !important;
+  border-bottom-color: var(--hepple-blue) !important;
+}
+
+/* Mobile: stack photo above copy */
+@media (max-width: 860px){
+  body .process__step{
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  body .process__nav{
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  body .process__nav .process__btn:nth-of-type(1){ order: 2; justify-self: start; }
+  body .process__nav .process__dots{ order: 1; }
+  body .process__nav .process__btn:nth-of-type(2){ order: 3; justify-self: end; }
+  body .process__dot{ font-size: .55rem !important; padding: .3rem .4rem !important; }
+}
+
+/* =========================================================
+   PROCESS STEPPER — SIMPLER OVERRIDE
+   Just hide inactive steps entirely, show active as a grid.
+   This supersedes the prior block.
+   ========================================================= */
+body .process__steps{
+  position: relative !important;
+  min-height: 0 !important;
+  display: block !important;
+}
+body .process__step{
+  display: none !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  transition: none !important;
+}
+body .process__step.is-active{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: clamp(2rem, 4vw, 4rem) !important;
+  align-items: start !important;
+}
+@media (max-width: 860px){
+  body .process__step.is-active{
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
+
+/* =========================================================
+   CRAFT PROCESS — Maristella sub-heading: MUCH bigger,
+   tight to the H3 below it
+   ========================================================= */
+body .process__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(3.2rem, 2.4rem + 3.6vw, 6rem) !important;
+  line-height: .9 !important;
+  color: var(--hepple-blue) !important;
+  margin: .2rem 0 -0.1em !important;
+  font-weight: 400 !important;
+  display: block !important;
+  text-align: left !important;
+}
+body .process__copy h3{
+  font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.6rem) !important;
+  line-height: 1 !important;
+  margin: 0 0 1.1rem !important;
+  letter-spacing: -.015em !important;
+}
+@media (max-width: 700px){
+  body .process__sub{
+    font-size: clamp(2.6rem, 2rem + 3vw, 4rem) !important;
+  }
+}
+
+/* =========================================================
+   ESTATE PAGE — text in a narrow left column (not full-width)
+   ========================================================= */
+.story-intro--narrow-left .wrap{
+  display: grid !important;
+  grid-template-columns: minmax(0, 36rem) 1fr !important;
+  gap: clamp(2rem, 5vw, 5rem) !important;
+  align-items: start !important;
+}
+.story-intro--narrow-left .story-intro__sub{
+  grid-column: 1 / -1 !important;
+  text-align: left !important;
+  margin-bottom: 1.4rem !important;
+}
+.story-intro--narrow-left .story-intro__body{
+  grid-column: 1 / 2 !important;
+  max-width: 36rem !important;
+  margin: 0 !important;
+}
+.story-intro--narrow-left .story-intro__body p{
+  font-size: .95rem !important;
+  line-height: 1.7 !important;
+  margin-bottom: 1.1rem !important;
+}
+@media (max-width: 860px){
+  .story-intro--narrow-left .wrap{
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .story-intro--narrow-left .story-intro__body{
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   HOME HERO HEADLINE — force exactly 3 lines, never orphan a word
+   ========================================================= */
+body .home-hero__headline{
+  display: flex !important;
+  flex-direction: column !important;
+}
+body .home-hero__headline span{
+  display: block !important;
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   HERO INTRO TEXT — FINAL: dead-centre horizontally,
+   sat in the lower-middle so it clears the bottles.
+   This supersedes ALL earlier intro overlay rules.
+   ========================================================= */
+body .intro__overlay{
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;          /* horizontal centre */
+  justify-content: flex-end !important;     /* push toward bottom */
+  text-align: center !important;
+  padding: 0 clamp(1.5rem, 4vw, 3rem) clamp(7rem, 20vh, 14rem) !important;
+  pointer-events: none !important;
+}
+body .intro__center{
+  align-self: center !important;
+  margin: 0 auto !important;
+  max-width: 44rem !important;
+  width: 100% !important;
+  text-align: center !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+body .intro__eyebrow,
+body .intro__headline{
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  width: auto !important;
+}
+body .intro__hint{
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(1.5rem, 4vh, 3rem) !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+}
+
+/* =========================================================
+   CRAFT INTRO HEADING — OUR CRAFT (Proxima) + Maristella script under it
+   ========================================================= */
+body .craft-intro__headline{
+  font-family: var(--sans) !important;
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem) !important;
+  letter-spacing: .04em !important;
+  line-height: 1 !important;
+  margin: 0 0 .05em !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 700 !important;
+}
+body .craft-intro__script{
+  font-family: var(--script) !important;
+  font-size: clamp(3.4rem, 2.6rem + 4vw, 6.5rem) !important;
+  line-height: .9 !important;
+  color: var(--hepple-blue) !important;
+  margin: 0 0 1rem !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+@media (max-width: 700px){
+  body .craft-intro__script{
+    font-size: clamp(2.6rem, 2rem + 4vw, 4rem) !important;
+    white-space: normal !important;
+  }
+}
+
+/* =========================================================
+   CRAFT STEP SUB — Maristella BIGGER AGAIN (Zach: still too small)
+   ========================================================= */
+body .process__sub{
+  font-size: clamp(4rem, 3rem + 4.5vw, 7.5rem) !important;
+  line-height: .85 !important;
+  margin: 0 0 -0.05em !important;
+}
+@media (max-width: 700px){
+  body .process__sub{
+    font-size: clamp(3rem, 2.4rem + 3.5vw, 4.8rem) !important;
+  }
+}
+
+/* =========================================================
+   ESTATE HEADING — Proxima, all caps, centred
+   ========================================================= */
+.estate-heading{
+  padding: clamp(3rem, 7vh, 5.5rem) 0 clamp(1.5rem, 4vh, 3rem);
+  background: var(--ground);
+}
+.estate-heading__title{
+  font-family: var(--sans);
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 24ch;
+  margin: 0 auto;
+  font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: .02em;
+  color: var(--hepple-blue);
+  font-weight: 700;
+}
+
+/* =========================================================
+   ESTATE BLOCKS — 3 alternating offset panels over bg images
+   ========================================================= */
+.estate-block{
+  position: relative;
+  min-height: clamp(30rem, 70vh, 44rem);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--hepple-ink);
+}
+.estate-block__bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.estate-block__bg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.estate-block__overlay{
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  padding: clamp(2rem, 5vw, 5rem);
+}
+.estate-block__panel{
+  background: rgba(237, 232, 224, 0.95);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: clamp(1.8rem, 3vw, 2.8rem);
+  border-radius: 4px;
+  max-width: 38rem;
+  color: var(--hepple-blue);
+  box-shadow: 0 10px 40px rgba(0, 48, 135, 0.12);
+}
+.estate-block__panel p{
+  font-size: .95rem;
+  line-height: 1.65;
+  color: var(--hepple-blue);
+  margin: 0 0 1rem;
+}
+.estate-block__panel p:last-child{ margin-bottom: 0; }
+
+/* Offset direction */
+.estate-block--right .estate-block__overlay{ justify-content: flex-end; }
+.estate-block--left  .estate-block__overlay{ justify-content: flex-start; }
+
+/* Gradient wash to help the panel read, direction-aware */
+.estate-block--right .estate-block__bg::after{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(237,232,224,0) 40%, rgba(237,232,224,.4) 100%);
+}
+.estate-block--left .estate-block__bg::after{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(270deg, rgba(237,232,224,0) 40%, rgba(237,232,224,.4) 100%);
+}
+
+@media (max-width: 760px){
+  .estate-block{ min-height: 0; }
+  .estate-block__overlay{
+    justify-content: center !important;
+    padding: 0;
+  }
+  .estate-block__bg{ position: relative; height: 50vw; min-height: 14rem; }
+  .estate-block__panel{
+    max-width: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+  .estate-block{ flex-direction: column; }
+}
+
+/* =========================================================
+   CRAFT INTRO HEADING — FINAL (Zach screenshot fix)
+   OUR CRAFT  = Proxima, small, on top
+   HOW WE MAKE HEPPLE = Maristella, big, below
+   ========================================================= */
+body .craft-intro__panel .craft-intro__headline{
+  font-family: var(--sans) !important;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem) !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  margin: 0 0 .05em !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 700 !important;
+  order: 1 !important;
+}
+body .craft-intro__panel .craft-intro__script{
+  font-family: var(--script) !important;
+  font-size: clamp(3.6rem, 2.6rem + 4.5vw, 7rem) !important;
+  line-height: .85 !important;
+  color: var(--hepple-blue) !important;
+  margin: 0 0 1rem !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+  order: 2 !important;
+}
+@media (max-width: 700px){
+  body .craft-intro__panel .craft-intro__script{
+    font-size: clamp(2.8rem, 2.2rem + 4vw, 4.4rem) !important;
+    white-space: normal !important;
+  }
+}
+
+/* =========================================================
+   CRAFT STEP HEADING ORDER — Proxima H3 on top, Maristella BELOW it
+   Much bigger Maristella, kept to one line where possible
+   ========================================================= */
+body .process__copy{
+  display: flex !important;
+  flex-direction: column !important;
+}
+body .process__copy .process__number{ order: 1 !important; margin-bottom: .5rem !important; }
+body .process__copy h3{ order: 2 !important; margin: 0 0 .05em !important; }
+body .process__copy .process__sub{ order: 3 !important; margin: 0 0 1.1rem !important; }
+body .process__copy p{ order: 4 !important; }
+
+/* Maristella sub — much bigger, one line */
+body .process__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(4.5rem, 3.4rem + 5vw, 8.5rem) !important;
+  line-height: .82 !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 400 !important;
+  display: block !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 700px){
+  body .process__sub{
+    font-size: clamp(3.2rem, 2.4rem + 4vw, 5rem) !important;
+    white-space: normal !important;
+  }
+}
+
+/* =========================================================
+   CRAFT HERO — just OUR CRAFT in Proxima (no Maristella)
+   ========================================================= */
+body .craft-intro__panel .craft-intro__headline{
+  font-family: var(--sans) !important;
+  font-size: clamp(2.4rem, 1.8rem + 2.5vw, 4.2rem) !important;
+  letter-spacing: -.01em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  margin: 0 0 1rem !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 700 !important;
+}
+
+/* =========================================================
+   CRAFT — HOW WE MAKE HEPPLE subhead (Proxima, one line, caps)
+   ========================================================= */
+body .craft-intro__subhead{
+  font-family: var(--sans) !important;
+  font-size: clamp(1.1rem, .9rem + .8vw, 1.6rem) !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  line-height: 1.1 !important;
+  margin: 0 0 1.2rem !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  opacity: .8;
+}
+@media (max-width: 600px){
+  body .craft-intro__subhead{ white-space: normal !important; }
+}
+
+/* =========================================================
+   PROCESS STEPS — remove the Maristella sub entirely
+   (just the Proxima H3 like INGREDIENTS)
+   ========================================================= */
+body .process__sub{ display: none !important; }
+
+/* =========================================================
+   STANDARD HERO PATTERN — Proxima H1 on top, Maristella BELOW,
+   similar size. Applies to Story / Estate / Cocktails / Visit heroes.
+   ========================================================= */
+body .story-hero__title{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: .1rem !important;
+}
+body .story-hero__title h1{
+  order: 1 !important;
+  font-family: var(--sans) !important;
+  font-size: clamp(2.6rem, 1.9rem + 3vw, 5rem) !important;
+  line-height: .95 !important;
+  margin: 0 !important;
+  letter-spacing: -.01em !important;
+}
+body .story-hero__title .script-accent{
+  order: 2 !important;
+  position: static !important;
+  transform: none !important;
+  font-family: var(--script) !important;
+  font-size: clamp(2.6rem, 1.9rem + 3vw, 5rem) !important;  /* similar size to H1 */
+  line-height: .9 !important;
+  margin: .1em 0 0 !important;
+  white-space: nowrap !important;
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+@media (max-width: 700px){
+  body .story-hero__title .script-accent{
+    font-size: clamp(2.2rem, 1.6rem + 3vw, 3.4rem) !important;
+    white-space: normal !important;
+  }
+}
+
+/* Visit page (placeholder) — same pattern, centred */
+body .placeholder__inner{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+body .placeholder__inner h1{
+  order: 1 !important;
+  font-family: var(--sans) !important;
+}
+body .placeholder__inner .script-accent{
+  order: 2 !important;
+  font-family: var(--script) !important;
+  font-size: clamp(2.4rem, 1.8rem + 2.5vw, 4rem) !important;
+  margin: .1em 0 1rem !important;
+  position: static !important;
+  transform: none !important;
+}
+body .placeholder__inner .placeholder__latin{ order: 3 !important; }
+body .placeholder__inner .placeholder__back{ order: 4 !important; }
+
+/* HOME SECTION 1 — Maristella eyebrow now BELOW headline, similar size */
+body .home-hero__panel{
+  display: flex !important;
+  flex-direction: column !important;
+}
+body .home-hero__headline{ order: 1 !important; }
+body .home-hero__eyebrow{
+  order: 2 !important;
+  font-size: clamp(2.2rem, 1.7rem + 2vw, 3.4rem) !important;
+  margin: .1em 0 1rem !important;
+  line-height: .9 !important;
+}
+body .home-hero__body{ order: 3 !important; }
+body .home-hero__actions{ order: 4 !important; }
+
+/* =========================================================
+   ESTATE STATS — bulletproof horizontal centering on all clients
+   ========================================================= */
+body .stats{
+  display: flex !important;
+  justify-content: center !important;
+}
+body .stats .wrap{
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+body .stats__grid{
+  margin-left: auto !important;
+  margin-right: auto !important;
+  justify-self: center !important;
+  justify-content: center !important;
+  justify-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+body .stat{
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+body .stat__number,
+body .stat__label{
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+/* =========================================================
+   STORY SPLIT — portrait image one side, text the other (cream bg)
+   ========================================================= */
+.story-split{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--ground);
+  align-items: stretch;
+  min-height: clamp(28rem, 70vh, 40rem);
+}
+.story-split__img{
+  background: var(--ground-deeper);
+  overflow: hidden;
+  position: relative;
+}
+.story-split__img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.story-split__body{
+  padding: clamp(2rem, 5vw, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--hepple-blue);
+  max-width: 36rem;
+}
+.story-split__body p{
+  font-size: .95rem;
+  line-height: 1.7;
+  color: var(--hepple-blue);
+  margin: 0 0 1.1rem;
+}
+.story-split__body p:last-child{ margin-bottom: 0; }
+.story-split__closer{
+  font-weight: 700;
+  margin-top: 1.2rem !important;
+}
+@media (max-width: 860px){
+  .story-split{ grid-template-columns: 1fr; min-height: 0; }
+  .story-split__img{ height: 60vw; min-height: 18rem; }
+  .story-split__body{ max-width: 100%; padding: 2rem 1.5rem; }
+}
+
+/* Story block (Section 1) — same width caps as estate blocks */
+.story-block .estate-block__panel{
+  max-width: 38rem;
+}
+
+/* =========================================================
+   STORY HERO IMG — anchor lower so full bodies are visible
+   ========================================================= */
+body .story-hero__img img{
+  object-position: center 70% !important;
+}
+
+/* =========================================================
+   STORY SPLIT — smaller portrait image, text centred vertically
+   on the right (already centered, but also center horizontally
+   within its column rather than building from the left)
+   ========================================================= */
+body .story-split{
+  /* Image col narrower than text col */
+  grid-template-columns: minmax(20rem, 38%) 1fr !important;
+}
+body .story-split__img{
+  /* Cap the image height so it's not full-bleed tall */
+  max-height: clamp(28rem, 60vh, 42rem) !important;
+  align-self: center !important;
+}
+body .story-split__body{
+  /* Centre the text horizontally within its half */
+  align-items: center !important;
+  text-align: center !important;
+  max-width: 100% !important;
+  padding: clamp(2rem, 5vw, 4rem) clamp(2rem, 6vw, 6rem) !important;
+}
+body .story-split__body p{
+  max-width: 38rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+@media (max-width: 860px){
+  body .story-split{
+    grid-template-columns: 1fr !important;
+  }
+  body .story-split__img{
+    max-height: 60vw !important;
+    min-height: 18rem !important;
+    width: 80% !important;
+    margin: 2rem auto 0 !important;
+    align-self: center !important;
+  }
+}
+
+/* =========================================================
+   MIRANDA PHOTO — zoomed out (less aggressive crop)
+   The square 800x800 was cropped on-import. We can't add pixels back,
+   but we CAN reduce the visible zoom by switching object-fit to contain
+   on her card OR adjusting object-position. Better: re-process her image
+   from the source PPT with a wider crop.
+   ========================================================= */
+
+/* estate-block panel closer (bold last paragraph) */
+.estate-block__closer{
+  font-weight: 700;
+  margin-top: 1.2rem !important;
+}
+
+/* =========================================================
+   COCKTAILS HERO — full bottles photo, text overlays the bottom
+   (same approach as Shop The Range)
+   ========================================================= */
+.cocktails-hero{
+  position: relative;
+  background: var(--ground);
+  overflow: hidden;
+  isolation: isolate;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.cocktails-hero__bg{
+  position: relative;
+  width: 100%;
+  display: block;
+}
+.cocktails-hero__bg img{
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* Text overlay sits at the bottom of the photo with a cream gradient wash */
+.cocktails-hero__overlay{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: clamp(2rem, 10vh, 6rem) var(--gutter) clamp(1.2rem, 3vh, 2.4rem);
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    rgba(237,232,224, 0)    0%,
+    rgba(237,232,224, .15) 35%,
+    rgba(237,232,224, .65) 75%,
+    rgba(237,232,224, .92) 100%
+  );
+  pointer-events: none;
+}
+.cocktails-hero__overlay > *{ pointer-events: auto; }
+.cocktails-hero__title{
+  font-family: var(--sans) !important;
+  font-size: clamp(2.4rem, 1.8rem + 3vw, 4.6rem) !important;
+  line-height: .95 !important;
+  letter-spacing: -.01em !important;
+  margin: 0 !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 700 !important;
+}
+.cocktails-hero__sub{
+  font-family: var(--script) !important;
+  font-size: clamp(2.2rem, 1.6rem + 2.5vw, 3.8rem) !important;
+  line-height: .9 !important;
+  margin: .15em 0 0 !important;
+  color: var(--hepple-blue) !important;
+  font-weight: 400 !important;
+}
+
+/* =========================================================
+   HERO CANVAS — frame-based scrub display
+   ========================================================= */
+.intro__canvas{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--hepple-ink);
+  /* No smoothing artifacts when scaling */
+  image-rendering: -webkit-optimize-contrast;
+}
+/* Hide the old .intro__video rules that might still apply */
+body .intro__video{ display: none !important; }
+
+/* =========================================================
+   ESTATE HERO VIDEO — fills the story-hero stage,
+   matches img behaviour exactly. Fallback img sits behind it.
+   ========================================================= */
+.story-hero__img--video{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--hepple-ink);
+}
+.story-hero__video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 2;
+  /* Same brightness/sat treatment as the img it replaces, for consistency */
+  filter: brightness(.78) saturate(.95);
+}
+.story-hero__fallback{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: brightness(.78) saturate(.95);
+}
+
+/* =========================================================
+   ESTATE HERO — Bunny iframe variant
+   Iframe scales up 110% so any player chrome is pushed off-screen,
+   giving a clean background-video feel.
+   ========================================================= */
+.story-hero__iframe-wrap{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+.story-hero__iframe{
+  position: absolute;
+  /* Overscan: scale up + offset so player edges are hidden */
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;            /* prevent click-to-pause */
+  filter: brightness(.78) saturate(.95);
+}
+@media (max-aspect-ratio: 16/9){
+  /* On tall viewports, scale up further to fully cover */
+  .story-hero__iframe{
+    width: 178vh;       /* 16/9 = 1.78 */
+    height: 110%;
+  }
+}
