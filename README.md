@@ -1,106 +1,158 @@
-# Hepple Spirits — Brand Site
+# Hepple Spirits — Brand Site + Stripe Shop + Analytics
 
-Static marketing site for Hepple Spirits Company.
+Static marketing site for Hepple Spirits Company, now with a **live Stripe
+checkout** and **PostHog analytics** wired in.
 
-**Designed by [Barker Digital](https://barkerdigital.co.uk)**
+**Designed & built by [Barker Digital](https://barkerdigital.co.uk)**
 
 ---
 
 ## Stack
 
-Pure HTML / CSS / JS — no framework, no build step, no npm install at deploy time.
+Pure HTML / CSS / JS on the front end — no framework, no build step. The only
+server-side code is a handful of **Vercel serverless functions** in `/api`
+(zero-config Node) that talk to Stripe, Supabase and PostHog. Secret keys never
+touch the browser.
 
-- Self-hosted Proxima Nova (OTF) — brand typography, non-negotiable
-- Scroll-scrubbed H.264/WebM hero video (monotonic — forward-only, no rewind)
-- Hash router: `/`, `#/story`, `#/estate`, `#/cocktails`, `#/visit`, `#/shop`, `#/shop/:slug`
-- 818-style product carousels (prev/next buttons with scroll-snap)
-- Process stepper on Our Story (numbered 1-5, animated transitions)
-- Animated number counters (IntersectionObserver + easeOutExpo)
-- Fake shop with localStorage cart, product detail pages, qty stepper, add-to-cart toast
+- Self-hosted Proxima Nova (OTF) — brand typography
+- Hash router: `/`, `#/story`, `#/estate`, `#/craft`, `#/cocktails`, `#/visit`, `#/shop`, `#/shop/:slug`
+- **localStorage cart** → **Stripe Checkout** (hosted, PCI-handled by Stripe)
+- **PostHog** product/cart/checkout funnel analytics (client + server)
+- **Supabase** order mirror so the Portal can track fulfilment
 
-## Structure
+## How checkout works
+
+```
+Browser                         Vercel (/api)                 Stripe
+───────                         ─────────────                 ──────
+add to cart (localStorage)
+click CHECKOUT  ───POST /api/checkout {items, ph_id}──▶
+                                validate cart vs catalogue
+                                build Checkout Session ──────▶ create session
+                ◀──{ url }──────                       ◀───── session.url
+redirect to Stripe ─────────────────────────────────────────▶ hosted pay page
+                                                               (card, address…)
+        ◀───────────── redirect back to /?checkout=success ───
+show confirmation modal,
+clear cart, capture('purchase')
+
+                       Stripe ──POST /api/stripe-webhook──▶ verify signature
+                                                            mirror order → Supabase
+                                                            capture order_completed → PostHog
+```
+
+The **client only ever sends `{ slug, qty }`** — the real price is looked up
+server-side in `api/_catalogue.js`, so prices can't be tampered with from the
+browser.
+
+## Project structure (new bits in **bold**)
 
 ```
 .
-├── index.html
-├── styles.css
-├── app.js
+├── index.html              # + PostHog snippet in <head>
+├── styles.css              # + .checkout-confirm modal styles
+├── app.js                  # + analytics capture(), startCheckout(), return handler
 ├── vercel.json
-├── package.json
+├── package.json            # + "stripe" dependency, node>=18 engine
+├── .env.example            # ← template, copy & fill (never commit real keys)
+├── supabase-schema.sql     # ← run in Supabase SQL editor
 ├── README.md
-├── .gitignore
-└── assets/
-    ├── hero.mp4                            # 1.6MB intro video
-    ├── hero.webm                           # 1.2MB fallback
-    ├── hero-poster.jpg
-    ├── brand/
-    │   ├── hepple-logotype-blue.png        # Real Hepple logo, transparent BG
-    │   └── hepple-logotype-blue-web.png
-    ├── fonts/
-    │   ├── ProximaNova-Regular.otf
-    │   ├── ProximaNova-Semibold.otf
-    │   ├── Proxima_Nova_Bold.otf
-    │   ├── Proxima_Nova_Black.otf
-    │   ├── Proxima_Nova_Extrabold.otf
-    │   └── Proxima_Nova_Thin.otf
-    └── products/
-        ├── hepple-gin.jpg
-        ├── douglas-fir.jpg
-        ├── wheat-vodka.jpg
-        ├── aquavit.jpg
-        ├── negroni.jpg
-        ├── lineup.jpg                       # Three-bottle family shot
-        └── gin-giftbox.jpg                  # Pink gift box
+└── api/                    # ← Vercel serverless functions
+    ├── _catalogue.js       #   server source-of-truth: products, prices, shipping
+    ├── checkout.js         #   POST → creates Stripe Checkout Session
+    └── stripe-webhook.js   #   Stripe → Supabase + PostHog (raw-body verified)
 ```
 
-## Run locally
+## Setup
+
+### 1. Install + run locally
 
 ```bash
-npx serve .
-# → http://localhost:3000
+npm install          # pulls the stripe SDK for the functions
+npx vercel dev       # runs the static site AND the /api functions locally
 ```
 
-**Why a server?** All asset paths (`assets/...`, `styles.css`, `app.js`) are now relative — they work both from a server AND from double-clicking `index.html` on Windows/Mac. Previously they used leading slashes (`/assets/...`) which only resolved on a web root, so opening the file directly on Windows showed a blank page. If you ever change a path back to a leading slash, the local-file-double-click workflow breaks again.
+(`npx serve .` still serves the static site, but won't run `/api`.)
 
-## Deploy to Netlify / Vercel
+### 2. Environment variables
 
-1. `git init && git add . && git commit -m "init"`
-2. Push to GitHub
-3. [vercel.com](https://vercel.com) → Add New → Project → import
-4. Framework preset: **Other** (already configured via `vercel.json`)
-5. Deploy
+Copy `.env.example` → `.env.local` (local) or paste into
+**Vercel → Settings → Environment Variables** (production). See that file for
+the full annotated list. Minimum to take a payment:
 
-`vercel.json` sets `buildCommand: null` and `outputDirectory: "."` — no build step, repo root is served directly.
+| Variable | Where to get it |
+|---|---|
+| `STRIPE_SECRET_KEY` | Stripe → Developers → API keys (`sk_test_…` / `sk_live_…`) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe → Developers → Webhooks → your endpoint (`whsec_…`) |
 
-## Behaviour notes
+Optional but recommended: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+(order mirror), `POSTHOG_API_KEY` (server-side order events).
 
-- **Hepple logo** in nav/footer always takes you back to `/` and replays the intro video, even if you've already seen it this session.
-- **Intro scroll** is monotonic — scrolling up does NOT rewind the video. Once the headline text has faded in, it stays.
-- **Session memory** — on second-visit-within-same-tab home visits (not via the logo), the intro is skipped.
-- **Cart** persists in `localStorage` under `hepple:cart`. Clear it with `localStorage.removeItem('hepple:cart')`.
+### 3. Client-side PostHog key
 
-## Copy
+Open `index.html`, find `window.__HEPPLE_POSTHOG__`, and replace
+`__POSTHOG_PROJECT_KEY__` with your **public** PostHog project key (`phc_…`).
+This key is browser-safe by design. If you leave the placeholder, PostHog
+simply stays disabled — the site still works.
 
-All body copy is Latin (Lorem Ipsum) placeholder. Structural UI text (buttons, nav, "Shop", "Add to cart", etc.) stays in English because it's UI, not copy.
+### 4. Stripe webhook
 
-Real lines preserved from the brand deck: "Come in.", "We're making drinks.", "A very good drink in a very good place."
+In Stripe → Developers → Webhooks → **Add endpoint**:
+
+- **URL:** `https://<your-domain>/api/stripe-webhook`
+- **Events:** `checkout.session.completed`, `checkout.session.async_payment_succeeded`
+
+Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+### 5. Supabase (optional — needed for fulfilment tracking)
+
+Create a project, then run `supabase-schema.sql` in the SQL editor. Put the
+project URL + **service-role** key into the env vars. RLS is on and there are no
+anon policies, so order data is server-only.
+
+### 6. Stripe products (optional)
+
+By default the server builds each line item's price inline from
+`api/_catalogue.js`. If you'd rather manage prices in the Stripe dashboard,
+create Products/Prices there and set `STRIPE_PRICE_<SLUG>` env vars (see
+`.env.example` for the exact names).
+
+## Analytics events captured
+
+| Event | Fired from | Notable props |
+|---|---|---|
+| `$pageview` | client (hash router) | `route`, `$current_url` |
+| `product_viewed` | client | `slug`, `name`, `price`, `sku` |
+| `product_added_to_cart` | client | `slug`, `qty`, `cart_value`, `cart_count` |
+| `product_removed_from_cart` | client | `slug`, `cart_value` |
+| `cart_opened` | client | `cart_count`, `cart_value` |
+| `checkout_started` | client | `cart_value`, `item_count` |
+| `purchase` | client (on return) | `order_id` |
+| `order_completed` | **server** (webhook) | `total`, `item_count`, deduped on session id |
+
+The server-side `order_completed` is the trustworthy revenue event (a user can
+close the tab before the client `purchase` fires; the webhook can't be skipped).
+
+## Deploy
+
+```bash
+git add . && git commit -m "stripe + posthog"
+npx vercel --prod
+```
+
+Framework preset **Other** (configured via `vercel.json`). Vercel auto-installs
+`stripe` and runs everything in `/api` as serverless functions — no extra config.
 
 ## Brand tokens
 
 ```css
---hepple-blue:     #003087;   /* PMS 287C  */
---hepple-ink:      #1b1a2e;   /* PMS 5255C */
---juniper-pink:    #EC008C;
---doug-fir-green:  #007A53;   /* PMS 341C */
---moorland-teal:   #0a6b80;
---ground:          #EDE8E0;   /* PMS 11-4201 TCX */
+--hepple-blue:  #003087;  /* PMS 287C  */
+--hepple-ink:   #1b1a2e;  /* PMS 5255C */
+--ground:       #EDE8E0;  /* PMS 11-4201 TCX */
 ```
-
-All defined at the top of `styles.css` — brand compliance is one-file wide.
 
 ## Accessibility
 
-- Respects `prefers-reduced-motion` (video scrub disabled, transitions snap)
-- Semantic HTML, keyboard-navigable carousels and stepper
-- Logo and cart have `aria-label`s
-- Focusable qty stepper with numeric input fallback
+- Respects `prefers-reduced-motion` (incl. the new confirmation modal)
+- Semantic HTML, keyboard-navigable carousels, stepper and cart
+- Confirmation modal is a labelled `role="dialog"`

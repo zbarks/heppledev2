@@ -1,0 +1,132 @@
+// =============================================================
+//  POST /api/checkout
+//  Builds a Stripe Checkout Session from the cart and returns its URL.
+//
+//  Request body:  { items: [{ slug, qty }, ...] }
+//  Response:      { url: "https://checkout.stripe.com/..." }
+//
+//  Env vars required (set in Vercel → Project → Settings → Environment):
+//    STRIPE_SECRET_KEY            sk_live_... or sk_test_...
+//    (optional) STRIPE_PRICE_<SLUG>   pre-made Stripe Price ids
+//    (optional) SITE_URL          canonical site origin for redirects
+//                                 (falls back to the request origin)
+//  Designed by Barker Digital
+// =============================================================
+
+const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey } = require('./_catalogue');
+
+function siteOrigin(req) {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
+  const proto = req.headers['x-forwarded-proto'] || 'https';
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  return `${proto}://${host}`;
+}
+
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    return res.status(500).json({
+      error: 'Stripe is not configured yet.',
+      hint: 'Add STRIPE_SECRET_KEY in your Vercel project environment variables.',
+    });
+  }
+
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch (_) { body = {}; }
+  }
+  const items = Array.isArray(body && body.items) ? body.items : [];
+  if (!items.length) return res.status(400).json({ error: 'Cart is empty.' });
+
+  // Optional PostHog visitor id so the webhook can tie the purchase
+  // back to the browsing session. Sanitised + length-capped.
+  const phId = typeof (body && body.ph_id) === 'string'
+    ? body.ph_id.slice(0, 120)
+    : null;
+
+  // ---- Validate cart against the server catalogue ----
+  const clean = [];
+  let subtotal = 0;
+  for (const it of items) {
+    const product = BY_SLUG[it && it.slug];
+    if (!product) continue;
+    const qty = Math.max(1, Math.min(99, parseInt(it.qty, 10) || 1));
+    clean.push({ product, qty });
+    subtotal += product.price * qty;
+  }
+  if (!clean.length) return res.status(400).json({ error: 'No valid items in cart.' });
+
+  const origin = siteOrigin(req);
+  const stripe = require('stripe')(key);
+
+  // ---- Build line items (Price id if provided, else inline price_data) ----
+  const line_items = clean.map(({ product, qty }) => {
+    const priceId = process.env[priceEnvKey(product.slug)];
+    if (priceId) return { price: priceId, quantity: qty };
+    return {
+      quantity: qty,
+      price_data: {
+        currency: CURRENCY,
+        unit_amount: Math.round(product.price * 100),
+        product_data: {
+          name: product.name,
+          metadata: { slug: product.slug, sku: product.sku },
+          images: [`${origin}/${product.image}`],
+        },
+      },
+    };
+  });
+
+  // ---- Shipping: free over threshold, flat fee below ----
+  const freeShipping = subtotal >= SHIPPING.freeThreshold;
+  const shipping_options = [{
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      display_name: freeShipping ? `${SHIPPING.label} (free)` : SHIPPING.label,
+      fixed_amount: {
+        amount: freeShipping ? 0 : Math.round(SHIPPING.flatFee * 100),
+        currency: CURRENCY,
+      },
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 2 },
+        maximum: { unit: 'business_day', value: 5 },
+      },
+    },
+  }];
+
+  // Compact cart summary stored on the session (≤ 500 chars per metadata value)
+  const cartSummary = clean
+    .map(({ product, qty }) => `${qty}x ${product.sku}`)
+    .join(', ')
+    .slice(0, 480);
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items,
+      shipping_options,
+      shipping_address_collection: { allowed_countries: ['GB'] },
+      phone_number_collection: { enabled: true },
+      billing_address_collection: 'auto',
+      allow_promotion_codes: true,
+      customer_creation: 'always',
+      success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/?checkout=cancel#/shop`,
+      metadata: {
+        source: 'hepple-site',
+        cart: cartSummary,
+        item_count: String(clean.reduce((s, i) => s + i.qty, 0)),
+        ph_id: phId || '',
+      },
+    });
+    return res.status(200).json({ url: session.url, id: session.id });
+  } catch (err) {
+    console.error('[checkout] Stripe error:', err && err.message);
+    return res.status(502).json({ error: 'Could not start checkout. Please try again.' });
+  }
+};

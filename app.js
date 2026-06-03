@@ -9,6 +9,22 @@
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
+  // ---------------------------------------------
+  // ANALYTICS — thin, always-safe PostHog wrapper.
+  // The PostHog snippet in <head> stubs every method even before
+  // (or without) init, so these calls are no-ops when analytics is
+  // disabled and never throw. See index.html → window.__HEPPLE_POSTHOG__.
+  // ---------------------------------------------
+  function capture(event, props){
+    try { if (window.posthog && typeof posthog.capture === 'function') posthog.capture(event, props || {}); }
+    catch (_) { /* analytics must never break the site */ }
+  }
+  function phDistinctId(){
+    try { if (window.posthog && typeof posthog.get_distinct_id === 'function') return posthog.get_distinct_id(); }
+    catch (_) {}
+    return undefined;
+  }
+
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -429,11 +445,59 @@
     renderCart();
     showToast('ADDED TO CART');
     bumpCart();
+    const p = productBySlug[slug];
+    capture('product_added_to_cart', {
+      slug, qty,
+      name: p ? p.name : slug,
+      price: p ? p.price : null,
+      cart_count: cartCount(),
+      cart_value: cartTotal(),
+    });
   }
   function removeFromCart(key){
+    const removed = cart.find(i => i.key === key);
     cart = cart.filter(i => i.key !== key);
     saveCart();
     renderCart();
+    capture('product_removed_from_cart', {
+      slug: removed ? removed.slug : key,
+      cart_count: cartCount(),
+      cart_value: cartTotal(),
+    });
+  }
+
+  // ---- Stripe checkout: hand the cart to /api/checkout and redirect ----
+  let _checkoutInFlight = false;
+  async function startCheckout(btn){
+    if (_checkoutInFlight) return;
+    if (!cart.length){ showToast('YOUR CART IS EMPTY'); return; }
+
+    const items = cart.map(i => ({ slug: i.slug, qty: i.qty }));
+    capture('checkout_started', {
+      item_count: cartCount(),
+      cart_value: cartTotal(),
+      items,
+    });
+
+    _checkoutInFlight = true;
+    const original = btn ? btn.textContent : '';
+    if (btn){ btn.disabled = true; btn.textContent = 'STARTING…'; }
+
+    try {
+      const resp = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, ph_id: phDistinctId() }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable right now.');
+      // Off to Stripe's hosted checkout.
+      window.location.href = data.url;
+    } catch (err){
+      showToast(((err && err.message) || 'CHECKOUT UNAVAILABLE').toUpperCase());
+      if (btn){ btn.disabled = false; btn.textContent = original || 'CHECKOUT'; }
+      _checkoutInFlight = false;
+    }
   }
   function cartCount(){ return cart.reduce((s, i) => s + i.qty, 0); }
   function cartTotal(){
@@ -605,9 +669,17 @@
     const r = getRoute();
     setActivePage(r);
     showIntroOrNot(r, forceIntro);
+    // Virtual pageview for the hash router so PostHog's Pages report works.
+    capture('$pageview', { $current_url: location.href, route: r });
   }
 
   document.addEventListener('click', (e) => {
+    const checkoutBtn = e.target.closest('.cart-panel__checkout');
+    if (checkoutBtn){
+      e.preventDefault();
+      startCheckout(checkoutBtn);
+      return;
+    }
     const removeBtn = e.target.closest('[data-remove]');
     if (removeBtn){
       e.preventDefault();
@@ -864,6 +936,7 @@
   $('#cartBtn')?.addEventListener('click', () => {
     $('#cartPanel').classList.add('is-open');
     $('#overlay').classList.add('is-active');
+    capture('cart_opened', { cart_count: cartCount(), cart_value: cartTotal() });
   });
   $('#cartClose')?.addEventListener('click', closeDrawers);
   $('#overlay')?.addEventListener('click', closeDrawers);
@@ -1147,6 +1220,11 @@
     `;
 
     initProductGallery();
+
+    capture('product_viewed', {
+      slug: p.slug, name: p.name, price: p.price,
+      sku: (p.meta && p.meta.sku) || null,
+    });
 
     const track = $('#relatedTrack');
     if (track){
@@ -1450,6 +1528,58 @@
   }
 
   // =============================================
+  // STRIPE RETURN — success / cancel handling
+  // Stripe sends the buyer back to:
+  //   /?checkout=success&session_id=cs_...     (paid)
+  //   /?checkout=cancel#/shop                  (abandoned at Stripe)
+  // The webhook is the source of truth for orders; the success event
+  // fired here is a client-side backup, deduped server-side by order id.
+  // =============================================
+  function handleCheckoutReturn(){
+    let params;
+    try { params = new URLSearchParams(window.location.search); }
+    catch (_) { return; }
+    const status = params.get('checkout');
+    if (!status) return;
+
+    if (status === 'success'){
+      const sid = params.get('session_id') || null;
+      capture('purchase', { order_id: sid, source: 'client-return' });
+      cart = []; saveCart(); renderCart();
+      showCheckoutConfirmation();
+    } else if (status === 'cancel'){
+      showToast('CHECKOUT CANCELLED');
+    }
+
+    // Strip the query string so a refresh can't replay the event.
+    const clean = window.location.pathname + (window.location.hash || '');
+    try { window.history.replaceState({}, document.title, clean); } catch (_) {}
+  }
+
+  function showCheckoutConfirmation(){
+    if ($('.checkout-confirm')) return;
+    const el = document.createElement('div');
+    el.className = 'checkout-confirm';
+    el.innerHTML = `
+      <div class="checkout-confirm__backdrop" data-cc-close></div>
+      <div class="checkout-confirm__panel" role="dialog" aria-modal="true" aria-label="Order confirmed">
+        <div class="checkout-confirm__mark" aria-hidden="true">✓</div>
+        <p class="checkout-confirm__kicker">ORDER CONFIRMED</p>
+        <h2 class="checkout-confirm__title">THANK YOU</h2>
+        <p class="checkout-confirm__text">Your order is confirmed and a receipt is on its way to your inbox. We’ll be in touch the moment it ships from the estate.</p>
+        <button class="checkout-confirm__btn" data-cc-close>CONTINUE</button>
+      </div>`;
+    document.body.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('is-open'));
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('[data-cc-close]')){
+        el.classList.remove('is-open');
+        setTimeout(() => el.remove(), 320);
+      }
+    });
+  }
+
+  // =============================================
   // BOOT
   // =============================================
   renderCart();
@@ -1457,5 +1587,6 @@
   initProcess();
   initCounters();
   initAllEmbla();
+  handleCheckoutReturn();
 
 })();

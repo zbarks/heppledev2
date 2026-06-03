@@ -2,9 +2,15 @@
   "name": "hepple",
   "version": "0.2.0",
   "private": true,
-  "description": "Hepple Spirits Company — brand site. Designed by Barker Digital.",
+  "description": "Hepple Spirits Company — brand site with Stripe checkout + PostHog analytics. Designed by Barker Digital.",
   "scripts": {
     "dev": "npx --yes serve . -p 3000"
+  },
+  "dependencies": {
+    "stripe": "^16.12.0"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "author": "Barker Digital",
   "license": "UNLICENSED"

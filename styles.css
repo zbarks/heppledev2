@@ -1765,6 +1765,104 @@ h1, h2, h3, h4{
 }
 .toast.is-visible{ opacity:1; transform:translateX(-50%) translateY(0); }
 
+/* ==========================================================
+   CHECKOUT CONFIRMATION — post-Stripe order confirmed modal
+   ========================================================== */
+.checkout-confirm{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:grid;
+  place-items:center;
+  padding:var(--gutter);
+  opacity:0;
+  visibility:hidden;
+  transition: opacity .32s ease, visibility 0s linear .32s;
+}
+.checkout-confirm.is-open{
+  opacity:1;
+  visibility:visible;
+  transition: opacity .32s ease;
+}
+.checkout-confirm__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(27,26,46,.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.checkout-confirm__panel{
+  position:relative;
+  width:min(34rem, 100%);
+  background: var(--cream);
+  color: var(--hepple-ink);
+  text-align:center;
+  padding: clamp(2.4rem, 2rem + 3vw, 3.6rem) clamp(1.8rem, 1.4rem + 3vw, 3.2rem);
+  border-radius: 4px;
+  box-shadow: 0 40px 90px rgba(0,48,135,.28);
+  transform: translateY(24px) scale(.97);
+  opacity:0;
+  transition: transform .42s cubic-bezier(.16,1,.3,1) .04s, opacity .42s ease .04s;
+}
+.checkout-confirm.is-open .checkout-confirm__panel{
+  transform: translateY(0) scale(1);
+  opacity:1;
+}
+.checkout-confirm__mark{
+  width:72px;
+  height:72px;
+  margin:0 auto 1.6rem;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background: var(--hepple-blue);
+  color: var(--cream);
+  font-size:2rem;
+  line-height:1;
+  box-shadow: 0 16px 32px rgba(0,48,135,.32);
+}
+.checkout-confirm__kicker{
+  margin:0 0 .6rem;
+  font-size:.7rem;
+  letter-spacing:.28em;
+  font-weight:700;
+  color: var(--hepple-blue);
+  text-transform:uppercase;
+}
+.checkout-confirm__title{
+  margin:0 0 1rem;
+  font-size: var(--h-lg);
+  line-height:1.02;
+  color: var(--hepple-blue);
+  font-weight:800;
+}
+.checkout-confirm__text{
+  margin:0 auto 2rem;
+  max-width:26rem;
+  font-size: var(--body);
+  line-height:1.6;
+  color: var(--hepple-ink);
+}
+.checkout-confirm__btn{
+  appearance:none;
+  border:0;
+  cursor:pointer;
+  background: var(--hepple-blue);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size:.72rem;
+  letter-spacing:.22em;
+  font-weight:700;
+  padding: 1rem 2.6rem;
+  border-radius:999px;
+  transition: background .25s ease, transform .25s ease;
+}
+.checkout-confirm__btn:hover{ background: var(--hepple-ink); transform: translateY(-1px); }
+.checkout-confirm__btn:active{ transform: translateY(0); }
+@media (prefers-reduced-motion: reduce){
+  .checkout-confirm, .checkout-confirm__panel, .checkout-confirm__btn{ transition:none; }
+}
+
 /* =========================================================
    FOOTER
    ========================================================= */
