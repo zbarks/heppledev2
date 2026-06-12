@@ -44,6 +44,46 @@ const PRODUCTS = [
     image: 'assets/products/wheat-vodka.jpg',
     meta:  { size: '70cl', abv: '41%' },
   },
+
+  // ---- Additional / limited expressions ----
+  {
+    slug:  'hepple-sloe-hawthorn',
+    name:  'Hepple Sloe & Hawthorn',
+    price: 32.50,
+    sku:   'HEP-SLO-50',
+    image: 'assets/products/sloe-hawthorn-main.jpg',
+    meta:  { size: '50cl', abv: '29.9%' },
+  },
+  {
+    slug:  'hepple-aquavit',
+    name:  'Hepple Aquavit',
+    price: 39.95,
+    sku:   'HEP-AQV-70',
+    image: 'assets/products/aquavit-main.jpg',
+    meta:  { size: '70cl', abv: '40%' },
+  },
+  {
+    slug:  'hepple-negroni',
+    name:  'Hepple Negroni',
+    price: 32.50,
+    sku:   'HEP-NEG-70',
+    image: 'assets/products/negroni-main.jpg',
+    meta:  { size: '70cl', abv: '24%' },
+  },
+
+  // ---- Add-on: handwritten card (£5) ----
+  // `addon: true` lets checkout.js (a) reject a card-only basket and
+  // (b) exclude the card from the free-shipping threshold. No image, so it
+  // renders as a plain line on the Stripe page.
+  {
+    slug:  'handwritten-card',
+    name:  'Handwritten Card',
+    price: 5.00,
+    sku:   'HEP-CARD',
+    image: '',
+    addon: true,
+    meta:  {},
+  },
 ];
 
 const BY_SLUG = Object.fromEntries(PRODUCTS.map((p) => [p.slug, p]));

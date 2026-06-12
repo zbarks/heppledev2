@@ -49,17 +49,35 @@ module.exports = async (req, res) => {
     ? body.ph_id.slice(0, 120)
     : null;
 
+  // Optional handwritten-card message. Capped at 250 chars (the client caps it
+  // too); only used if a card line is actually present and valid.
+  const giftMessage = typeof (body && body.gift_message) === 'string'
+    ? body.gift_message.slice(0, 250)
+    : '';
+
   // ---- Validate cart against the server catalogue ----
   const clean = [];
   let subtotal = 0;
+  let goodsSubtotal = 0; // excludes add-ons (the card), for the shipping test
   for (const it of items) {
     const product = BY_SLUG[it && it.slug];
     if (!product) continue;
     const qty = Math.max(1, Math.min(99, parseInt(it.qty, 10) || 1));
     clean.push({ product, qty });
     subtotal += product.price * qty;
+    if (!product.addon) goodsSubtotal += product.price * qty;
   }
   if (!clean.length) return res.status(400).json({ error: 'No valid items in cart.' });
+
+  // ---- GUARD: a handwritten card can never be the only thing in the basket.
+  // This is the authoritative check (the browser can be bypassed). ----
+  const hasCard = clean.some(({ product }) => product.addon);
+  const hasGoods = clean.some(({ product }) => !product.addon);
+  if (hasCard && !hasGoods) {
+    return res.status(400).json({
+      error: 'A handwritten card can only be added to an order with at least one product.',
+    });
+  }
 
   const origin = siteOrigin(req);
   const stripe = require('stripe')(key);
@@ -68,22 +86,25 @@ module.exports = async (req, res) => {
   const line_items = clean.map(({ product, qty }) => {
     const priceId = process.env[priceEnvKey(product.slug)];
     if (priceId) return { price: priceId, quantity: qty };
+    const product_data = {
+      name: product.name,
+      metadata: { slug: product.slug, sku: product.sku },
+    };
+    // Only attach an image when the product has one (the card has none).
+    if (product.image) product_data.images = [`${origin}/${product.image}`];
     return {
       quantity: qty,
       price_data: {
         currency: CURRENCY,
         unit_amount: Math.round(product.price * 100),
-        product_data: {
-          name: product.name,
-          metadata: { slug: product.slug, sku: product.sku },
-          images: [`${origin}/${product.image}`],
-        },
+        product_data,
       },
     };
   });
 
   // ---- Shipping: free over threshold, flat fee below ----
-  const freeShipping = subtotal >= SHIPPING.freeThreshold;
+  // The card add-on does not count toward the free-shipping threshold.
+  const freeShipping = goodsSubtotal >= SHIPPING.freeThreshold;
   const shipping_options = [{
     shipping_rate_data: {
       type: 'fixed_amount',
@@ -122,6 +143,8 @@ module.exports = async (req, res) => {
         cart: cartSummary,
         item_count: String(clean.reduce((s, i) => s + i.qty, 0)),
         ph_id: phId || '',
+        has_gift_card: hasCard ? 'true' : 'false',
+        gift_message: hasCard ? giftMessage : '',
       },
     });
     return res.status(200).json({ url: session.url, id: session.id });
