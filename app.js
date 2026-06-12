@@ -167,7 +167,142 @@
       }
     }
   ];
-  const productBySlug = Object.fromEntries(PRODUCTS.map(p => [p.slug, p]));
+
+  // =============================================
+  // ADDITIONAL / LIMITED EXPRESSIONS
+  // Sold on a separate, clearly-marked line in the shop. NOT part of the
+  // core range carousels (home / related / cocktails). Client PDF copy used
+  // verbatim. Product photos to be dropped into /assets/products by Zach —
+  // filenames named *-main.jpg below.
+  // =============================================
+  const EXTRA_PRODUCTS = [
+    {
+      slug:    'hepple-sloe-hawthorn',
+      name:    'HEPPLE SLOE & HAWTHORN',
+      nameTop: 'HEPPLE',
+      nameRest:'SLOE & HAWTHORN',
+      short:   'Sloe & Hawthorn',
+      tagline: 'DARK. WILD. GENEROUS.',
+      kicker:  'A DARKER SIDE OF HEPPLE',
+      price:   32.50,
+      meta:    { size: '50CL', abv: '29.9%', origin: 'NORTHUMBERLAND' },
+      sku:     'sloe-hawthorn',
+      image:   'assets/products/sloe-hawthorn-main.jpg',
+      body: [
+        "NOT EVERY FLAVOUR ON THE ESTATE IS BRIGHT AND GREEN. AS AUTUMN ARRIVES, THE LANDSCAPE SHIFTS TOWARDS DARKER NOTES OF FRUIT, SPICE AND HEDGEROW BERRIES. SLOE & HAWTHORN WAS CREATED TO CAPTURE THAT SIDE OF HEPPLE.",
+        "RATHER THAN BEGINNING WITH FINISHED GIN, WE SELECT DISTILLATE FROM THE COPPER STILL, CHOSEN FOR ITS DEPTH, STRUCTURE AND ABILITY TO CARRY FRUIT. IT IS THEN RESTED ON CAREFULLY SELECTED SLOE AND HAWTHORN BERRIES FOR MORE THAN SIX MONTHS, ALLOWING FLAVOUR TO DEVELOP SLOWLY AND NATURALLY OVER TIME.",
+        "THE FRESHNESS OF JUNIPER REMAINS AT ITS HEART, LAYERED WITH NOTES OF RIPE PLUM, DARK CHERRY, BITTER ALMOND AND GENTLE SPICE. RICH ENOUGH FOR WINTER EVENINGS, BRIGHT ENOUGH TO ENJOY THROUGHOUT THE YEAR.",
+        "LIKE EVERYTHING WE MAKE AT HEPPLE, IT IS GUIDED BY FLAVOUR FIRST AND MADE IN PURSUIT OF DELICIOUSNESS."
+      ],
+      tasting: {
+        nose:   'BITTER ALMOND, RIPE JUNIPER AND STONE FRUIT WITH THE FAINTEST HINT OF COCOA',
+        palate: 'RICH PLUM AND CHERRY WITH LAYERS OF ALMOND AND WARMING SPICE',
+        finish: 'LONG AND GENEROUS, WITH LINGERING NOTES OF JUNIPER, SOUR CHERRY AND DARK FRUIT'
+      },
+      howToEnjoy: {
+        lead: "OUR FAVOURITE WAY TO ENJOY SLOE & HAWTHORN IS SIMPLY OVER ICE WITH A TWIST OF ORANGE.",
+        recipe: [
+          "50ML HEPPLE SLOE & HAWTHORN",
+          "SERVE OVER PLENTY OF ICE",
+          "FINISH WITH A STRIP OF ORANGE ZEST"
+        ],
+        alt: "ALSO WORKS BEAUTIFULLY WITH TONIC, SPARKLING WINE OR IN A WINTER NEGRONI."
+      }
+    },
+    {
+      slug:    'hepple-aquavit',
+      name:    'HEPPLE AQUAVIT',
+      nameTop: 'HEPPLE',
+      nameRest:'AQUAVIT',
+      short:   'Aquavit',
+      tagline: 'SAVOURY. BRIGHT. DISTINCTIVE.',
+      kicker:  'A SCANDINAVIAN CLASSIC, THE HEPPLE WAY',
+      price:   39.95,
+      meta:    { size: '70CL', abv: '40%', origin: 'NORTHUMBERLAND' },
+      sku:     'aquavit',
+      image:   'assets/products/aquavit-main.jpg',
+      body: [
+        "AQUAVIT BEGAN WITH A SUGGESTION FROM AWARD WINNING BARTENDER MONICA BERG, WHO BELIEVED HEPPLE'S APPROACH TO FLAVOUR COULD BRING SOMETHING NEW TO ONE OF SCANDINAVIA'S MOST DISTINCTIVE SPIRITS.",
+        "WHAT FOLLOWED WAS A YEAR OF EXPERIMENTATION, COLLABORATION AND TASTING. THE PROJECT EVENTUALLY FOUND A HOME WITH SWEDISH CHEF AND RESTAURATEUR ALEX NIETOSVUORI, PROPRIETOR OF MICHELIN-STARRED HJEM IN NORTHUMBERLAND, WHOSE DEEP APPRECIATION FOR AQUAVIT HELPED SHAPE THE FINAL SPIRIT.",
+        "AT ITS HEART ARE CARAWAY AND DILL SEED, THE DEFINING FLAVOURS OF TRADITIONAL AQUAVIT. AROUND THEM SITS A CAREFULLY SELECTED BLEND OF ANGELICA ROOT, CORIANDER, STAR ANISE AND BITTER ORANGE, BRINGING FRESHNESS, COMPLEXITY AND LENGTH.",
+        "AS WITH ALL HEPPLE SPIRITS, DIFFERENT BOTANICALS ARE TREATED IN DIFFERENT WAYS. TRADITIONAL COPPER POT DISTILLATION PROVIDES DEPTH AND STRUCTURE, WHILE VACUUM DISTILLATION HELPS PRESERVE FRESHNESS AND AROMATIC DETAIL.",
+        "THE RESULT IS AN AQUAVIT THAT FEELS BOTH ROOTED IN TRADITION AND UNMISTAKABLY HEPPLE. BRIGHT, SAVOURY AND WONDERFULLY VERSATILE, WHETHER SERVED FROM THE FREEZER, ALONGSIDE FOOD OR STIRRED INTO A COCKTAIL."
+      ],
+      tasting: {
+        nose:   'FRESH DILL, WARM SPICE, BRIGHT CITRUS AND AROMATIC CARAWAY',
+        palate: 'LAYERS OF CARAWAY, HERBACEOUS DILL AND DELICATE CITRUS, BALANCED BY GENTLE SPICE AND SAVOURY DEPTH',
+        finish: 'CLEAN, LONG AND REFRESHING WITH LINGERING NOTES OF CARAWAY, ANGELICA AND EARTHY BOTANICALS'
+      },
+      howToEnjoy: {
+        lead: "OUR FAVOURITE WAY TO ENJOY AQUAVIT IS ICE COLD FROM THE FREEZER, SERVED ALONGSIDE SMOKED FISH, CHEESES, CURED MEATS OR A GENEROUS TABLE OF GOOD FOOD WITH FRIENDS.",
+        recipe: [
+          "50ML HEPPLE AQUAVIT",
+          "SERVE STRAIGHT FROM THE FREEZER IN A SMALL CHILLED GLASS"
+        ],
+        alt: "ALSO WORKS WELL ON ICE WITH TONIC WATER AND A SLICE OF LEMON, OR IN A VESPER."
+      }
+    },
+    {
+      slug:    'hepple-negroni',
+      name:    'HEPPLE NEGRONI',
+      nameTop: 'HEPPLE',
+      nameRest:'NEGRONI',
+      short:   'Hepple Negroni',
+      tagline: 'BITTERSWEET. BRIGHT. ELEGANT.',
+      kicker:  'READY TO POUR',
+      price:   32.50,
+      meta:    { size: '70CL', abv: '24%', origin: 'NORTHUMBERLAND' },
+      sku:     'negroni',
+      image:   'assets/products/negroni-main.jpg',
+      body: [
+        "THE NEGRONI IS ONE OF THE WORLD'S GREAT COCKTAILS. EQUAL PARTS GIN, BITTER APERITIF AND SWEET VERMOUTH, IT HAS BEEN ENJOYED FOR MORE THAN A CENTURY FOR ITS BALANCE OF BITTERNESS, SWEETNESS AND SPICE.",
+        "OUR VERSION BEGINS WITH HEPPLE WILD JUNIPER GIN. NICK STRANGEWAY HAS REWORKED THE CLASSIC RECIPE TO PLACE GREATER EMPHASIS ON JUNIPER, CREATING A BRIGHTER, FRESHER EXPRESSION OF THE DRINK WHILE REMAINING TRUE TO THE ORIGINAL.",
+        "TO ADD ANOTHER LAYER OF COMPLEXITY, THE FINISHED COCKTAIL IS RAPIDLY AGED ON JUNIPER WOOD USING ULTRASONIC INFUSION. THIS PROCESS DRAWS FLAVOUR FROM THE WOOD IN A MATTER OF DAYS RATHER THAN MONTHS, ADDING SUBTLE SPICE, WARMTH AND DEPTH WHILE AMPLIFYING THE CHARACTER OF THE GIN.",
+        "THE RESULT IS A READY-TO-DRINK NEGRONI WITH REMARKABLE BALANCE. BRIGHT JUNIPER, BITTERSWEET CITRUS, GENTLE SPICE AND A LONG, ELEGANT FINISH."
+      ],
+      tasting: {
+        nose:   'BRIGHT JUNIPER, ORANGE PEEL AND FRESH CITRUS LAYERED WITH GENTLE SPICE AND BITTERSWEET HERBS',
+        palate: 'VIBRANT JUNIPER, BITTER ORANGE AND RICH VERMOUTH BALANCED BY WARMING SPICE AND SUBTLE NOTES OF WOOD',
+        finish: 'LONG AND COMPLEX WITH LINGERING CITRUS, GENTLE BITTERNESS AND A DISTINCTIVE JUNIPER FRESHNESS'
+      },
+      howToEnjoy: {
+        lead: "OUR FAVOURITE WAY TO ENJOY THE HEPPLE NEGRONI IS SIMPLY OVER PLENTY OF ICE WITH A TWIST OF ORANGE.",
+        recipe: [
+          "75ML HEPPLE NEGRONI",
+          "POUR OVER ICE IN A ROCKS GLASS",
+          "FINISH WITH A STRIP OF ORANGE ZEST"
+        ],
+        alt: "NO MIXING. NO MEASURING. JUST A PERFECTLY BALANCED NEGRONI, READY TO POUR."
+      }
+    }
+  ];
+
+  // =============================================
+  // GIFT ADD-ON — handwritten card (£5)
+  // An add-on only: it can never be the only thing in the cart (see the
+  // gift-card rules in the CART section). Price is enforced server-side in
+  // api/_catalogue.js; this client entry is only for display + totals.
+  // =============================================
+  const GIFT_SLUG = 'handwritten-card';
+  const GIFT_CARD = {
+    slug:    GIFT_SLUG,
+    name:    'HANDWRITTEN CARD',
+    nameTop: 'HANDWRITTEN',
+    nameRest:'CARD',
+    short:   'Handwritten Card',
+    tagline: 'A NOTE IN OUR HAND',
+    kicker:  'ADD A PERSONAL MESSAGE',
+    price:   5.00,
+    isAddon: true,
+    image:   '' // no asset — rendered with an inline mark in the cart
+  };
+
+  // Core range (unchanged) drives the home/related/cocktails displays.
+  // The combined lookup also resolves the extras + the gift card so the
+  // cart, totals and product-detail pages work for everything.
+  const productBySlug = Object.fromEntries(
+    PRODUCTS.concat(EXTRA_PRODUCTS).concat([GIFT_CARD]).map(p => [p.slug, p])
+  );
 
   // =============================================
   // COCKTAILS — 9 drinks grouped by SKU per feedback
@@ -436,6 +571,39 @@
   })();
   const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
+  // ---- Gift card (handwritten note) ----------------------------------------
+  // Rules enforced here AND server-side (api/checkout.js):
+  //   • the card is an add-on; the cart can never contain ONLY the card
+  //   • removing the last real product also removes the card
+  //   • the message is capped at 250 characters
+  const GIFT_MSG_KEY = 'hepple:giftMessage';
+  const GIFT_MSG_MAX = 250;
+  const getGiftMessage = () => { try { return localStorage.getItem(GIFT_MSG_KEY) || ''; } catch(_){ return ''; } };
+  const setGiftMessage = (v) => { try { localStorage.setItem(GIFT_MSG_KEY, (v || '').slice(0, GIFT_MSG_MAX)); } catch(_){} };
+  const hasRealItems = () => cart.some(i => i.slug !== GIFT_SLUG);
+  const hasGiftCard  = () => cart.some(i => i.slug === GIFT_SLUG);
+
+  function addGiftCard(){
+    if (!hasRealItems()){ showToast('ADD A PRODUCT FIRST'); return false; }
+    if (!hasGiftCard()){ cart.push({ key: GIFT_SLUG, slug: GIFT_SLUG, qty: 1 }); saveCart(); }
+    return true;
+  }
+  function removeGiftCard(){
+    cart = cart.filter(i => i.slug !== GIFT_SLUG);
+    saveCart();
+  }
+  // Belt-and-braces: a card can never survive on its own.
+  function enforceGiftCardRule(){
+    if (hasGiftCard() && !hasRealItems()){ removeGiftCard(); }
+  }
+
+  // Escape user-supplied text before it ever touches innerHTML.
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+    ));
+  }
+
   function addToCart(slug, qty=1){
     const key = slug;
     const existing = cart.find(i => i.key === key);
@@ -471,11 +639,21 @@
   async function startCheckout(btn){
     if (_checkoutInFlight) return;
     if (!cart.length){ showToast('YOUR CART IS EMPTY'); return; }
+    // Client-side guard (the server enforces this too): a handwritten card can
+    // never be checked out on its own — there must be at least one product.
+    enforceGiftCardRule();
+    if (hasGiftCard() && !hasRealItems()){
+      showToast('ADD A PRODUCT TO SEND A CARD');
+      renderCart();
+      return;
+    }
 
     const items = cart.map(i => ({ slug: i.slug, qty: i.qty }));
+    const giftMessage = hasGiftCard() ? getGiftMessage().slice(0, GIFT_MSG_MAX) : '';
     capture('checkout_started', {
       item_count: cartCount(),
       cart_value: cartTotal(),
+      has_gift_card: hasGiftCard(),
       items,
     });
 
@@ -487,7 +665,7 @@
       const resp = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, ph_id: phDistinctId() }),
+        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage }),
       });
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable right now.');
@@ -510,6 +688,7 @@
   }
 
   function renderCart(){
+    enforceGiftCardRule();
     const body = $('#cartBody');
     const foot = $('#cartFoot');
     const count = cartCount();
@@ -523,11 +702,31 @@
     if (count === 0){
       body.innerHTML = `<p class="cart-panel__empty">YOUR CART IS EMPTY</p>`;
       if (foot) foot.hidden = true;
+      renderGift();
       return;
     }
     body.innerHTML = cart.map(i => {
       const p = productBySlug[i.slug];
       if (!p) return '';
+      // Handwritten card renders as a special add-on line (no thumbnail).
+      if (i.slug === GIFT_SLUG){
+        const msg = getGiftMessage();
+        return `
+          <div class="cart-item cart-item--gift">
+            <div class="cart-item__img cart-item__img--gift" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+            </div>
+            <div class="cart-item__info">
+              <h4>HANDWRITTEN CARD</h4>
+              ${msg
+                ? `<div class="cart-item__msg">&ldquo;${escapeHtml(msg)}&rdquo;</div>`
+                : `<div class="qty">Add your message below</div>`}
+              <button class="cart-item__remove" data-remove-gift>REMOVE</button>
+            </div>
+            <div class="cart-item__price">£${p.price.toFixed(2)}</div>
+          </div>
+        `;
+      }
       const unit = p.price;
       const thumb = p.image;
       return `
@@ -545,6 +744,36 @@
     if (foot) foot.hidden = false;
     const totalEl = $('#cartTotal');
     if (totalEl) totalEl.textContent = `£${cartTotal().toFixed(2)}`;
+    renderGift();
+  }
+
+  // ---- Handwritten-card add-on UI (lives between cart body and footer) ----
+  function renderGift(){
+    const wrap = $('#cartGift');
+    if (!wrap) return;
+    // Only offer the card when there's a real product to attach it to.
+    if (!hasRealItems()){ wrap.hidden = true; wrap.innerHTML = ''; return; }
+    wrap.hidden = false;
+    const on  = hasGiftCard();
+    const msg = getGiftMessage();
+    wrap.innerHTML = `
+      <div class="cart-gift__head">
+        <div class="cart-gift__label">
+          <span class="cart-gift__title">ADD A HANDWRITTEN CARD</span>
+          <span class="cart-gift__price">£5.00</span>
+        </div>
+        <button type="button" class="cart-gift__toggle ${on ? 'is-on' : ''}" data-gift-toggle aria-pressed="${on}">
+          ${on ? 'ADDED ✓' : 'ADD'}
+        </button>
+      </div>
+      <p class="cart-gift__note">A personal note, written by hand and sent with your order.</p>
+      ${on ? `
+        <div class="cart-gift__field">
+          <textarea id="giftMsgInput" maxlength="${GIFT_MSG_MAX}" rows="3"
+            placeholder="Write your message…">${escapeHtml(msg)}</textarea>
+          <div class="cart-gift__count"><span id="giftMsgCount">${msg.length}</span>/${GIFT_MSG_MAX}</div>
+        </div>` : ''}
+    `;
   }
 
   function bumpCart(){
@@ -618,7 +847,7 @@
       a.classList.toggle('is-active', active);
     });
 
-    if (route === '/shop'){ renderShopGrid(); renderShopCocktails(); }
+    if (route === '/shop'){ renderShopGrid(); renderShopExtras(); renderShopCocktails(); }
     if (route === '/estate'){ initEstateHeroVideo(); }
     else { pauseEstateHeroVideo(); }
     if (/^\/shop\/[\w-]+$/.test(route)){
@@ -686,6 +915,23 @@
       removeFromCart(removeBtn.dataset.remove);
       return;
     }
+    const giftToggle = e.target.closest('[data-gift-toggle]');
+    if (giftToggle){
+      e.preventDefault();
+      if (hasGiftCard()) removeGiftCard();
+      else addGiftCard();
+      renderCart();
+      // Keep the cart drawer open and focus the message field if just added.
+      if (hasGiftCard()){ const t = $('#giftMsgInput'); if (t) t.focus(); }
+      return;
+    }
+    const removeGiftBtn = e.target.closest('[data-remove-gift]');
+    if (removeGiftBtn){
+      e.preventDefault();
+      removeGiftCard();
+      renderCart();
+      return;
+    }
     const addBtn = e.target.closest('[data-add-to-cart]');
     if (addBtn){
       e.preventDefault();
@@ -729,6 +975,17 @@
       if (isBrand) window._hepple_forceIntro = true;
       location.hash = '#' + target;
     }
+  });
+
+  // Live handwritten-card message: save on every keystroke (capped), update
+  // the counter, without re-rendering the cart (keeps the textarea focused).
+  document.addEventListener('input', (e) => {
+    const t = e.target.closest('#giftMsgInput');
+    if (!t) return;
+    if (t.value.length > GIFT_MSG_MAX) t.value = t.value.slice(0, GIFT_MSG_MAX);
+    setGiftMessage(t.value);
+    const counter = $('#giftMsgCount');
+    if (counter) counter.textContent = String(t.value.length);
   });
 
   // Page transition: show loader → wait for cover → swap page → wait → fade out
@@ -1129,13 +1386,37 @@
   }
 
   // =============================================
+  // SHOP — ADDITIONAL / LIMITED EXPRESSIONS (separate marked line)
+  // =============================================
+  function renderShopExtras(){
+    const grid = $('#shopExtrasGrid');
+    if (!grid) return;
+    grid.innerHTML = EXTRA_PRODUCTS.map(p => `
+      <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="shop-card shop-card--limited">
+        <span class="shop-card__badge">LIMITED</span>
+        <div class="shop-card__img">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+        </div>
+        <h3 class="shop-card__title"><span class="shop-card__brand">${p.nameTop}</span><span class="shop-card__variant">${p.nameRest}</span></h3>
+        <div class="shop-card__kicker">${p.kicker}</div>
+        <div class="shop-card__tagline">${p.tagline}</div>
+        <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
+        <div class="shop-card__price">£${p.price.toFixed(2)}</div>
+        <div class="shop-card__actions">
+          <span class="btn btn--tiny">VIEW</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // =============================================
   // PRODUCT DETAIL — with full body, tasting notes, how-to-enjoy
   // =============================================
   function renderProductDetail(slug){
     const root = $('#productDetail');
     const p = productBySlug[slug];
     if (!root) return;
-    if (!p){
+    if (!p || p.isAddon || !Array.isArray(p.body)){
       root.innerHTML = `<div class="wrap" style="padding:6rem 0; text-align:center;">
         <p>PRODUCT NOT FOUND.</p>
         <a href="#/shop" data-route="/shop" style="border-bottom:1px solid; font-weight:700; letter-spacing:.2em; font-size:.7rem;">BACK TO SHOP →</a>
