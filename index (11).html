@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Hepple Spirits Company</title>
+<meta name="description" content="Hepple Spirits: an independent spirits house led by taste and flavour. Distilled in Northumberland." />
+<meta name="theme-color" content="#EDE8E0" />
+
+<meta property="og:title" content="Hepple Spirits Company" />
+<meta property="og:description" content="Distilled spirits from the Hepple Estate, Northumberland." />
+<meta property="og:image" content="assets/hero-poster.jpg" />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23003087'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='64' font-weight='800' fill='%23EDE8E0' letter-spacing='-2'%3EH%3C/text%3E%3C/svg%3E" />
+
+<link rel="preload" as="image" href="assets/hero-poster.jpg" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/hero-frames/frame-001.jpg" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/gallery/klj-hepple-may2022-shot-09-468.jpg" fetchpriority="high" />
+<link rel="preload" as="font" href="assets/fonts/ProximaNova-Regular.otf" type="font/otf" crossorigin />
+<link rel="preload" as="font" href="assets/fonts/Proxima_Nova_Bold.otf" type="font/otf" crossorigin />
+<link rel="preload" as="font" href="assets/fonts/Maristella.otf" type="font/otf" crossorigin />
+<link rel="dns-prefetch" href="https://hepplespirits.com" />
+
+<link rel="stylesheet" href="styles.css" />
+
+<!-- =====================================================================
+     ADDITIONS (Dec edits) — scoped styles for the new shop line, the
+     Juniper Trust block and the handwritten-card cart add-on. Kept here
+     because styles.css is managed separately; safe to fold into styles.css
+     later. Uses the existing brand tokens with hard fallbacks.
+     ===================================================================== -->
+<style id="hepple-additions">
+  /* --- Additional / limited expressions line --- */
+  .shop-extra-sec{ padding: 1rem 0 4rem; }
+  .shop-extra__head{
+    max-width: 720px; margin: 0 auto 2.4rem; text-align: center;
+    padding-top: 2.6rem; border-top: 1px solid rgba(0,48,135,.16);
+  }
+  .shop-extra__title{
+    font-family: 'Proxima Nova', Arial, sans-serif; font-weight: 800;
+    letter-spacing: .04em; line-height: 1.02;
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    color: var(--hepple-blue, #003087); margin: .2rem 0 .9rem;
+  }
+  .shop-extra__note{
+    font-size: .95rem; line-height: 1.65;
+    color: var(--hepple-ink, #1b1a2e); opacity: .85; margin: 0 auto; max-width: 60ch;
+  }
+  /* LIMITED badge so the line is clearly marked */
+  .shop-card--limited{ position: relative; }
+  .shop-card__badge{
+    position: absolute; top: .85rem; left: .85rem; z-index: 2;
+    background: var(--hepple-blue, #003087); color: var(--ground, #EDE8E0);
+    font-family: 'Proxima Nova', Arial, sans-serif; font-weight: 700;
+    font-size: .58rem; letter-spacing: .22em; padding: .34em .7em; border-radius: 2px;
+  }
+
+  /* --- The Hepple Juniper Trust --- */
+  .juniper-trust__title{
+    font-family: 'Proxima Nova', Arial, sans-serif; font-weight: 800;
+    letter-spacing: .03em; line-height: 1.05;
+    font-size: clamp(1.5rem, 3vw, 2.2rem); margin: 0 0 1.1rem;
+  }
+  .juniper-trust__panel p{ letter-spacing: .01em; }
+  .juniper-trust__wilds{
+    display: inline-block; margin-top: 1.6rem; line-height: 0;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .juniper-trust__wilds img{
+    width: auto; height: clamp(2.4rem, 4vw, 3.4rem); max-width: 220px; object-fit: contain;
+  }
+  .juniper-trust__wilds:hover{ opacity: .82; transform: translateY(-2px); }
+
+  /* --- Handwritten card add-on (in the cart) --- */
+  .cart-gift{
+    padding: 1rem 1.25rem 1.2rem; border-top: 1px solid rgba(0,48,135,.14);
+    background: rgba(0,48,135,.03);
+  }
+  .cart-gift__head{ display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .cart-gift__label{ display: flex; flex-direction: column; gap: .15rem; }
+  .cart-gift__title{
+    font-family: 'Proxima Nova', Arial, sans-serif; font-weight: 700;
+    letter-spacing: .12em; font-size: .72rem; color: var(--hepple-ink, #1b1a2e);
+  }
+  .cart-gift__price{ font-size: .72rem; letter-spacing: .1em; opacity: .6; }
+  .cart-gift__toggle{
+    flex: none; cursor: pointer; border: 1px solid var(--hepple-blue, #003087);
+    background: transparent; color: var(--hepple-blue, #003087);
+    font-family: 'Proxima Nova', Arial, sans-serif; font-weight: 700;
+    letter-spacing: .12em; font-size: .62rem; padding: .5em 1em; border-radius: 2px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .cart-gift__toggle.is-on{ background: var(--hepple-blue, #003087); color: var(--ground, #EDE8E0); }
+  .cart-gift__note{ font-size: .76rem; line-height: 1.5; opacity: .7; margin: .55rem 0 0; }
+  .cart-gift__field{ margin-top: .8rem; }
+  .cart-gift__field textarea{
+    width: 100%; box-sizing: border-box; resize: vertical; min-height: 64px;
+    border: 1px solid rgba(0,48,135,.28); border-radius: 3px; padding: .6rem .7rem;
+    font-family: 'Proxima Nova', Arial, sans-serif; font-size: .85rem; line-height: 1.5;
+    color: var(--hepple-ink, #1b1a2e); background: #fff;
+  }
+  .cart-gift__field textarea:focus{ outline: 2px solid rgba(0,48,135,.35); outline-offset: 1px; }
+  .cart-gift__count{ text-align: right; font-size: .68rem; letter-spacing: .08em; opacity: .55; margin-top: .3rem; }
+
+  /* --- Gift card line inside the cart body --- */
+  .cart-item__img--gift{
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,48,135,.08); color: var(--hepple-blue, #003087);
+    border-radius: 3px;
+  }
+  .cart-item__msg{
+    font-size: .8rem; line-height: 1.45; font-style: normal; opacity: .8;
+    margin: .15rem 0 .35rem; max-width: 22ch;
+  }
+</style>
+
+<!-- =====================================================================
+     ANALYTICS — PostHog
+     The project API key below is PUBLIC by design (client-side key); it is
+     safe to commit. Replace the placeholder with your phc_… project key on
+     deploy, or leave it as-is to ship with analytics disabled — the site
+     works either way (every posthog.* call is a guarded no-op until a real
+     key is present). Server-side keys (Stripe, Supabase, PostHog ingest)
+     live ONLY in Vercel environment variables, never here.
+     ===================================================================== -->
+<script>
+  window.__HEPPLE_POSTHOG__ = {
+    key:  'phc_wZF5D53bS5pXYFi92fAxzvAHJzq9GqsActyVGdHTxouz',     // e.g. 'phc_xxxxxxxxxxxxxxxxxxxx'
+    host: 'https://us.i.posthog.com'     // or 'https://us.i.posthog.com'
+  };
+</script>
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  (function(){
+    var cfg = window.__HEPPLE_POSTHOG__ || {};
+    var key = (typeof cfg.key === 'string' && cfg.key.indexOf('phc_') === 0) ? cfg.key : null;
+    if (key && window.posthog && typeof posthog.init === 'function'){
+      posthog.init(key, {
+        api_host: cfg.host || 'https://eu.i.posthog.com',
+        person_profiles: 'identified_only',
+        capture_pageview: false,   // hash router fires its own $pageview (see app.js → route())
+        capture_pageleave: true,
+        autocapture: true
+      });
+    }
+  })();
+</script>
+</head>
+<body>
+
+<!-- LOADING SCREEN — hides automatically once critical assets are ready.
+     Inline styles + inline script so it works the instant the page parses,
+     before stylesheets/JS finish loading. -->
+<div id="siteLoader" aria-hidden="false" role="status" aria-live="polite"
+     style="position:fixed;inset:0;z-index:99999;background:#EDE8E0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .55s ease;will-change:opacity;">
+  <img src="assets/brand/hepple-logotype-blue.png" alt="Hepple"
+       style="width:auto;height:clamp(2.8rem,5vw,4.4rem);max-width:80vw;object-fit:contain;animation:loaderPulse 1.6s ease-in-out infinite;" />
+  <div style="width:140px;height:2px;background:rgba(0,48,135,.12);border-radius:2px;overflow:hidden;">
+    <div id="siteLoaderBar" style="width:0%;height:100%;background:#003087;transition:width .35s ease;"></div>
+  </div>
+</div>
+
+<!-- Page transition loader — brief Hepple logo flash on every page navigation -->
+<div id="pageTransition" aria-hidden="true">
+  <img src="assets/brand/hepple-logotype-blue.png" alt="" />
+</div>
+<style>
+  @keyframes loaderPulse{
+    0%, 100% { opacity: .65; }
+    50%      { opacity: 1; }
+  }
+  body.is-loading{ overflow: hidden; }
+  #siteLoader.is-hidden{ opacity: 0; pointer-events: none; }
+
+  /* Page transition loader — quick flash on hash navigations */
+  #pageTransition{
+    position: fixed; inset: 0; z-index: 99998;
+    background: #EDE8E0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity .25s ease, visibility 0s linear .25s;
+    pointer-events: none;
+  }
+  #pageTransition.is-active{
+    opacity: 1; visibility: visible;
+    transition: opacity .15s ease, visibility 0s linear;
+    pointer-events: all;
+  }
+  #pageTransition img{
+    width: auto; height: clamp(2.4rem, 4vw, 3.6rem); max-width: 70vw;
+    object-fit: contain;
+    animation: loaderPulse 1.2s ease-in-out infinite;
+  }
+</style>
+<script>
+  (function(){
+    document.body.classList.add('is-loading');
+
+    // Critical assets that MUST be loaded before the page reveals
+    var critical = [
+      'assets/brand/hepple-logotype-blue.png',
+      'assets/hero-poster.jpg',
+      'assets/hero-frames/frame-001.jpg',
+      'assets/hero-frames/frame-013.jpg',
+      'assets/hero-frames/frame-026.jpg',
+      'assets/gallery/klj-hepple-may2022-shot-09-468.jpg',
+      'assets/products/group-shot-hero.jpg',
+      'assets/estate/estate-hero-poster.jpg'
+    ];
+
+    var loaded = 0;
+    var total = critical.length;
+    var bar = document.getElementById('siteLoaderBar');
+    var startedAt = Date.now();
+    var MIN_DISPLAY_MS = 500;   // never hide loader sooner than this
+
+    function tick(){
+      loaded++;
+      if (bar) bar.style.width = (loaded / total * 100) + '%';
+      if (loaded >= total) tryHide();
+    }
+
+    function tryHide(){
+      var elapsed = Date.now() - startedAt;
+      if (elapsed < MIN_DISPLAY_MS){
+        setTimeout(hide, MIN_DISPLAY_MS - elapsed);
+      } else {
+        hide();
+      }
+    }
+
+    function hide(){
+      var el = document.getElementById('siteLoader');
+      if (!el || el.classList.contains('is-hidden')) return;
+      if (bar) bar.style.width = '100%';
+      el.classList.add('is-hidden');
+      document.body.classList.remove('is-loading');
+      // Remove from DOM after fade so it can't catch clicks
+      setTimeout(function(){ el && el.parentNode && el.parentNode.removeChild(el); }, 700);
+    }
+
+    critical.forEach(function(src){
+      var img = new Image();
+      img.onload = tick;
+      img.onerror = tick;       // count errors as "done" so a missing asset can't hang the loader
+      img.src = src;
+    });
+
+    // Hard timeout: never let the loader hang the page more than 5s
+    setTimeout(hide, 5000);
+
+    // Also hide when the window 'load' event fires (everything in the DOM has loaded)
+    window.addEventListener('load', function(){ setTimeout(tryHide, 200); });
+  })();
+</script>
+
+<!-- File:// warning — only displays if the site was opened via double-click.
+     When served via a web server (Netlify, localhost, etc.) this stays hidden. -->
+<div id="fileProtocolWarning" style="display:none; position:fixed; bottom:20px; left:20px; right:20px; max-width:640px; margin:0 auto; padding:1rem 1.2rem; background:#003087; color:#f6f2ea; font-family:'Proxima Nova', Arial, sans-serif; font-size:.85rem; line-height:1.5; border-radius:6px; z-index:9999; box-shadow:0 8px 24px rgba(0,0,0,.25);">
+  <strong style="display:block; margin-bottom:.4rem; font-size:.95rem;">⚠ Opened as a local file</strong>
+  This site needs to be served via a web server for video, fonts and interactive features to work properly. On Windows, right-click the project folder, open a terminal and run: <code style="background:rgba(255,255,255,.15); padding:.1em .4em; border-radius:3px;">npx serve .</code> &nbsp;— or deploy to Netlify. Close this with the × below.
+  <button onclick="this.parentNode.style.display='none'" style="position:absolute; top:.4rem; right:.6rem; background:none; border:0; color:#f6f2ea; font-size:1.2rem; cursor:pointer; padding:0 .3rem;">&times;</button>
+</div>
+<script>
+  if (window.location.protocol === 'file:'){
+    document.getElementById('fileProtocolWarning').style.display = 'block';
+  }
+</script>
+
+<!-- AGE GATE -->
+<div class="age-gate" id="ageGate" role="dialog" aria-labelledby="ageGateTitle">
+  <div class="age-gate__panel">
+    <img src="assets/brand/hepple-logotype-blue.png" alt="Hepple" class="age-gate__logo" />
+    <p class="age-gate__eyebrow">Come in</p>
+    <h1 class="age-gate__title" id="ageGateTitle">PLEASE CONFIRM<br>YOU ARE 18 OR OVER</h1>
+    <p class="age-gate__body">
+      YOU MUST BE OF LEGAL DRINKING AGE IN YOUR COUNTRY TO ENTER.
+      BY ENTERING YOU ACCEPT OUR TERMS OF USE AND PRIVACY POLICY.
+    </p>
+    <div class="age-gate__actions">
+      <button class="btn btn--solid-blue" id="ageGateYes">I AM 18 OR OVER</button>
+      <button class="btn btn--outline-dark" id="ageGateNo">I AM UNDER 18</button>
+    </div>
+    <p class="age-gate__foot">PLEASE DRINK RESPONSIBLY.</p>
+  </div>
+</div>
+
+<!-- NAV — Visit US removed from main menu per feedback -->
+<nav class="nav" id="nav" aria-label="Primary">
+  <a href="#/" class="nav__brand" data-route="/" data-brand aria-label="Hepple home">
+    <img src="assets/brand/hepple-logotype-blue.png" alt="Hepple" />
+  </a>
+
+  <ul class="nav__links">
+    <li><a href="#/story"     data-route="/story">OUR STORY</a></li>
+    <li><a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a></li>
+    <li><a href="#/craft"     data-route="/craft">OUR CRAFT</a></li>
+    <li><a href="#/cocktails" data-route="/cocktails">COCKTAILS</a></li>
+    <li><a href="#/visit"     data-route="/visit">VISIT US</a></li>
+  </ul>
+
+  <div class="nav__right">
+    <a href="#/shop" class="nav__cta nav__cta--juniper" data-route="/shop">SHOP</a>
+    <button class="nav__cart" id="cartBtn" aria-label="Open cart">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/>
+        <path d="M9 7V5a3 3 0 0 1 6 0v2"/>
+      </svg>
+      <span class="nav__cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+
+  <button class="nav__menu-btn" id="menuBtn" aria-label="Open menu"><span></span></button>
+</nav>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer__close" id="drawerClose" aria-label="Close menu">CLOSE ✕</button>
+  <a href="#/"          data-route="/">HOME</a>
+  <a href="#/story"     data-route="/story">OUR STORY</a>
+  <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
+  <a href="#/craft"     data-route="/craft">OUR CRAFT</a>
+  <a href="#/cocktails" data-route="/cocktails">COCKTAILS</a>
+  <a href="#/visit"     data-route="/visit">VISIT US</a>
+  <a href="#/shop"      data-route="/shop">SHOP</a>
+</aside>
+
+<aside class="cart-panel" id="cartPanel" aria-hidden="true">
+  <div class="cart-panel__head">
+    <h3>YOUR CART</h3>
+    <button class="cart-panel__close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-panel__body" id="cartBody"></div>
+  <div class="cart-gift" id="cartGift" hidden></div>
+  <div class="cart-panel__foot" id="cartFoot" hidden>
+    <div class="cart-panel__total">
+      <span>SUBTOTAL</span>
+      <strong id="cartTotal">£0.00</strong>
+    </div>
+    <button class="cart-panel__checkout">CHECKOUT</button>
+    <p class="cart-panel__note">SHIPPING CALCULATED AT CHECKOUT</p>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<!-- INTRO — scroll-scrubbed hero video. The intro section is 200vh tall.
+     The inner __pin sticks at top:0 for that 200vh, and as the user scrolls,
+     the video's currentTime is updated in proportion to scroll progress.
+     Once scrolled past, .is-complete collapses the section so the rest
+     of the page is reachable normally. -->
+<section class="intro" id="intro" aria-label="Welcome">
+  <div class="intro__pin">
+    <div class="intro__stage">
+      <canvas class="intro__canvas" id="heroCanvas" aria-label="Hepple making drinks"></canvas>
+      <div class="intro__vignette"></div>
+
+      <div class="intro__overlay">
+        <div class="intro__center">
+          <p class="intro__eyebrow">Come in</p>
+          <h1 class="intro__headline">WE'RE MAKING DRINKS</h1>
+        </div>
+        <div class="intro__hint">
+          <span>SCROLL</span>
+          <span class="intro__hint-line"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="content" id="content">
+
+  <!-- HOME -->
+  <div class="page is-active" data-page="/">
+
+    <!-- MERGED Section 1+2: founders-on-the-hill bg image + single text panel
+         "AN INDEPENDENT..." headline + body copy + buttons. No two-box layout. -->
+    <section class="home-hero">
+      <div class="home-hero__bg">
+        <img src="assets/gallery/klj-hepple-may2022-shot-09-468.jpg" alt="The four Hepple founders on the hill" loading="lazy" />
+      </div>
+      <div class="home-hero__overlay">
+        <div class="home-hero__panel">
+          <h2 class="home-hero__headline"><span>AN INDEPENDENT</span><span>SPIRITS HOUSE</span><span>LED BY FLAVOUR</span></h2>
+          <p class="script-accent home-hero__eyebrow">Welcome to Hepple</p>
+          <p class="home-hero__body">
+            Hepple began with a group of friends, each bringing a different kind
+            of expertise, and one ambitious question: how do you
+            capture the wild character of a landscape in a glass?
+          </p>
+          <p class="home-hero__body">
+            Inspired by the ancient juniper, generous plants and clean water of
+            the Hepple Estate, we make spirits with depth, brightness and
+            remarkable flavour. Rooted in Northumberland, crafted with curiosity,
+            and made for drinks worth sharing.
+          </p>
+          <div class="home-hero__actions">
+            <a href="#/story"  data-route="/story"  class="btn btn--solid-blue">OUR STORY</a>
+            <a href="#/estate" data-route="/estate" class="btn btn--solid-blue">OUR ESTATE</a>
+            <a href="#/craft"  data-route="/craft"  class="btn btn--solid-blue">OUR CRAFT</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP THE RANGE — full-bleed product hero, big button, no carousel -->
+    <section class="shop-range">
+      <div class="shop-range__bg">
+        <img src="assets/products/group-shot-hero.jpg" alt="The Hepple range: Wild Juniper Gin, Wheat Vodka and Douglas Fir Vodka" loading="lazy" />
+      </div>
+      <div class="shop-range__overlay">
+        <h2 class="shop-range__headline">SHOP THE RANGE</h2>
+        <a href="#/shop" data-route="/shop" class="btn btn--solid-blue btn--huge">SHOP NOW</a>
+      </div>
+    </section>
+
+    <!-- Sticky gallery — no intro text block per Zach's feedback -->
+    <section class="sticky-gallery">
+      <div class="sticky-gallery__grid">
+        <div class="sticky-gallery__col sticky-gallery__col--scroll">
+          <figure><img src="assets/gallery-new/side-keep-1.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-new-1.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="assets/gallery-new/side-keep-2.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-new-2.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-keep-3.jpg" alt="" loading="lazy" /></figure>
+        </div>
+        <div class="sticky-gallery__col sticky-gallery__col--sticky">
+          <figure><img src="assets/gallery-new/central-1.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/central-2.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="assets/gallery-new/central-3.jpg" alt="" loading="lazy" /></figure>
+        </div>
+        <div class="sticky-gallery__col sticky-gallery__col--scroll">
+          <figure><img src="assets/gallery-new/side-new-3.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-keep-4.jpg" alt="" loading="lazy" /></figure>
+          <figure><img src="assets/gallery-new/side-new-4.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-keep-5.jpg" alt="" loading="lazy" /></figure>
+          <figure class="mobile-hide"><img src="assets/gallery-new/side-new-5.jpg" alt="" loading="lazy" /></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Craft CTA — text overlays the photo per feedback -->
+    <section class="estate-cta estate-cta--overlay">
+      <div class="estate-cta__bg">
+        <img src="assets/lifestyle/founder-forest.jpg" alt="A Hepple founder in the woods" loading="lazy" />
+      </div>
+      <div class="estate-cta__overlay">
+        <div class="estate-cta__inner">
+          <h2 class="estate-cta__headline">HOW WE MAKE<br>HEPPLE</h2>
+          <p class="estate-cta__sub">TURNING THE BEAUTY OF THE LANDSCAPE INTO FLAVOUR</p>
+          <a href="#/craft" data-route="/craft" class="btn btn--outline-light">OUR CRAFT</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- COCKTAILS section on home — Let's Make Cocktails -->
+    <section class="cocktails-home" id="cocktailsHome">
+      <div class="wrap">
+        <div class="cocktails-home__head">
+          <h2>LET'S MAKE<br>COCKTAILS</h2>
+        </div>
+        <div id="cocktailsGrid"></div>
+        <div class="cocktails-home__foot">
+          <a href="#/cocktails" data-route="/cocktails" class="btn btn--outline-dark">SEE ALL COCKTAILS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIAL — quote in Hepple style. -->
+    <section class="testimonial">
+      <div class="wrap testimonial__inner">
+        <span class="testimonial__mark" aria-hidden="true">&ldquo;</span>
+        <blockquote class="testimonial__quote">Probably the most important distillery to open in a decade.&rdquo;</blockquote>
+        <p class="testimonial__cite">
+          <span class="testimonial__name">Tristan Stephenson</span>
+          <span class="testimonial__source">The Curious Bartender</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Slim Visit block at the very bottom (reduced) -->
+    <section class="shop-cta">
+      <p class="script-accent script-accent--offset">Take Hepple Home</p>
+      <h3>SHOP HEPPLE</h3>
+      <a href="#/shop" class="btn btn--outline-dark" data-route="/shop">SHOP NOW</a>
+    </section>
+
+    <!-- AWARDS — medal strip. Drop the three badges into /assets/awards/.
+         Heights are matched in CSS so the different badge shapes sit tidily. -->
+    <section class="awards" aria-label="Awards">
+      <div class="awards__row">
+        <img class="awards__badge awards__badge--tall" src="assets/awards/fifty-best-gin-double-gold-2022.png" alt="The Fifty Best — Best Gin, Double Gold Medal 2022" loading="lazy" />
+        <img class="awards__badge awards__badge--wide" src="assets/awards/diffords-guide-5stars-2017.png" alt="Difford's Guide — five stars, Outstanding, 2017" loading="lazy" />
+        <img class="awards__badge" src="assets/awards/sfwsc-double-gold-2017.png" alt="San Francisco World Spirits Competition — Double Gold 2017" loading="lazy" />
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- OUR STORY — now about the brand; founders + Team placeholder -->
+  <div class="page" data-page="/story">
+
+    <section class="story-hero">
+      <div class="story-hero__img">
+        <img src="assets/story/story-header.jpg" alt="The Hepple story" loading="lazy" />
+      </div>
+      <div class="story-hero__title">
+        <h1>IN PURSUIT OF<br>DELICIOUSNESS</h1>
+      </div>
+    </section>
+
+    <!-- STORY SECTION 1 — estate-style bg image with text panel offset right -->
+    <section class="estate-block estate-block--right story-block">
+      <div class="estate-block__bg">
+        <img src="assets/story/story-section-1.jpg" alt="The Hepple founders' shared love of land" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel">
+          <p>Hepple was founded in 2014 on the Hepple Estate in Northumberland, bringing together a group of friends with a shared love of land, flavour and exceptional drinks.</p>
+          <p>Walter Riddell, owner of the Hepple Estate, brought the landscape itself: its wild moorland, ancient juniper, clean water and deep sense of place. Valentine Warner brought the instincts of a chef, writer and naturalist, with a lifelong fascination for seasonality, wild ingredients and the generous plants of Britain. Nick Strangeway brought decades of cocktail knowledge and the restless curiosity of one of the world's most respected bartenders. Chris Garden brought the distilling expertise needed to turn an ambitious idea into a beautifully made spirit.</p>
+          <p>Together, they began with gin, inspired by the ancient wild juniper growing across the moorland. But the ambition was never simply to make another gin. The aim was to create a spirit that could capture the extraordinary freshness of green juniper from the estate, while building the depth, texture and complexity needed for truly exceptional drinks.</p>
+          <p>They approached gin from several directions at once. Not as a recipe to be repeated, but as a flavour challenge to be solved. How could they capture brightness without losing depth? How could they make juniper feel vivid, green and alive, while still creating a spirit with structure, elegance and length?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY SECTION 2 — estate-style bg image with text panel offset left -->
+    <section class="estate-block estate-block--left story-block">
+      <div class="estate-block__bg">
+        <img src="assets/story/story-section-2.jpg" alt="Three generations at Hepple" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel">
+          <p>The answer became Hepple's way of making: a layered approach that combines traditional copper pot distillation with more precise modern techniques, allowing different botanicals to be expressed in different ways. The result was a gin with remarkable dimension. Fresh, complex, beautifully balanced and made for proper drinks.</p>
+          <p>From that first gin, Hepple has continued to explore the flavours of the estate. Douglas fir, sloe, hawthorn and other botanicals have inspired new spirits and seasonal expressions, each one shaped by the same curiosity: what can this landscape give us, and how can we make it taste extraordinary?</p>
+          <p>In 2020, Hani Farsi joined as Chairman of the Board, bringing further creative ambition and support for Hepple's next chapter.</p>
+          <p>Today, Hepple is evolving into an estate-led spirits house, still guided by the same founding spirit: wild at heart, elegant in craft, generous in its welcome and just eccentric enough to keep things interesting.</p>
+          <p class="estate-block__closer">Rooted in the English wilderness, Hepple is made for martinis, hosting, good company and drinks worth making.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE PEOPLE OF HEPPLE — placeholder team grid -->
+    <section class="team">
+      <div class="wrap">
+        <div class="team__head">
+          <h2>THE PEOPLE OF HEPPLE</h2>
+          <p class="team__lede">
+            The people behind Hepple. Tap a name to read more.
+          </p>
+        </div>
+
+        <div class="team__showcase" id="teamShowcase">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <section class="shop-cta">
+      <p class="script-accent script-accent--offset">Take Hepple Home</p>
+      <h3>SHOP HEPPLE</h3>
+      <a href="#/shop" class="btn btn--outline-dark" data-route="/shop">SHOP NOW</a>
+    </section>
+  </div>
+
+
+  <!-- THE HEPPLE ESTATE — now has the number counters + rewilding story -->
+  <div class="page" data-page="/estate">
+
+    <section class="story-hero">
+      <div class="story-hero__img story-hero__img--video">
+        <!-- =================================================================
+             ESTATE HERO VIDEO — self-hosted MP4, fixed quality, no streaming.
+             720p source for mobile, 1080p for desktop. Browser auto-selects.
+             ================================================================= -->
+        <video class="story-hero__video"
+               id="estateHeroVideo"
+               autoplay muted loop playsinline preload="auto"
+               poster="assets/estate/estate-hero-poster.jpg"
+               aria-label="The Hepple Estate">
+          <source src="assets/estate/estate-hero-720p.mp4" type="video/mp4" media="(max-width: 860px)" />
+          <source src="assets/estate/estate-hero-1080p.mp4" type="video/mp4" />
+        </video>
+        <!-- Poster as a fallback (also poster on the video for instant render) -->
+        <img src="assets/estate/estate-hero-poster.jpg" alt="The Hepple Estate" loading="eager" class="story-hero__fallback" />
+      </div>
+      <div class="story-hero__title">
+        <h1>THE HEPPLE<br>ESTATE</h1>
+      </div>
+    </section>
+
+    <!-- Numbers FIRST per feedback, then the text -->
+    <section class="stats">
+      <div class="wrap">
+        <div class="stats__grid">
+          <div class="stat">
+            <div class="stat__number" data-count-to="4000" data-count-format="comma">0</div>
+            <div class="stat__label">ACRES OF WILD<br>NORTHUMBERLAND</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number" data-count-to="1539" data-count-format="comma">0</div>
+            <div class="stat__label">DIFFERENT SPECIES<br>LIVE ON OUR ESTATE</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number" data-count-to="600" data-count-format="comma">0</div>
+            <div class="stat__label">JUNIPER SAPLINGS<br>PLANTED TO DATE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="estate-heading">
+      <div class="wrap">
+        <h2 class="estate-heading__title">THE LANDSCAPE IS NOT A BACKDROP. IT IS AN INGREDIENT.</h2>
+      </div>
+    </section>
+
+    <!-- 3 alternating offset blocks: right, left, right. Placeholder bg images for now. -->
+    <section class="estate-block estate-block--right">
+      <div class="estate-block__bg">
+        <img src="assets/estate-blocks/block-1.jpg" alt="The Hepple Estate" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel">
+          <p>Hepple sits in 4,000 acres of wild Northumberland, where moorland, woodland, water, pasture and weather all shape the character of the place.</p>
+          <p>This is where our spirits begin. Not in a boardroom, but in the living detail of the estate: ancient juniper, Douglas fir, sloe, hawthorn, clean water, wild herbs, fungi, flowers, fruit and the shifting green of the seasons. Some of Hepple's oldest juniper may be more than 300 years old, growing here long before gin became the drink we know today. These rare trees inspired our first spirit, and they continue to guide how we think about flavour. Since 2014, Hepple has planted roughly 100 to 200 young junipers each year, helping protect and expand a species that is central to both the estate and our story.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="estate-block estate-block--left">
+      <div class="estate-block__bg">
+        <img src="assets/estate-blocks/block-2.jpg" alt="Hepple Wilds restoration" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel">
+          <p>But Hepple is not preserved in aspic. It is a working, changing landscape, and through Hepple Wilds the estate is being restored with nature at the centre. Since 2020, the wilding project has focused on strengthening life from the ground up: improving soil, holding water, removing artificial chemicals, managing deer numbers and using light grazing and rootling to build a richer, more resilient ecosystem.</p>
+          <p>Water is a major part of that work. By blocking artificial drainage channels, Hepple has created new ponds, wet grassland and fen, now rapidly filling with wildfowl, insects and amphibians. Across the estate, cattle, Exmoor ponies and Mangalitsa pigs help shape the land in a more natural way, opening ground, grazing pasture and allowing heathland and scrub to regenerate.</p>
+          <p>The results are already remarkable. To date, more than 1,500 species have been recorded at Hepple, from birds and bats to moths, fungi, dragonflies and damselflies. In 2025 alone, surveys recorded new wetland life, breeding amphibians, rare fungi, veteran trees and heathland specialists returning to the landscape.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="estate-block estate-block--right">
+      <div class="estate-block__bg">
+        <img src="assets/estate-blocks/block-3.jpg" alt="The source of Hepple spirits" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel">
+          <p>This matters to us because flavour is never separate from place. A healthier estate gives us more to notice, more to learn from and more to work with. It gives us plants, water, texture, seasonality and inspiration. It also gives Hepple its particular spirit: wild, generous, elegant and alive.</p>
+          <p>For us, the estate is not scenery. It is the source. It is where the drinks begin, and where the next ideas are always growing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE HEPPLE JUNIPER TRUST — bottom of the estate section.
+         Background photo: assets/estate/juniper-trust.jpg  (drop in)
+         Hepple Wilds logo:  assets/brand/hepple-wilds-logo.png  (drop in)
+         Logo links out to https://www.hepplewilds.com/ -->
+    <section class="estate-block estate-block--left juniper-trust">
+      <div class="estate-block__bg">
+        <img src="assets/estate/juniper-trust.jpg" alt="The ancient juniper groves at Hepple" loading="lazy" />
+      </div>
+      <div class="estate-block__overlay">
+        <div class="estate-block__panel juniper-trust__panel">
+          <h2 class="juniper-trust__title">THE HEPPLE JUNIPER TRUST</h2>
+          <p>THE ANCIENT JUNIPER GROVES AT HEPPLE ARE MORE THAN A SOURCE OF INSPIRATION. THEY PROVIDE THE BRIGHT GREEN BERRIES THAT DEFINE THE CHARACTER OF OUR GIN, MAKING US CUSTODIANS OF A REMARKABLE AND INCREASINGLY RARE LANDSCAPE.</p>
+          <p>TO HELP SECURE THE FUTURE OF THIS REMARKABLE SPECIES, THE HEPPLE JUNIPER TRUST WAS ESTABLISHED TO PROTECT AND EXPAND THE ESTATE'S JUNIPER POPULATION, ENSURING FUTURE GENERATIONS INHERIT A LANDSCAPE EVEN RICHER THAN THE ONE WE ENJOY TODAY.</p>
+          <p>WORKING ALONGSIDE NATURAL ENGLAND, NORTHUMBERLAND NATIONAL PARK AND NEWCASTLE UNIVERSITY, WE RUN ONE OF THE LARGEST JUNIPER PROPAGATION PROGRAMMES IN ENGLAND. EACH YEAR, HUNDREDS OF YOUNG JUNIPER PLANTS ARE GROWN AND PLANTED ACROSS THE ESTATE, HELPING TO REPLENISH A SPECIES THAT REPRODUCES SLOWLY AND CAN TAKE MORE THAN A DECADE TO PRODUCE ITS FIRST BERRIES.</p>
+          <p>TODAY, NEW SEEDLINGS GROW ALONGSIDE SOME OF ENGLAND'S OLDEST JUNIPER TREES, MANY OF WHICH ARE THOUGHT TO BE SEVERAL HUNDRED YEARS OLD. ENCOURAGINGLY, JUNIPER IS NOW BEGINNING TO SELF-SEED NATURALLY ACROSS THE ESTATE, AN IMPORTANT SIGN THAT THESE ANCIENT GROVES ARE REGENERATING ONCE AGAIN.</p>
+          <p>FOR MORE INFORMATION ABOUT THE WORK OF THE HEPPLE JUNIPER TRUST AND REWILDING AT HEPPLE, VISIT HEPPLE WILDS.</p>
+          <a class="juniper-trust__wilds" href="https://www.hepplewilds.com/" target="_blank" rel="noopener" aria-label="Visit Hepple Wilds">
+            <img src="assets/brand/hepple-wilds-logo.png" alt="Hepple Wilds" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit-slim">
+      <p class="script-accent script-accent--offset">Come &amp; See Us</p>
+      <h3>THE HEPPLE<br>EXPERIENCE</h3>
+      <a href="#/visit" class="btn btn--outline-dark" data-route="/visit">PLAN YOUR VISIT</a>
+    </section>
+  </div>
+
+
+  <!-- OUR CRAFT — process stepper moves here from Our Story -->
+  <div class="page" data-page="/craft">
+
+    <!-- CRAFT INTRO — photo + overlay text using EXACT PDF copy -->
+    <section class="craft-intro">
+      <div class="craft-intro__bg">
+        <img src="assets/craft/craft-intro.jpg" alt="Hepple craft and process" loading="lazy" />
+      </div>
+      <div class="craft-intro__overlay">
+        <div class="craft-intro__panel">
+          <h2 class="craft-intro__headline">OUR CRAFT</h2>
+          <h3 class="craft-intro__subhead">HOW WE MAKE HEPPLE</h3>
+          <div class="craft-intro__body">
+            <p>At Hepple, craft begins with a simple belief: flavour comes first.</p>
+            <p>Every spirit we make starts with curiosity, patience and a refusal to settle for the obvious. We work with remarkable ingredients from the estate and beyond, then explore how to capture them at their most vivid, generous and delicious.</p>
+            <p>Some flavours need the warmth and structure of traditional copper pot distillation. Others need the precision of low-temperature vacuum distillation, or the extraordinary detail of supercritical extraction. We use old methods, new methods and whatever works best, because the point is not to show off the technique. The point is to make the drink better.</p>
+            <p>Creating a Hepple spirit takes time. Recipes are tested, adjusted, tasted and tested again. Botanicals are treated differently depending on what we want from them: depth, brightness, texture, lift, length or aroma. Nothing is rushed, because the final liquid has to do more than taste good. It has to make a remarkable drink.</p>
+            <p>That is the Hepple way of making: layered, exacting, curious and quietly obsessive.</p>
+            <p class="craft-intro__closer">All in pursuit of deliciousness.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="wrap">
+        <div class="process__head">
+          <h2>OUR PROCESS</h2>
+        </div>
+
+        <div class="process__viewer" data-process>
+          <div class="process__steps" data-process-track>
+            <article class="process__step is-active" data-step="1">
+              <div class="process__img process__img--video">
+                <video class="process__video"
+                       autoplay muted loop playsinline preload="metadata"
+                       poster="assets/craft/ingredients-poster.jpg"
+                       aria-label="Hepple botanicals on the estate">
+                  <source src="assets/craft/ingredients-720p.mp4" type="video/mp4" media="(max-width: 860px)" />
+                  <source src="assets/craft/ingredients-1080p.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="process__copy">
+                <span class="process__number">01</span>
+                <p class="script-accent process__sub">Selected at their best</p>
+                <h3>INGREDIENTS</h3>
+                <p>Everything begins with flavour. At Hepple, our estate ingredients are the inspiration and the main players: wild juniper, Douglas fir, sloe, hawthorn and the generous plants of the landscape. They are hand-picked, hand-harvested and gathered at the moment we believe they taste most alive.</p>
+                <p>To build a spirit with real dimension, we work with a careful balance of ingredients from the estate and beyond. Bright citrus, spice and seed notes, from Amalfi lemon to coriander and fennel, are chosen with the same precision, each one adding lift, structure or length to the final liquid.</p>
+                <p>Water matters too. The quality of the water used to bring our spirits to strength is part of the final character of Hepple: clean, bright and rooted in the estate.</p>
+                <p>The result is not a list of botanicals. It is a composition.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="2">
+              <div class="process__img">
+                <img src="assets/craft/copper-pot.jpg" alt="Traditional copper pot still at Hepple" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">02</span>
+                <p class="script-accent process__sub">The foundation</p>
+                <h3>TRADITIONAL COPPER POT</h3>
+                <p>Copper pot distillation gives Hepple its structure, warmth and depth.</p>
+                <p>This is the traditional heart of our craft: slow, careful and full of character. In the copper pot, botanicals are distilled in a way that builds body, texture and length, creating the foundation on which the rest of the spirit can stand.</p>
+                <p>It gives us the deeper notes, the rounded edges and the proper backbone needed for a spirit that can hold its own in a martini, a cocktail or a beautifully simple serve.</p>
+                <p>For all our curiosity about modern methods, copper remains essential. It gives Hepple its grounding.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="3">
+              <div class="process__img">
+                <img src="assets/craft/vacuum.jpg" alt="Vacuum distillation glass apparatus with green botanicals" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">03</span>
+                <p class="script-accent process__sub">Capturing freshness</p>
+                <h3>VACUUM DISTILLATION</h3>
+                <p>Some flavours are too delicate for heat.</p>
+                <p>Vacuum distillation allows us to distil at lower temperatures, capturing the brighter, fresher and more aromatic qualities of certain botanicals without cooking away their character.</p>
+                <p>This is how we preserve lift, clarity and green freshness. It helps us express botanicals in a way that feels vivid and alive, especially when working with ingredients where brightness matters as much as depth.</p>
+                <p>If copper gives us structure, vacuum distillation gives us light.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="4">
+              <div class="process__img">
+                <img src="assets/craft/supercritical.jpg" alt="Supercritical extraction apparatus at Hepple" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">04</span>
+                <p class="script-accent process__sub">The finest detail</p>
+                <h3>SUPERCRITICAL EXTRACTION</h3>
+                <p>Supercritical extraction lets us capture flavour with extraordinary precision.</p>
+                <p>Borrowed from the world of fine fragrance and high-definition botanical extraction, this method allows us to draw out tiny, vivid details that might otherwise be lost. It gives us intensity without heaviness, aroma without muddiness and a remarkable sense of definition.</p>
+                <p>At Hepple, we use it not because it sounds clever, and kind of supersonic, but because it helps us make better spirits.</p>
+                <p>It is one more tool in the pursuit of deliciousness: another way to make the landscape, the botanicals and the final drink taste even better.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="5">
+              <div class="process__img">
+                <img src="assets/craft/blending.jpg" alt="Hepple team blending and tasting" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">05</span>
+                <p class="script-accent process__sub">Where everything comes together</p>
+                <h3>BLENDING</h3>
+                <p>Blending is where technique becomes taste.</p>
+                <p>Each element is made separately, then brought together by people, not formula alone. The team tastes, adjusts, debates and tastes again, looking for balance, brightness, texture, length and that hard-to-define moment when the spirit simply feels right.</p>
+                <p>This is a group effort, shaped by distilling knowledge, cocktail experience, food instinct and a shared obsession with flavour.</p>
+                <p>The aim is not just complexity for its own sake. The aim is harmony. A spirit with dimension, but also elegance. Something that makes a remarkable drink.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="6">
+              <div class="process__img">
+                <img src="assets/craft/bottling.jpg" alt="Hepple Gin bottles on the bottling line" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">06</span>
+                <p class="script-accent process__sub">Finished at Hepple</p>
+                <h3>BOTTLING</h3>
+                <p>Every Hepple spirit is bottled and hand-finished at the distillery on the estate. The final liquid is brought down to optimal strength using water from Hepple, then bottled with the same care that shaped every stage before it. Our bottles use recycled glass, part of a wider commitment to making considered choices wherever we can, from the land we restore to the materials we use.</p>
+                <p>This last step matters. It is where the spirit becomes something ready to leave the estate and take its place in a glass, on a table, in a bar or at home.</p>
+                <p>Small details count: clarity, consistency, finish and feel.</p>
+                <p>From landscape to bottle, Hepple stays close to home.</p>
+              </div>
+            </article>
+            <article class="process__step" data-step="7">
+              <div class="process__img">
+                <img src="assets/craft/enjoying.jpg" alt="Two Hepple cocktails on the estate" loading="lazy" />
+              </div>
+              <div class="process__copy">
+                <span class="process__number">07</span>
+                <p class="script-accent process__sub">Made for proper drinks</p>
+                <h3>ENJOYING</h3>
+                <p>Hepple spirits are made to be enjoyed, not admired from a distance.</p>
+                <p>They are built for martinis, cocktails, freezer pours, generous hosting and drinks worth making. All that craft, time and experimentation only matters if the final spirit brings pleasure in the glass.</p>
+                <p>A Hepple drink should feel bright, elegant and full of character. It should have enough depth to reward attention, but enough charm to disappear happily into good company.</p>
+                <p>Serve it cold. Serve it well. Add friends.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="process__nav">
+            <button class="process__btn" data-process-prev>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+              PREV
+            </button>
+            <div class="process__dots" data-process-dots>
+              <button class="process__dot is-active" data-dot="1"><span>01</span> INGREDIENTS</button>
+              <button class="process__dot" data-dot="2"><span>02</span> COPPER POT</button>
+              <button class="process__dot" data-dot="3"><span>03</span> VACUUM</button>
+              <button class="process__dot" data-dot="4"><span>04</span> SUPERCRITICAL</button>
+              <button class="process__dot" data-dot="5"><span>05</span> BLENDING</button>
+              <button class="process__dot" data-dot="6"><span>06</span> BOTTLING</button>
+              <button class="process__dot" data-dot="7"><span>07</span> ENJOYING</button>
+            </div>
+            <button class="process__btn" data-process-next>
+              NEXT
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shop-cta">
+      <p class="script-accent script-accent--offset">Take Hepple Home</p>
+      <h3>SHOP HEPPLE</h3>
+      <a href="#/shop" class="btn btn--outline-dark" data-route="/shop">SHOP NOW</a>
+    </section>
+  </div>
+
+
+  <!-- COCKTAILS — full page with all 9 flip cards grouped by SKU -->
+  <div class="page" data-page="/cocktails">
+
+    <section class="cocktails-hero">
+      <div class="cocktails-hero__bg">
+        <img src="assets/cocktails/cocktails-hero.jpg" alt="The Hepple range with cocktails in the greenhouse" />
+      </div>
+      <div class="cocktails-hero__overlay">
+        <h1 class="cocktails-hero__title">LET'S MAKE COCKTAILS</h1>
+        <p class="cocktails-hero__sub script-accent">Delicious drinks start here</p>
+      </div>
+    </section>
+
+    <section class="cocktails-page" id="cocktailsPage">
+      <!-- Rendered by JS — grouped into 3 sections -->
+    </section>
+
+    <section class="shop-cta">
+      <p class="script-accent script-accent--offset">Take Hepple Home</p>
+      <h3>SHOP HEPPLE</h3>
+      <a href="#/shop" class="btn btn--outline-dark" data-route="/shop">SHOP NOW</a>
+    </section>
+  </div>
+
+
+  <!-- VISIT -->
+  <div class="page" data-page="/visit">
+    <section class="placeholder">
+      <div class="placeholder__inner">
+        <h1>ALMOST READY</h1>
+        <p class="script-accent script-accent--hero">Come and see us</p>
+        <p class="placeholder__latin">
+          We're just chilling the glasses. Visits to Hepple are coming soon.
+          For now, the estate is busy growing, distilling and getting ready to
+          welcome you.
+        </p>
+        <a href="#/" class="placeholder__back" data-route="/">← BACK HOME</a>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- SHOP -->
+  <div class="page" data-page="/shop">
+    <section class="shop-hero">
+      <div class="wrap">
+        <h1>FOR DRINKS WORTH MAKING</h1>
+        <p class="shop-hero__lede">
+          The Hepple range, from the estate to your glass. Free UK delivery on
+          orders over £45.
+        </p>
+      </div>
+    </section>
+
+    <section class="shop-grid-sec">
+      <div class="wrap">
+        <div class="shop-grid" id="shopGrid"></div>
+      </div>
+    </section>
+
+    <!-- ADDITIONAL / LIMITED EXPRESSIONS — clearly marked, on their own line.
+         Client copy used verbatim in the note below. -->
+    <section class="shop-extra-sec">
+      <div class="wrap">
+        <div class="shop-extra__head">
+          <p class="script-accent script-accent--offset">From the archive</p>
+          <h2 class="shop-extra__title">ADDITIONAL EXPRESSIONS</h2>
+          <p class="shop-extra__note">
+            Not every Hepple spirit remains in continuous production. These Hepple
+            expressions represent different moments in our pursuit of flavour and
+            remain available in limited quantities.
+          </p>
+        </div>
+        <div class="shop-grid" id="shopExtrasGrid"></div>
+      </div>
+    </section>
+
+    <!-- AWARDS — medal strip (same as home). Badges live in /assets/awards/. -->
+    <section class="awards" aria-label="Awards">
+      <div class="awards__row">
+        <img class="awards__badge awards__badge--tall" src="assets/awards/fifty-best-gin-double-gold-2022.png" alt="The Fifty Best — Best Gin, Double Gold Medal 2022" loading="lazy" />
+        <img class="awards__badge awards__badge--wide" src="assets/awards/diffords-guide-5stars-2017.png" alt="Difford's Guide — five stars, Outstanding, 2017" loading="lazy" />
+        <img class="awards__badge" src="assets/awards/sfwsc-double-gold-2017.png" alt="San Francisco World Spirits Competition — Double Gold 2017" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- Cocktails carousel below the shop per feedback ("repeated in a carousel... how the cocktails would also show up in the shop") -->
+    <section class="shop-cocktails">
+      <div class="wrap">
+        <div class="range__head">
+          <div>
+            <h2>LET'S MAKE<br>COCKTAILS</h2>
+            <p class="shop-cocktails__sub">Delicious drinks start here</p>
+          </div>
+          <a href="#/cocktails" data-route="/cocktails" class="range__seeall">SEE ALL →</a>
+        </div>
+      </div>
+      <div class="embla" data-embla>
+        <div class="embla__viewport" data-embla-viewport>
+          <div class="embla__container" data-embla-container id="shopCocktailsTrack"></div>
+        </div>
+        <div class="embla__controls">
+          <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="embla__dots" data-embla-dots></div>
+          <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- PRODUCT DETAIL -->
+  <div class="page" data-page="/shop/*">
+    <section class="product-detail" id="productDetail"></section>
+
+    <section class="range range--related">
+      <div class="wrap">
+        <div class="range__head">
+          <div>
+            <h2>MORE FROM THE RANGE</h2>
+          </div>
+        </div>
+      </div>
+      <div class="embla" data-embla>
+        <div class="embla__viewport" data-embla-viewport>
+          <div class="embla__container" data-embla-container id="relatedTrack"></div>
+        </div>
+        <div class="embla__controls">
+          <button class="embla__btn embla__btn--prev" data-embla-prev aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="embla__dots" data-embla-dots></div>
+          <button class="embla__btn embla__btn--next" data-embla-next aria-label="Next">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- FOOTER (unchanged slim version per prior feedback) -->
+  <footer>
+    <div class="footer__grid">
+      <a href="#/" data-route="/" class="footer__brand-link" aria-label="Hepple home">
+        <img src="assets/brand/hepple-roundel.png" alt="Hepple Spirits Company" class="footer__logo" />
+      </a>
+
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#/story"     data-route="/story">OUR STORY</a>
+        <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
+        <a href="#/craft"     data-route="/craft">OUR CRAFT</a>
+        <a href="#/cocktails" data-route="/cocktails">COCKTAILS</a>
+        <a href="#/visit"     data-route="/visit">VISIT US</a>
+        <a href="#/shop"      data-route="/shop">SHOP</a>
+      </nav>
+
+      <a class="footer__email" href="mailto:hello@hepplespirits.com">HELLO@HEPPLESPIRITS.COM</a>
+    </div>
+
+    <div class="footer__bar">
+      <div>© <span id="year"></span> HEPPLE SPIRITS COMPANY · PLEASE DRINK RESPONSIBLY</div>
+      <div class="footer__barker">
+        DESIGNED BY <a href="https://barkerdigital.co.uk" target="_blank" rel="noopener">BARKER DIGITAL</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -6426,3 +6426,35 @@ body .team-photo[data-team-id="walter"] img{
   background: var(--hepple-blue) !important;
   color: var(--cream) !important;
 }
+
+/* =========================================================
+   AWARDS — medal strip (home bottom + shop, before cocktails)
+   Badges differ in shape, so match by height; the wide Difford's
+   banner is set a touch shorter so the trio reads balanced.
+   ========================================================= */
+.awards{
+  background: var(--ground);
+  padding: clamp(2.5rem, 6vh, 4rem) var(--gutter);
+  text-align: center;
+}
+.awards__row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 3.5rem);
+  max-width: 60rem;
+  margin: 0 auto;
+}
+.awards__badge{
+  height: clamp(54px, 8vw, 78px);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+.awards__badge--wide{ height: clamp(40px, 6vw, 58px); }
+@media (max-width: 760px){
+  .awards{ padding: clamp(2rem, 6vh, 3rem) 1.25rem; }
+  .awards__row{ gap: 1.5rem 2rem; }
+}
