@@ -6194,3 +6194,212 @@ body .craft-intro__panel{
   }
   body .shop-range__headline{ font-size: 1.6rem !important; }
 }
+
+/* =========================================================
+   FINAL CLEANUP PASS — appended last so it wins the cascade.
+   Footer roundel · no hyphenated wraps · mobile homepage tidy ·
+   team photo crops. Scoped tightly; desktop largely untouched.
+   ========================================================= */
+
+/* ---- 1. FOOTER LOGO → circular roundel (desktop + mobile) ----
+   The top-left nav wordmark is untouched; only the footer mark changes.
+   Asset to add: assets/brand/hepple-roundel.png */
+.footer__logo{
+  height: clamp(60px, 13vw, 82px) !important;
+  width: auto !important;
+  border-radius: 50%;
+}
+
+/* ---- 2. NO HYPHENATED LINE BREAKS — words wrap whole, never mid-word ---- */
+body, body p, body h1, body h2, body h3, body h4, body h5,
+body li, body a, body span, body div{
+  -webkit-hyphens: none !important;
+  hyphens: none !important;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* ---- 3. TEAM PHOTOS — show full faces / portraits (no cropped chins) ----
+   Hani & Miranda were cropping the chin; Walter is a full portrait. `contain`
+   guarantees the whole photo shows. Nudge per-person if you want a tighter
+   crop once the assets are in. */
+body .team-photo[data-team-id="hani"] img,
+body .team-photo[data-team-id="miranda"] img,
+body .team-photo[data-team-id="walter"] img{
+  object-fit: contain !important;
+  background: var(--ground-deeper);
+}
+
+/* =========================================================
+   MOBILE (≤ 760px) — homepage cleanup
+   ========================================================= */
+@media (max-width: 760px){
+
+  /* 4. INTRO — make the scroll-scrub WORK on mobile.
+        The earlier `body .intro{ height:100vh }` mobile rule left no scroll
+        runway, so the frames couldn't scrub (it snapped straight to complete).
+        Restore the 200vh runway; keep the pinned stage at 100vh. */
+  body .intro{ height: 200vh !important; }
+  body .intro.is-complete{ height: 200vh !important; }
+  body .intro__pin{ position: sticky !important; top: 0 !important; height: 100vh !important; }
+  body .intro__canvas{ display: block !important; }
+
+  /* 5. HOME HERO — photo band, THEN one clean text box (no double box,
+        photo is visible again) */
+  body .home-hero{
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    background-image: none !important;
+    background-color: var(--ground) !important;
+  }
+  body .home-hero__bg{
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: 46vh !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+  body .home-hero__bg img{
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 28% !important;
+  }
+  body .home-hero__overlay{
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    justify-content: center !important;
+  }
+  body .home-hero__panel{
+    background: var(--ground) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 1.6rem 1.25rem 2rem !important;
+  }
+
+  /* 6. SHOP THE RANGE — ONE photo only (kill the duplicate full image),
+        taller + slightly more zoomed out so necks/tops + all bottles show */
+  body .shop-range__bg{ display: none !important; }
+  body .shop-range{
+    aspect-ratio: auto !important;
+    min-height: 82vh !important;
+    background-size: auto 112%, auto 112% !important;
+    background-position: center 32%, center 32% !important;
+  }
+
+  /* 7. HOW WE MAKE HEPPLE — text sits OVER the photo, no blank space */
+  body .estate-cta--overlay{
+    position: relative !important;
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    margin: 0 0 1rem !important;
+    overflow: hidden !important;
+  }
+  body .estate-cta__bg{
+    position: absolute !important;
+    inset: 0 !important;
+    aspect-ratio: auto !important;
+    height: 100% !important;
+  }
+  body .estate-cta__bg img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  body .estate-cta__bg::after{
+    background: linear-gradient(180deg,
+      rgba(237,232,224,0)   30%,
+      rgba(237,232,224,.5)  68%,
+      rgba(237,232,224,.92) 100%) !important;
+  }
+  body .estate-cta__overlay{
+    position: absolute !important;
+    inset: 0 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 1.25rem clamp(1.5rem, 5vw, 2.5rem) !important;
+    background: transparent !important;
+  }
+  body .estate-cta__inner{
+    background: rgba(246,242,234,.86) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1.2rem 1.25rem !important;
+    border-radius: 6px !important;
+    text-align: center !important;
+  }
+
+  /* 8. LET'S MAKE COCKTAILS — proper section-sized header (was too small) */
+  body .cocktails-home__head h2{
+    white-space: normal !important;
+    font-size: clamp(2rem, 8vw, 2.8rem) !important;
+    line-height: 1 !important;
+  }
+}
+
+/* =========================================================
+   TESTIMONIAL — quote on cream, Hepple-blue italic serif
+   (matches the brand testimonial graphic)
+   ========================================================= */
+.testimonial{
+  background: var(--ground);
+  color: var(--hepple-blue);
+  padding: clamp(4rem, 9vh, 6.5rem) var(--gutter);
+}
+.testimonial__inner{ max-width: 50rem; margin: 0 auto; }
+.testimonial__mark{
+  font-family: Georgia, "Cormorant Garamond", "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(3.4rem, 9vw, 5.5rem);
+  line-height: .4;
+  color: var(--hepple-blue);
+  display: block;
+  margin: 0 0 .12em;
+}
+.testimonial__quote{
+  font-family: Georgia, "Cormorant Garamond", "EB Garamond", "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 1rem + 2.1vw, 2.7rem);
+  line-height: 1.25;
+  margin: 0 0 1.5rem;
+  color: var(--hepple-blue);
+  max-width: 26ch;
+}
+.testimonial__cite{ margin: 0; line-height: 1.45; }
+.testimonial__name{
+  display: block;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(1rem, .9rem + .4vw, 1.25rem);
+  color: var(--hepple-blue);
+}
+.testimonial__source{
+  display: block;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: clamp(.9rem, .85rem + .3vw, 1.05rem);
+  color: var(--hepple-blue);
+  opacity: .7;
+}
+@media (max-width: 760px){
+  .testimonial{ padding: clamp(3rem, 8vh, 4.5rem) 1.25rem; }
+}

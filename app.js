@@ -286,11 +286,11 @@
   const GIFT_SLUG = 'handwritten-card';
   const GIFT_CARD = {
     slug:    GIFT_SLUG,
-    name:    'HANDWRITTEN CARD',
-    nameTop: 'HANDWRITTEN',
-    nameRest:'CARD',
-    short:   'Handwritten Card',
-    tagline: 'A NOTE IN OUR HAND',
+    name:    'GIFT WRAP & HANDWRITTEN CARD',
+    nameTop: 'MAKE IT',
+    nameRest:'A GIFT',
+    short:   'Gift Wrap & Card',
+    tagline: 'HAND-WRAPPED WITH A PERSONAL NOTE',
     kicker:  'ADD A PERSONAL MESSAGE',
     price:   5.00,
     isAddon: true,
@@ -717,10 +717,10 @@
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
             </div>
             <div class="cart-item__info">
-              <h4>HANDWRITTEN CARD</h4>
+              <h4>MAKE IT A GIFT</h4>
               ${msg
                 ? `<div class="cart-item__msg">&ldquo;${escapeHtml(msg)}&rdquo;</div>`
-                : `<div class="qty">Add your message below</div>`}
+                : `<div class="qty">Gift-wrapped + handwritten card</div>`}
               <button class="cart-item__remove" data-remove-gift>REMOVE</button>
             </div>
             <div class="cart-item__price">£${p.price.toFixed(2)}</div>
@@ -759,18 +759,18 @@
     wrap.innerHTML = `
       <div class="cart-gift__head">
         <div class="cart-gift__label">
-          <span class="cart-gift__title">ADD A HANDWRITTEN CARD</span>
+          <span class="cart-gift__title">MAKE IT A GIFT</span>
           <span class="cart-gift__price">£5.00</span>
         </div>
         <button type="button" class="cart-gift__toggle ${on ? 'is-on' : ''}" data-gift-toggle aria-pressed="${on}">
           ${on ? 'ADDED ✓' : 'ADD'}
         </button>
       </div>
-      <p class="cart-gift__note">A personal note, written by hand and sent with your order.</p>
+      <p class="cart-gift__note">Beautifully hand-wrapped and finished with a handwritten card carrying your message.</p>
       ${on ? `
         <div class="cart-gift__field">
           <textarea id="giftMsgInput" maxlength="${GIFT_MSG_MAX}" rows="3"
-            placeholder="Write your message…">${escapeHtml(msg)}</textarea>
+            placeholder="Write your gift message…">${escapeHtml(msg)}</textarea>
           <div class="cart-gift__count"><span id="giftMsgCount">${msg.length}</span>/${GIFT_MSG_MAX}</div>
         </div>` : ''}
     `;
@@ -1122,6 +1122,7 @@
     }, 6000);
 
     window.addEventListener('resize', resizeCanvas, { passive: true });
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150), { passive: true });
   } else {
     fallbackToPoster('no canvas');
   }
@@ -1509,7 +1510,7 @@
 
     const track = $('#relatedTrack');
     if (track){
-      const related = PRODUCTS.filter(x => x.slug !== slug);
+      const related = PRODUCTS.concat(EXTRA_PRODUCTS).filter(x => x.slug !== slug && !x.isAddon);
       track.innerHTML = related.map(rp => `
         <div class="embla__slide">
           <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
