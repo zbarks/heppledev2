@@ -77,7 +77,7 @@ const PRODUCTS = [
   // renders as a plain line on the Stripe page.
   {
     slug:  'handwritten-card',
-    name:  'Handwritten Card',
+    name:  'Gift Wrap & Handwritten Card',
     price: 5.00,
     sku:   'HEP-CARD',
     image: '',
