@@ -6403,3 +6403,26 @@ body .team-photo[data-team-id="walter"] img{
 @media (max-width: 760px){
   .testimonial{ padding: clamp(3rem, 8vh, 4.5rem) 1.25rem; }
 }
+
+/* =========================================================
+   SHOP CARD — quick ADD (primary) + VIEW (secondary)
+   ========================================================= */
+.shop-card__add{
+  background: var(--hepple-blue) !important;
+  color: var(--cream) !important;
+  cursor: pointer;
+}
+.shop-card__add:hover{ background: var(--hepple-ink) !important; }
+.shop-card__add.is-added{
+  background: var(--hepple-ink) !important;
+  color: var(--cream) !important;
+}
+.shop-card__view{
+  background: transparent !important;
+  color: var(--hepple-blue) !important;
+  border: 1px solid var(--hepple-blue) !important;
+}
+.shop-card__view:hover{
+  background: var(--hepple-blue) !important;
+  color: var(--cream) !important;
+}

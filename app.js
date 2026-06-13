@@ -936,14 +936,18 @@
     if (addBtn){
       e.preventDefault();
       const slug = addBtn.dataset.addToCart;
-      const qtyInput = $('#pdQty');
-      const qty = qtyInput ? Math.max(1, parseInt(qtyInput.value || '1', 10)) : 1;
+      // Product-detail button reads the qty stepper; shop-card quick-add is
+      // always 1 (and must NOT read a stale #pdQty from a hidden detail page).
+      const qty = addBtn.classList.contains('product-detail__add')
+        ? Math.max(1, parseInt(($('#pdQty') || {}).value || '1', 10))
+        : 1;
       addToCart(slug, qty);
+      if (!addBtn.dataset.label) addBtn.dataset.label = addBtn.textContent.trim();
       addBtn.classList.add('is-added');
       addBtn.textContent = 'ADDED ✓';
       setTimeout(() => {
         addBtn.classList.remove('is-added');
-        addBtn.textContent = 'ADD TO CART';
+        addBtn.textContent = addBtn.dataset.label || 'ADD TO CART';
       }, 1800);
       return;
     }
@@ -977,7 +981,14 @@
     }
   });
 
-  // Live handwritten-card message: save on every keystroke (capped), update
+  // Keyboard support for the span-based shop-card ADD control (Enter / Space).
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    const addEl = e.target.closest && e.target.closest('[data-add-to-cart][role="button"]');
+    if (!addEl) return;
+    e.preventDefault();
+    addEl.click();
+  });
   // the counter, without re-rendering the cart (keeps the textarea focused).
   document.addEventListener('input', (e) => {
     const t = e.target.closest('#giftMsgInput');
@@ -1380,7 +1391,8 @@
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
         <div class="shop-card__price">£${p.price.toFixed(2)}</div>
         <div class="shop-card__actions">
-          <span class="btn btn--tiny">VIEW</span>
+          <span class="btn btn--tiny shop-card__add" data-add-to-cart="${p.slug}" role="button" tabindex="0">ADD</span>
+          <span class="btn btn--tiny shop-card__view">VIEW</span>
         </div>
       </a>
     `).join('');
@@ -1404,7 +1416,8 @@
         <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
         <div class="shop-card__price">£${p.price.toFixed(2)}</div>
         <div class="shop-card__actions">
-          <span class="btn btn--tiny">VIEW</span>
+          <span class="btn btn--tiny shop-card__add" data-add-to-cart="${p.slug}" role="button" tabindex="0">ADD</span>
+          <span class="btn btn--tiny shop-card__view">VIEW</span>
         </div>
       </a>
     `).join('');
