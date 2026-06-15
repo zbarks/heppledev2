@@ -527,6 +527,9 @@
       name: 'Chris Garden',
       role: 'FOUNDER & MASTER DISTILLER',
       photo: 'assets/team/chris.jpg',
+      // Self-hosted MP4 — same approach as the estate hero, but this one is a
+      // proper player (visible controls + sound). Drop the file in here later.
+      video: 'assets/team/chris_video.mp4',
       bio: "Chris is Hepple's master distiller and the technical mind behind the liquid. With over 20 years distilling experience, including time at Sipsmith, he brings deep knowledge of flavour extraction, botanical precision and spirit production. Working closely with the founders, Chris helped develop Hepple's distinctive three-part approach to flavour, combining traditional copper pot distillation with modern techniques to capture brightness, texture and aromatic detail. His craft sits at the heart of every bottle, bringing discipline, balance and quiet brilliance to Hepple's wildness."
     },
     {
@@ -1802,10 +1805,24 @@
       });
     }
     const body = $('#bioModalBody', modal);
+
+    // If this member has a video, show a real player (controls + sound),
+    // poster falls back to their still photo. Otherwise just the photo.
+    const mediaHtml = m.video
+      ? `<div class="bio-modal__media bio-modal__media--video">
+           <video class="bio-modal__video"
+                  controls playsinline preload="metadata"
+                  poster="${m.photo}"
+                  aria-label="${m.name}">
+             <source src="${m.video}" type="video/mp4" />
+           </video>
+         </div>`
+      : `<div class="bio-modal__photo">
+           <img src="${m.photo}" alt="${m.name}" />
+         </div>`;
+
     body.innerHTML = `
-      <div class="bio-modal__photo">
-        <img src="${m.photo}" alt="${m.name}" />
-      </div>
+      ${mediaHtml}
       <div class="bio-modal__content">
         <p class="bio-modal__role">${m.role}</p>
         <h2 class="bio-modal__name">${m.name}</h2>
@@ -1818,6 +1835,9 @@
   function closeBio(){
     const modal = $('#bioModal');
     if (!modal) return;
+    // Stop any playing video so its audio doesn't continue after closing.
+    const vid = $('.bio-modal__video', modal);
+    if (vid){ try { vid.pause(); } catch(_){} }
     modal.classList.remove('is-open');
     document.body.classList.remove('no-scroll');
   }
@@ -1875,8 +1895,27 @@
   }
 
   // =============================================
+  // BROKEN IMAGE GUARD
+  // On mobile (esp. iOS Safari) a failed/empty <img> inside a fixed-height
+  // box renders as a dark "broken image" block — the black boxes reported on
+  // the shop. We catch load failures globally (capture phase, since error
+  // events don't bubble) and hide the broken image + flag its wrapper so the
+  // cream background shows through instead of a black box.
+  // =============================================
+  function initBrokenImageGuard(){
+    document.addEventListener('error', (e) => {
+      const el = e.target;
+      if (!el || el.tagName !== 'IMG') return;
+      el.style.display = 'none';
+      const wrap = el.closest('.shop-card__img, .product-card__img, .bio-modal__photo, .embla__slide, [class*="__img"], [class*="__bg"]');
+      if (wrap) wrap.classList.add('img-failed');
+    }, true);
+  }
+
+  // =============================================
   // BOOT
   // =============================================
+  initBrokenImageGuard();
   renderCart();
   route();
   initProcess();

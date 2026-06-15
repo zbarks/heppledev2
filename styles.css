@@ -2623,12 +2623,34 @@ footer{
   color: var(--hepple-blue);
 }
 
-/* 6. MOBILE PRODUCT CARD — kill any rogue dark element
-   The "weird black box top-left" Zach reported. Most likely culprits:
-   - Old broken alt-text rendering when img fails
-   - A pseudo-element or focus ring
-   We make the image container guaranteed transparent and ensure
-   no children get inherited dark backgrounds.                   */
+/* 6. SHOP / PRODUCT CARD IMAGE GUARD — kill the dark "black box"
+   Zach reported on mobile. Cause: a failed or empty <img> renders as a
+   dark broken-image block (most visibly on iOS Safari). We:
+   - keep the image box transparent so the cream card shows through,
+   - never render alt text as a visible label,
+   - and when JS flags a failed image (.img-failed), guarantee a clean
+     cream area instead of a black box. Applies at ALL widths.            */
+.product-card__img,
+.shop-card__img,
+.bio-modal__photo{
+  background: transparent;
+}
+.product-card__img img,
+.shop-card__img img{
+  color: transparent;          /* hide alt text if the image fails */
+  font-size: 0;
+}
+.product-card__img.img-failed,
+.shop-card__img.img-failed,
+.bio-modal__photo.img-failed{
+  background: var(--cream);
+}
+.product-card__img.img-failed img,
+.shop-card__img.img-failed img,
+.bio-modal__photo.img-failed img{
+  display: none !important;
+}
+
 @media (max-width: 700px){
   .product-card,
   .shop-card{
@@ -2646,11 +2668,6 @@ footer{
   .shop-card__img::after{
     display: none !important;
     content: none !important;
-  }
-  /* Hide alt text if image fails (visually replace with empty space) */
-  .product-card__img img,
-  .shop-card__img img{
-    color: transparent;
   }
   /* If first slide of Embla has an extra control overlay on mobile,
      make sure the prev arrow doesn't show as a black square           */
@@ -4410,6 +4427,22 @@ body .shop-range__overlay{
   display: block;
   min-height: 280px;
 }
+/* Video variant — a proper player (controls + sound), same self-hosted
+   MP4 approach as the estate hero. Sits in the same column as the photo. */
+.bio-modal__media--video{
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.bio-modal__video{
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  display: block;
+}
 .bio-modal__content{
   padding: clamp(1.6rem, 4vw, 2.6rem);
   display: flex;
@@ -4459,6 +4492,10 @@ body .shop-range__overlay{
   .bio-modal__photo img{
     height: 240px;
     min-height: 240px;
+  }
+  .bio-modal__video{
+    height: 220px;
+    min-height: 220px;
   }
   .bio-modal__content{
     padding: 1.4rem 1.2rem 1.6rem;
