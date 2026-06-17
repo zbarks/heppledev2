@@ -4428,18 +4428,21 @@ body .shop-range__overlay{
   min-height: 280px;
 }
 /* Video variant — a proper player (controls + sound), same self-hosted
-   MP4 approach as the estate hero. Sits in the same column as the photo. */
+   MP4 approach as the estate hero. Sits in the same column as the photo.
+   The video fills its container via absolute positioning so it can never
+   collapse on desktop (a percentage height on the <video> did not resolve
+   against the grid-stretched column, so only the black background showed). */
 .bio-modal__media--video{
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
+  position: relative;
+  min-height: 280px;
 }
 .bio-modal__video{
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 280px;
   object-fit: cover;
   display: block;
 }
@@ -4494,6 +4497,10 @@ body .shop-range__overlay{
     min-height: 240px;
   }
   .bio-modal__video{
+    height: 100%;
+    min-height: 0;
+  }
+  .bio-modal__media--video{
     height: 220px;
     min-height: 220px;
   }
@@ -5682,9 +5689,20 @@ body .story-split__body p{
   width: 100%;
   height: 100%;
   display: block;
-  background: var(--hepple-ink);
+  background: transparent;
   /* No smoothing artifacts when scaling */
   image-rendering: -webkit-optimize-contrast;
+}
+/* When we are NOT on the home route, the JS adds .intro-off to <body>.
+   Force the whole intro subtree — including the canvas's OWN box — out of the
+   render tree. Targeting the canvas directly (not just the ancestor) is what
+   stops mobile Safari from keeping a composited dark layer (the dark square). */
+body.intro-off #intro,
+body.intro-off .intro,
+body.intro-off .intro__pin,
+body.intro-off .intro__stage,
+body.intro-off .intro__canvas{
+  display: none !important;
 }
 /* Hide the old .intro__video rules that might still apply */
 body .intro__video{ display: none !important; }
@@ -6279,7 +6297,10 @@ body .team-photo[data-team-id="walter"] img{
   body .intro{ height: 200vh !important; }
   body .intro.is-complete{ height: 200vh !important; }
   body .intro__pin{ position: sticky !important; top: 0 !important; height: 100vh !important; }
-  body .intro__canvas{ display: block !important; }
+  /* NOTE: previously `body .intro__canvas{ display:block !important }` lived here.
+     That !important defeated the JS that hides the canvas off the home route, so on
+     mobile Safari the hero canvas ghost-painted as a dark square on every page.
+     The canvas already defaults to display:block, so the rule was redundant — removed. */
 
   /* 5. HOME HERO — photo band, THEN one clean text box (no double box,
         photo is visible again) */
@@ -6494,4 +6515,55 @@ body .team-photo[data-team-id="walter"] img{
 @media (max-width: 760px){
   .awards{ padding: clamp(2rem, 6vh, 3rem) 1.25rem; }
   .awards__row{ gap: 1.5rem 2rem; }
+}
+
+/* =========================================================
+   COOKIE CONSENT — slim bottom banner, Hepple blue on cream.
+   Hidden until app.js decides the visitor hasn't chosen yet.
+   ========================================================= */
+.cookie-consent{
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 90;                 /* under cart/drawer (70) is fine; above page content */
+  background: rgba(237, 232, 224, .97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 48, 135, .15);
+  box-shadow: 0 -8px 30px rgba(0, 48, 135, .08);
+  transform: translateY(100%);
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+.cookie-consent.is-visible{ transform: translateY(0); }
+.cookie-consent__inner{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+.cookie-consent__text{
+  margin: 0;
+  flex: 1 1 22rem;
+  font-size: .82rem;
+  line-height: 1.6;
+  letter-spacing: .02em;
+  color: var(--hepple-blue);
+  font-weight: 500;
+}
+.cookie-consent__actions{
+  display: flex;
+  gap: .6rem;
+  flex-shrink: 0;
+}
+.cookie-consent__btn{
+  padding: .7rem 1.4rem;
+  font-size: .66rem;
+}
+@media (max-width: 560px){
+  .cookie-consent__inner{ justify-content: center; text-align: center; }
+  .cookie-consent__actions{ width: 100%; }
+  .cookie-consent__btn{ flex: 1 1 auto; }
 }

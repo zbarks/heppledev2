@@ -141,7 +141,12 @@
         person_profiles: 'identified_only',
         capture_pageview: false,   // hash router fires its own $pageview (see app.js → route())
         capture_pageleave: true,
-        autocapture: true
+        autocapture: true,
+        // Cookie consent: do nothing until the visitor accepts. Until then
+        // PostHog captures no events and writes no tracking cookies. The
+        // banner in app.js calls posthog.opt_in_capturing() on Accept.
+        opt_out_capturing_by_default: true,
+        disable_session_recording: true
       });
     }
   })();
@@ -1028,6 +1033,22 @@
   </footer>
 
 </main>
+
+<!-- COOKIE CONSENT — analytics stay off until the visitor accepts.
+     Wired up in app.js (initCookieConsent). -->
+<div class="cookie-consent" id="cookieConsent" role="dialog" aria-live="polite"
+     aria-label="Cookie choices" hidden>
+  <div class="cookie-consent__inner">
+    <p class="cookie-consent__text">
+      We use cookies to understand how the site is used and to improve it. You can
+      accept analytics cookies or carry on with only the essentials.
+    </p>
+    <div class="cookie-consent__actions">
+      <button type="button" class="btn btn--solid-blue cookie-consent__btn" data-cookie="accept">ACCEPT</button>
+      <button type="button" class="btn btn--outline-dark cookie-consent__btn" data-cookie="decline">ESSENTIAL ONLY</button>
+    </div>
+  </div>
+</div>
 
 <script src="app.js" defer></script>
 </body>

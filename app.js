@@ -871,6 +871,8 @@
           intro.style.display = 'none';
           intro.classList.remove('is-complete');
         }
+        if (canvas) canvas.style.display = 'none';
+        document.body.classList.add('intro-off');
         document.body.classList.remove('is-loading');
         nav.classList.add('is-visible');
         window.scrollTo(0, 0);
@@ -881,6 +883,8 @@
           intro.classList.remove('is-complete');
           intro.classList.remove('is-text-revealed');
         }
+        if (canvas) canvas.style.display = '';
+        document.body.classList.remove('intro-off');
         // Reset frame-scrub state
         introComplete = false;
         textRevealed = false;
@@ -893,6 +897,8 @@
       }
     } else {
       if (intro) intro.style.display = 'none';
+      if (canvas) canvas.style.display = 'none';
+      document.body.classList.add('intro-off');
       nav.classList.add('is-visible');
       window.scrollTo(0, 0);
     }
@@ -1085,7 +1091,7 @@
 
   // ---- preload all frames ----
   if (canvas && intro){
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: true });
     let frameW = 1280, frameH = 720;
 
     function resizeCanvas(){
@@ -1158,7 +1164,7 @@
     if (!canvas || introComplete) return;
     const ease = 0.18;
     currentFrame += (targetFrame - currentFrame) * ease;
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: true });
     const i = Math.max(0, Math.min(FRAME_COUNT - 1, Math.round(currentFrame)));
     const img = frames[i];
     if (img && img.complete && img.naturalWidth > 0){
@@ -1913,9 +1919,51 @@
   }
 
   // =============================================
+  // COOKIE CONSENT — analytics stay off until accepted
+  // =============================================
+  function initCookieConsent(){
+    const banner = document.getElementById('cookieConsent');
+    if (!banner) return;
+    const KEY = 'hepple:cookie-consent';
+
+    function apply(accepted){
+      try {
+        if (!window.posthog) return;
+        if (accepted && typeof posthog.opt_in_capturing === 'function') posthog.opt_in_capturing();
+        else if (!accepted && typeof posthog.opt_out_capturing === 'function') posthog.opt_out_capturing();
+      } catch (_) {}
+    }
+
+    let choice = null;
+    try { choice = localStorage.getItem(KEY); } catch (_) {}
+
+    if (choice === 'accepted'){ apply(true);  return; }
+    if (choice === 'declined'){ apply(false); return; }
+
+    // Undecided — show the banner.
+    banner.hidden = false;
+    requestAnimationFrame(() => banner.classList.add('is-visible'));
+
+    banner.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-cookie]');
+      if (!btn) return;
+      const accepted = btn.dataset.cookie === 'accept';
+      try { localStorage.setItem(KEY, accepted ? 'accepted' : 'declined'); } catch (_) {}
+      apply(accepted);
+      // If they just accepted, record the pageview we held back this session.
+      if (accepted){
+        try { capture('$pageview', { $current_url: location.href, route: getRoute() }); } catch (_) {}
+      }
+      banner.classList.remove('is-visible');
+      setTimeout(() => { banner.hidden = true; }, 500);
+    });
+  }
+
+  // =============================================
   // BOOT
   // =============================================
   initBrokenImageGuard();
+  initCookieConsent();
   renderCart();
   route();
   initProcess();

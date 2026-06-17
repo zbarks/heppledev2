@@ -19,6 +19,8 @@ create table if not exists public.orders (
   items                 jsonb   default '[]'::jsonb,
   cart_summary          text,
   posthog_distinct_id   text,
+  has_gift_card         boolean default false,
+  gift_message          text,
   shipping_address      jsonb,
   payment_status        text,
   fulfilled             boolean default false,
@@ -41,3 +43,11 @@ alter table public.orders enable row level security;
 
 -- (No anon policies on purpose — anon/public clients get nothing.)
 -- The service-role key used server-side bypasses RLS automatically.
+
+-- ------------------------------------------------------------
+--  If the orders table already exists from an earlier deploy, run this
+--  once to add the gift columns the webhook now writes. Without them,
+--  PostgREST rejects the whole insert and paid orders fail to record.
+-- ------------------------------------------------------------
+alter table public.orders add column if not exists has_gift_card boolean default false;
+alter table public.orders add column if not exists gift_message  text;
