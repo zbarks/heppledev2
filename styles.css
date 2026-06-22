@@ -1968,6 +1968,7 @@ footer{
   max-width: 52ch;
   margin: 0 0 1rem;
   font-weight: 500;
+  text-transform: uppercase;
 }
 .product-detail__body-copy p:last-child{ margin-bottom: 0; }
 
@@ -1990,6 +1991,7 @@ footer{
   margin: 0 0 .8rem;
   max-width: 52ch;
   font-weight: 500;
+  text-transform: uppercase;
 }
 .product-detail__section p:last-child{ margin-bottom: 0; }
 .product-detail__section ul{
@@ -2004,6 +2006,7 @@ footer{
   letter-spacing: .06em;
   margin: 0 0 .3rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
 .product-detail__tasting{
