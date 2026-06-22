@@ -2012,14 +2012,15 @@ footer{
   gap: .8rem;
 }
 .product-detail__tasting > div{
+  display: flex;
+  align-items: baseline;
   font-size: .82rem;
   line-height: 1.7;
   letter-spacing: .05em;
   font-weight: 500;
 }
 .product-detail__tasting strong{
-  display: inline-block;
-  min-width: 70px;
+  flex: 0 0 70px;
   font-size: .64rem;
   letter-spacing: .24em;
   color: var(--hepple-blue);

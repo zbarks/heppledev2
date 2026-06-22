@@ -71,7 +71,7 @@
       nameTop: 'HEPPLE',
       nameRest:'WILD JUNIPER GIN',
       short:   'Wild Juniper Gin',
-      tagline: 'BRIGHT. WILD. ELEGANT',
+      tagline: 'BRIGHT. WILD. ELEGANT.',
       kicker:  'THE HEART OF HEPPLE',
       price:   39.95,
       meta:    { size: '70CL', abv: '45%', origin: 'NORTHUMBERLAND' },
@@ -79,11 +79,11 @@
       image:   'assets/products/hepple-gin.jpg',
       sceneImage: 'assets/products/gin-scene.jpg',
       body: [
-        "ON THE HEPPLE ESTATE, ANCIENT JUNIPER BUSHES GROW WILD ACROSS THE NORTHUMBERLAND MOORLAND — SHAPED BY WIND, WEATHER AND TIME.",
-        "EACH SUMMER, WE HARVEST THE BERRIES BY HAND WHILE THEY ARE STILL BRIGHT GREEN. AT THIS STAGE, JUNIPER IS FRESHER, MORE VIBRANT AND MORE ALIVE — FULL OF CITRUS LIFT, NATURAL ZEST AND A QUIET ELEGANCE YOU DON'T FIND IN THE DRIED BERRY ALONE.",
-        "THAT FRESHNESS SITS AT THE HEART OF THIS GIN. DRIED JUNIPER IS USED CAREFULLY, TO BRING DEPTH AND STRUCTURE. BUT IT'S THE WILD GREEN JUNIPER PICKED FRESH FROM THE ESTATE THAT DEFINES THE CHARACTER: BRIGHT, LIFTED AND UNMISTAKABLY HEPPLE.",
-        "AROUND IT SITS A CAREFULLY SELECTED GROUP OF BOTANICALS — DOUGLAS FIR, BLACKCURRANT LEAF, LOVAGE, CHAMOMILE, CORIANDER SEED, ANGELICA ROOT, ORRIS ROOT, CASSIA BARK, LIQUORICE ROOT, AND GRAINS OF PARADISE — EACH CHOSEN AND TESTED REPEATEDLY FOR HOW IT SUPPORTS AND EXTENDS THE CHARACTER OF JUNIPER, RATHER THAN COMPETING WITH IT.",
-        "NOTHING IS THERE BY ACCIDENT. EVERYTHING IS THERE TO MAKE A BETTER DRINK."
+        "The spirit that started it all.",
+        "On the Hepple Estate, ancient juniper bushes grow wild across the Northumberland moorland, shaped by wind, weather and time. Each summer, we harvest the berries by hand while they are still bright green. At this stage, juniper is fresher, more vibrant and more alive, bringing citrus lift, natural zest and a remarkable brightness that ripe juniper berries alone cannot deliver.",
+        "That bright flavour note is the starting point for Hepple Wild Juniper Gin, but it is only part of the story. To capture the fullest expression of juniper, we build flavour using all three of our extraction methods: traditional copper pot distillation for depth and structure, vacuum distillation for freshness and aromatic lift, and supercritical CO₂ extraction for the delicate oils and finer details that would otherwise be lost. Together, they create a more vivid, layered and complete picture of juniper than any one technique could achieve alone.",
+        "Around the juniper sits a carefully selected group of botanicals, chosen to support and extend the character of juniper rather than compete with it. Douglas fir, lovage, blackcurrant leaf, angelica root and bog myrtle all play their part, bringing lift, freshness, depth and length to the final spirit.",
+        "The result is a multi-dimensional, elegant gin with juniper at its heart. Bright and vivid in the glass, it retains its freshness, structure and unmistakable juniper character when mixed, making it exceptional in a Martini and perfect for classic gin cocktails."
       ],
       tasting: {
         nose:   'SPICY JUNIPER, FRESH GREEN APPLE, BRIGHT GRAPEFRUIT',
@@ -91,15 +91,12 @@
         finish: 'LONG AND BALANCED, WITH SUBTLE NOTES OF CEDAR AND SANDALWOOD BENEATH A VIBRANT RICH JUNIPER POP'
       },
       howToEnjoy: {
-        lead: "OUR FAVOURITE WAY TO TRULY EXPERIENCE THE FULL SPECTRUM OF FLAVOUR IS AN ICY COLD MARTINI WITH A FRESH LEMON ZEST.",
+        lead: "Our favourite way to experience the full spectrum of flavour is an icy cold Martini with a fresh lemon twist.",
         recipe: [
-          "5 PARTS (75ML) HEPPLE WILD JUNIPER GIN",
-          "1 PART (15ML) DRY VERMOUTH",
-          "STIR WITH CUBED ICE IN A MIXING GLASS OR JUG UNTIL COLD AS THE ARCTIC (20–30 SECONDS).",
-          "STRAIN INTO A CHILLED GLASS.",
-          "FINISH WITH A LEMON TWIST."
-        ],
-        alt: "ALSO WORKS BEAUTIFULLY IN A G&T OR A TOM COLLINS."
+          "5 parts Hepple Wild Juniper Gin",
+          "1 part dry vermouth",
+          "Stir with cubed ice until cold as the Arctic, then strain into a chilled glass and finish with lemon zest."
+        ]
       }
     },
     {
@@ -108,18 +105,18 @@
       nameTop: 'HEPPLE',
       nameRest:'DOUGLAS FIR VODKA',
       short:   'Douglas Fir Vodka',
-      tagline: 'FRESH. LIFTED. UNEXPECTED',
-      kicker:  'WHERE FOREST BECOMES FLAVOUR',
+      tagline: 'VIBRANT. LIFTED. DISTINCTIVE.',
+      kicker:  'DOUGLAS FIR, REIMAGINED',
       price:   39.95,
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'doug-fir-green',
       image:   'assets/products/douglas-fir.jpg',
       sceneImage: 'assets/products/douglas-fir-scene.jpg',
       body: [
-        "HIGH ABOVE THE HEPPLE ESTATE, ANCIENT DOUGLAS FIR TREES RISE THROUGH THE VALLEY — SOME MORE THAN TWO HUNDRED YEARS OLD. EVERGREEN THROUGH WINTER, SHARP WITH RESIN AND ALIVE WITH SCENT, THEY CARRY A CLARITY YOU DON'T EXPECT TO FIND IN A VODKA.",
-        "WE HARVEST THE YOUNG NEEDLES BY HAND, WORKING TO CAPTURE THAT MOMENT WHEN THE FLAVOUR IS AT ITS BRIGHTEST — GREEN, CITRUS-LED AND QUIETLY AROMATIC. IT'S A CHARACTER THAT'S SURPRISINGLY DELICATE: FRESH RATHER THAN HEAVY, LIFTED RATHER THAN OVERTLY PINE.",
-        "THIS TOOK TIME TO UNDERSTAND. THROUGH EXTENSIVE TRIALS AND CAREFUL EXTRACTION, WE WORKED TO EXPRESS THE COMPLEXITIES OF DOUGLAS FIR IN FULL — NOT JUST AS AN IDEA, BUT AS A COMPLETE FLAVOUR. THE RESULT IS A VODKA WITH DEFINITION AND LENGTH, CHOSEN AT 41% ABV WHERE EVERYTHING COMES INTO BALANCE.",
-        "WE MADE IT TO BRING SOMETHING NEW AND TRULY UNIQUE TO THE GLASS — A VODKA WITH REAL PRESENCE, DESIGNED TO BRING A REFINED COMPLEXITY AND SAVOURY POP TO YOUR COCKTAILS."
+        "A vodka with a completely different point of view.",
+        "Each spring, the Douglas fir trees on the Hepple Estate produce bright green tips packed with aroma and flavour. We harvest them at just the right moment, when the shoots are young, vivid and full of life, then use all three of our extraction methods to capture as much of their character as possible.",
+        "Traditional copper pot distillation brings weight and structure. Vacuum distillation preserves the fir's brightest, most delicate aromatics. Supercritical CO₂ extraction draws out the deeper, more nuanced notes that would otherwise be left behind. Used together, the three methods allow us to build a fuller, more expressive picture of Douglas fir than any one technique could deliver on its own.",
+        "The result is not a piney novelty vodka or a walk through a conifer forest, but a botanical vodka with remarkable complexity built from a single ingredient. Clean, bright and full of character, it carries notes of citrus, fresh fir and flashes of tropical fruit and ripe melon, and is delicious served ice cold from the freezer, over ice, or mixed into long drinks and cocktails."
       ],
       tasting: {
         nose:   'FRESH, DELICATE DOUGLAS FIR UNDERPINNED BY SOUR LEMON AND RICHER CITRUS OIL',
@@ -127,31 +124,32 @@
         finish: 'DEEP, CLEAN AND LINGERING, WITH PINE, WHITE GRAPEFRUIT AND A SOFT, ROUNDED LENGTH'
       },
       howToEnjoy: {
-        lead: "SIP NEAT, OR OVER ICE.",
+        lead: "Our favourite way to enjoy Douglas Fir Vodka is long with tonic, plenty of ice and a slice of pink grapefruit.",
         recipe: [
-          "GREAT IN A MARTINI WITH A PINK GRAPEFRUIT ZEST.",
-          "REFRESHING SERVED LONG WITH SODA AND A SQUEEZE OF PINK GRAPEFRUIT."
-        ]
+          "50ml Hepple Douglas Fir Vodka",
+          "Top with chilled tonic water",
+          "Finish with pink grapefruit"
+        ],
+        alt: "Also works beautifully in a Paloma, Collins or other bright, citrus-led serves."
       }
     },
     {
       slug:    'hepple-moorland-vodka',
-      name:    'HEPPLE WHEAT VODKA',
+      name:    'HEPPLE MOORLAND VODKA',
       nameTop: 'HEPPLE',
-      nameRest:'WHEAT VODKA',
-      short:   'Wheat Vodka',
-      tagline: 'PURE, CRISP, SMOOTH',
-      kicker:  'PRECISION IN RESTRAINT',
+      nameRest:'MOORLAND VODKA',
+      short:   'Moorland Vodka',
+      tagline: 'PURE. SMOOTH. BALANCED.',
+      kicker:  'BUILT FOR GREAT DRINKS',
       price:   34.95,
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'moorland-teal',
       image:   'assets/products/wheat-vodka.jpg',
       sceneImage: 'assets/products/wheat-vodka-scene.jpg',
       body: [
-        "MADE FROM ENGLISH WHEAT AND BLENDED WITH OUR OWN SPRING WATER — FILTERED SLOWLY THROUGH PEAT, SANDSTONE AND LIMESTONE — IT BEGINS WITH CLARITY. NOT BY STRIPPING EVERYTHING AWAY, BUT BY KEEPING ONLY WHAT MATTERS.",
-        "USING OUR COPPER POT STILL, WE WORKED CAREFULLY TO REFINE THE SPIRIT WITHOUT LOSING ITS NATURAL CHARACTER. THROUGH CONTROLLED DISTILLATION AND PRECISE CUTS, WE REMOVE HEAVINESS WHILE PRESERVING TEXTURE, SOFTNESS AND A GENTLE GRAIN AND MINERALLY WARMTH THAT CARRIES THROUGH THE GLASS.",
-        "THE RESULT IS A VODKA THAT IS CLEAN, BUT NOT EMPTY. BALANCED, BUT NEVER FLAT.",
-        "WE MADE OUR VODKA TO BE THE QUIET FOUNDATION OF A GREAT DRINK — RESOLVING, LIFTING AND BRINGING EVERYTHING INTO PLACE."
+        "Moorland Vodka is made from 100% English wheat and Hepple spring water, drawn from the estate and filtered slowly through the Northumberland landscape before it reaches us. Like everything we make, it begins with ingredients chosen for the quality of flavour they can deliver, then refined with patience and care until every element feels in balance.",
+        "The spring water is an important part of the character of the spirit. It brings a softness, clarity and a gentle mineral edge that gives Moorland Vodka more presence than a neutral vodka, while keeping the finish clean and composed.",
+        "The result is a balanced vodka with subtle cereal notes, a smooth finish and a gentle mineral edge from the spring water. Great for mixing, delicious in an icy Martini, and excellent in a very cold vodka soda with a squeeze of lime."
       ],
       tasting: {
         nose:   'CLEAN AND ROUNDED, WITH SOFT CEREAL NOTES AND A GENTLE HINT OF SPICE',
@@ -159,10 +157,9 @@
         finish: 'LONG AND COMPOSED, WITH SOFT CEREAL SWEETNESS AND A CLEAN, SLIGHTLY SALINE LINGERING LENGTH'
       },
       howToEnjoy: {
-        lead: "BEST ENJOYED IN AN ICY COLD MARTINI, WITH A LEMON ZEST OR WITH YOUR FAVOURITE OLIVES. WE LIKE IT DIRTY TOO, BUT THAT'S OUR LITTLE SECRET, OK?",
+        lead: "Our favourite way to enjoy Moorland Vodka is in an icy cold Martini or a simple highball.",
         recipe: [
-          "GREAT STRAIGHT FROM THE FREEZER WITH FOOD OR FRIENDS.",
-          "THE PERFECT INGREDIENT IN YOUR FAVOURITE VODKA COCKTAIL."
+          "For a Martini, stir 5 parts Moorland Vodka with 1 part dry vermouth and strain into a chilled glass."
         ]
       }
     }
@@ -432,7 +429,7 @@
       note: 'If you want an even simpler version, swap the fresh pink grapefruit juice and soda for a good pink grapefruit soda. Keep the lime for brightness.'
     },
 
-    // ── HEPPLE WHEAT VODKA (formerly Moorland) ──
+    // ── HEPPLE MOORLAND VODKA ──
     {
       id: 'honey-trap',
       name: 'HONEY TRAP',
@@ -440,7 +437,7 @@
       image: 'assets/cocktails/honey-trap.jpg',
       tagline: 'SUNNY, ELEGANT AND SLIGHTLY UNEXPECTED.',
       blurb: 'A silky vodka cocktail with honeyed softness, fresh lemon and a little apricot glow. Easy to make, lovely in a coupe, and perfect when you want something sunny, elegant and slightly unexpected.',
-      ingredients: ['50ML HEPPLE WHEAT VODKA', '25ML FRESHLY SQUEEZED LEMON JUICE', '15ML HONEY SYRUP', '15ML APRICOT JAM OR APRICOT CONSERVE', 'OPTIONAL: DASH OF ORANGE BITTERS'],
+      ingredients: ['50ML HEPPLE MOORLAND VODKA', '25ML FRESHLY SQUEEZED LEMON JUICE', '15ML HONEY SYRUP', '15ML APRICOT JAM OR APRICOT CONSERVE', 'OPTIONAL: DASH OF ORANGE BITTERS'],
       garnish: 'LEMON ZEST',
       glass: 'COUPE',
       equipment: 'COCKTAIL SHAKER, FINE STRAINER',
@@ -459,8 +456,8 @@
       sku: 'hepple-moorland-vodka',
       image: 'assets/cocktails/coming-up-roses.jpg',
       tagline: 'BRIGHT, TART AND LIGHTLY FLORAL.',
-      blurb: 'A fresh raspberry vodka martini with a delicate rose lift. Hepple Wheat Vodka keeps the drink clean and beautifully cold, while muddled raspberries bring colour, sharpness and a little summer drama. Perfect for aperitif hour, garden drinks or when the evening needs something with a bit of charm.',
-      ingredients: ['50ML HEPPLE WHEAT VODKA', '6 TO 8 FRESH RASPBERRIES', '20ML FRESHLY SQUEEZED LEMON JUICE', '15ML SUGAR SYRUP', '2 DROPS ROSEWATER'],
+      blurb: 'A fresh raspberry vodka martini with a delicate rose lift. Hepple Moorland Vodka keeps the drink clean and beautifully cold, while muddled raspberries bring colour, sharpness and a little summer drama. Perfect for aperitif hour, garden drinks or when the evening needs something with a bit of charm.',
+      ingredients: ['50ML HEPPLE MOORLAND VODKA', '6 TO 8 FRESH RASPBERRIES', '20ML FRESHLY SQUEEZED LEMON JUICE', '15ML SUGAR SYRUP', '2 DROPS ROSEWATER'],
       garnish: 'FRESH RASPBERRY OR LEMON TWIST',
       glass: 'COUPE',
       equipment: 'COCKTAIL SHAKER, MUDDLER, FINE STRAINER',
@@ -480,8 +477,8 @@
       sku: 'hepple-moorland-vodka',
       image: 'assets/cocktails/extra-dirty.jpg',
       tagline: 'COLD, BRINY AND ABSOLUTELY NO NONSENSE.',
-      blurb: 'A vodka martini for olive lovers. Hepple Wheat Vodka keeps the drink clean, crisp and beautifully cold, while a generous splash of olive brine gives it savoury depth and proper bite. Best served icy, direct and with more olives than is strictly necessary.',
-      ingredients: ['60ML HEPPLE WHEAT VODKA', '10ML GOOD QUALITY DRY VERMOUTH', '15ML OLIVE BRINE'],
+      blurb: 'A vodka martini for olive lovers. Hepple Moorland Vodka keeps the drink clean, crisp and beautifully cold, while a generous splash of olive brine gives it savoury depth and proper bite. Best served icy, direct and with more olives than is strictly necessary.',
+      ingredients: ['60ML HEPPLE MOORLAND VODKA', '10ML GOOD QUALITY DRY VERMOUTH', '15ML OLIVE BRINE'],
       garnish: 'GREEN OLIVES',
       glass: 'MARTINI GLASS',
       equipment: 'MIXING GLASS, BAR SPOON, STRAINER',

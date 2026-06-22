@@ -38,7 +38,7 @@ const PRODUCTS = [
   },
   {
     slug:  'hepple-moorland-vodka',
-    name:  'Hepple Wheat Vodka',
+    name:  'Hepple Moorland Vodka',
     price: 34.95,
     sku:   'HEP-WHV-70',
     image: 'assets/products/wheat-vodka.jpg',
