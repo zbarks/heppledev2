@@ -4450,6 +4450,56 @@ body .shop-range__overlay{
   object-fit: cover;
   display: block;
 }
+/* Fallback shown only when inline playback fails — covers the player with
+   the still photo (dimmed) plus a button that opens the clip directly. */
+.bio-modal__video-fallback{
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.bio-modal__video-fallback.is-shown{ display: flex; }
+.bio-modal__video-fallback-img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(.42);
+}
+.bio-modal__video-fallback-inner{
+  position: relative;
+  z-index: 1;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  align-items: center;
+}
+.bio-modal__video-fallback-text{
+  margin: 0;
+  color: #fff;
+  font-size: .82rem;
+  line-height: 1.45;
+  letter-spacing: .01em;
+  max-width: 22ch;
+  text-shadow: 0 1px 6px rgba(0,0,0,.5);
+}
+.bio-modal__video-fallback-btn{
+  display: inline-block;
+  padding: .6rem 1.15rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--hepple-blue);
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  text-decoration: none;
+  transition: transform .15s ease, background .15s ease;
+}
+.bio-modal__video-fallback-btn:hover{ transform: translateY(-1px); background: #f1f1f1; }
 .bio-modal__content{
   padding: clamp(1.6rem, 4vw, 2.6rem);
   display: flex;

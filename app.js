@@ -1782,6 +1782,74 @@
   // =============================================
   // BIO MODAL — opens when a board member is clicked
   // =============================================
+
+  // Holds the "is the video taking too long?" timer so we can clear it on close.
+  let bioVideoWatchdog = null;
+
+  // Build a <source> list from the single mp4 path in the data.
+  // We list the original mp4 first (it definitely exists), then optional
+  // sibling files the browser can fall back to if the mp4 can't be decoded.
+  // A browser silently skips any <source> it can't load or play, so listing
+  // files that may not exist (e.g. a .webm) is harmless — it just gives
+  // desktop browsers (which often can't decode iPhone HEVC) another shot.
+  function bioVideoSources(mp4){
+    const base = mp4.replace(/\.(mp4|m4v|mov)$/i, '');
+    return [
+      `<source src="${mp4}" type="video/mp4" />`,
+      `<source src="${base}.webm" type="video/webm" />`,
+      `<source src="${base}-h264.mp4" type="video/mp4" />`,
+    ].join('\n             ');
+  }
+
+  // Wire up resilient playback for the bio video: detect when it can't play
+  // and swap in a fallback that opens the clip directly (which uses a
+  // different, more forgiving playback path / lets the OS handle it).
+  function initBioVideo(member){
+    const wrap = $('#bioModal [data-bio-video]');
+    if (!wrap) return;
+    const video    = $('.bio-modal__video', wrap);
+    const fallback = $('.bio-modal__video-fallback', wrap);
+    if (!video || !fallback) return;
+
+    let settled = false;
+    const stop = () => { if (bioVideoWatchdog){ clearTimeout(bioVideoWatchdog); bioVideoWatchdog = null; } };
+
+    const showFallback = (reason) => {
+      if (settled) return;
+      settled = true; stop();
+      try { video.pause(); } catch(_){}
+      video.style.display = 'none';
+      fallback.classList.add('is-shown');
+      try { if (typeof capture === 'function') capture('bio_video_fallback', { member: member && member.id, reason }); } catch(_){}
+    };
+    const markOk = () => { if (settled) return; settled = true; stop(); };
+
+    // Header parsed = the browser can read the file → treat as playable.
+    video.addEventListener('loadedmetadata', markOk);
+    video.addEventListener('canplay', markOk);
+    video.addEventListener('playing', markOk);
+
+    // Hard decode/network error on the <video> itself → fall back.
+    video.addEventListener('error', () => showFallback('video-error'));
+    // If every <source> failed, the element reports NO_SOURCE.
+    $$('source', video).forEach((s) => s.addEventListener('error', () => {
+      if (video.networkState === 3 /* NETWORK_NO_SOURCE */) showFallback('no-source');
+    }));
+
+    // Backstop: if nothing at all has loaded after 8s, assume it won't.
+    stop();
+    bioVideoWatchdog = setTimeout(() => {
+      if (!settled && video.readyState === 0 /* HAVE_NOTHING */) showFallback('timeout');
+    }, 8000);
+
+    // (Re)load the chosen source and make a best-effort attempt to start.
+    // A blocked-autoplay rejection is NOT a failure — controls are visible,
+    // so we deliberately ignore it rather than showing the fallback.
+    try { video.load(); } catch(_){}
+    const p = video.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }
+
   function openBio(id){
     const m = TEAM_MEMBERS.find(x => x.id === id);
     if (!m) return;
@@ -1812,13 +1880,20 @@
     // If this member has a video, show a real player (controls + sound),
     // poster falls back to their still photo. Otherwise just the photo.
     const mediaHtml = m.video
-      ? `<div class="bio-modal__media bio-modal__media--video">
+      ? `<div class="bio-modal__media bio-modal__media--video" data-bio-video>
            <video class="bio-modal__video"
                   controls playsinline preload="metadata"
                   poster="${m.photo}"
-                  aria-label="${m.name}">
-             <source src="${m.video}" type="video/mp4" />
+                  aria-label="${m.name} — video">
+             ${bioVideoSources(m.video)}
            </video>
+           <div class="bio-modal__video-fallback">
+             <img class="bio-modal__video-fallback-img" src="${m.photo}" alt="${m.name}" aria-hidden="true" />
+             <div class="bio-modal__video-fallback-inner">
+               <p class="bio-modal__video-fallback-text">This clip won’t play inline in this browser.</p>
+               <a class="bio-modal__video-fallback-btn" href="${m.video}" target="_blank" rel="noopener">▶&nbsp; Open the video</a>
+             </div>
+           </div>
          </div>`
       : `<div class="bio-modal__photo">
            <img src="${m.photo}" alt="${m.name}" />
@@ -1834,11 +1909,14 @@
     `;
     modal.classList.add('is-open');
     document.body.classList.add('no-scroll');
+    if (m.video) initBioVideo(m);
   }
   function closeBio(){
     const modal = $('#bioModal');
     if (!modal) return;
-    // Stop any playing video so its audio doesn't continue after closing.
+    // Stop any playing video so its audio doesn't continue after closing,
+    // and cancel the load watchdog so it can't fire after we've closed.
+    if (bioVideoWatchdog){ clearTimeout(bioVideoWatchdog); bioVideoWatchdog = null; }
     const vid = $('.bio-modal__video', modal);
     if (vid){ try { vid.pause(); } catch(_){} }
     modal.classList.remove('is-open');
