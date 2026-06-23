@@ -1125,16 +1125,21 @@ h1, h2, h3, h4{
 
 .team-photo{
   width: clamp(90px, 14vw, 165px);
-  aspect-ratio: 6/7;
+  /* Height follows the image's natural shape so the frame always wraps the
+     photo exactly — no letterbox bars, no cropped faces. */
+  height: auto;
   overflow: hidden;
   border-radius: 10px;
   cursor: pointer;
   transition: opacity .4s ease;
   flex-shrink: 0;
   background: var(--ground-deeper);
+  line-height: 0; /* kills the inline-image baseline gap under the photo */
 }
 .team-photo img{
-  width:100%; height:100%;
+  display: block;
+  width: 100%;
+  height: auto;        /* natural ratio → container fits image exactly */
   object-fit: cover;
   filter: grayscale(1) brightness(.8);
   transition: filter .5s ease;
@@ -6328,15 +6333,16 @@ body li, body a, body span, body div{
   word-break: normal;
 }
 
-/* ---- 3. TEAM PHOTOS — show full faces / portraits (no cropped chins) ----
-   Hani & Miranda were cropping the chin; Walter is a full portrait. `contain`
-   guarantees the whole photo shows. Nudge per-person if you want a tighter
-   crop once the assets are in. */
+/* ---- 3. TEAM PHOTOS — frame fits the image ----
+   Each .team-photo now sizes its height to the photo's natural ratio (see the
+   base .team-photo rule), so every frame wraps its image exactly: no empty
+   bars from `contain`, and no cropped chins from a forced `cover` ratio. */
 body .team-photo[data-team-id="hani"] img,
 body .team-photo[data-team-id="miranda"] img,
 body .team-photo[data-team-id="walter"] img{
-  object-fit: contain !important;
-  background: var(--ground-deeper);
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
 }
 
 /* =========================================================
