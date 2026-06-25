@@ -13,7 +13,7 @@
 //  Designed by Barker Digital
 // =============================================================
 
-const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey } = require('./_catalogue');
+const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey, lookupPromo } = require('./_catalogue');
 
 function siteOrigin(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
@@ -55,6 +55,21 @@ module.exports = async (req, res) => {
     ? body.gift_message.slice(0, 250)
     : '';
 
+  // ---- Promo code (validated server-side; the browser can't be trusted) ----
+  // A recognised code can apply a % discount and/or free shipping. The % is
+  // applied via a Stripe coupon when one is configured (STRIPE_COUPON_<CODE>),
+  // otherwise it's baked into the line items so the code still works.
+  const promo = lookupPromo(body && body.promo_code);
+  const couponId = promo && promo.couponEnv ? process.env[promo.couponEnv] : null;
+  // Inline % discount only when a recognised promo has no Stripe coupon wired.
+  const inlineDiscount = promo && !couponId ? (promo.percentOff || 0) : 0;
+  if (promo && !couponId) {
+    console.warn(
+      `[checkout] Promo "${promo.code}" applied via inline discount — ` +
+      `set ${promo.couponEnv} in Vercel to use the Stripe coupon instead.`
+    );
+  }
+
   // ---- Validate cart against the server catalogue ----
   const clean = [];
   let subtotal = 0;
@@ -83,9 +98,13 @@ module.exports = async (req, res) => {
   const stripe = require('stripe')(key);
 
   // ---- Build line items (Price id if provided, else inline price_data) ----
+  // When an inline promo discount is in force we must build price_data (a fixed
+  // Stripe Price id can't be reduced), so the Price-id shortcut is skipped in
+  // that case to make sure the discount actually reaches every line.
+  const discountMult = inlineDiscount ? (1 - inlineDiscount / 100) : 1;
   const line_items = clean.map(({ product, qty }) => {
     const priceId = process.env[priceEnvKey(product.slug)];
-    if (priceId) return { price: priceId, quantity: qty };
+    if (priceId && !inlineDiscount) return { price: priceId, quantity: qty };
     const product_data = {
       name: product.name,
       metadata: { slug: product.slug, sku: product.sku },
@@ -96,15 +115,15 @@ module.exports = async (req, res) => {
       quantity: qty,
       price_data: {
         currency: CURRENCY,
-        unit_amount: Math.round(product.price * 100),
+        unit_amount: Math.round(product.price * 100 * discountMult),
         product_data,
       },
     };
   });
 
-  // ---- Shipping: free over threshold, flat fee below ----
+  // ---- Shipping: free over threshold, OR free when the promo grants it ----
   // The card add-on does not count toward the free-shipping threshold.
-  const freeShipping = goodsSubtotal >= SHIPPING.freeThreshold;
+  const freeShipping = (promo && promo.freeShipping) || goodsSubtotal >= SHIPPING.freeThreshold;
   const shipping_options = [{
     shipping_rate_data: {
       type: 'fixed_amount',
@@ -127,14 +146,13 @@ module.exports = async (req, res) => {
     .slice(0, 480);
 
   try {
-    const session = await stripe.checkout.sessions.create({
+    const params = {
       mode: 'payment',
       line_items,
       shipping_options,
       shipping_address_collection: { allowed_countries: ['GB'] },
       phone_number_collection: { enabled: true },
       billing_address_collection: 'auto',
-      allow_promotion_codes: true,
       customer_creation: 'always',
       success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?checkout=cancel#/shop`,
@@ -145,8 +163,24 @@ module.exports = async (req, res) => {
         ph_id: phId || '',
         has_gift_card: hasCard ? 'true' : 'false',
         gift_message: hasCard ? giftMessage : '',
+        promo_code: promo ? promo.code : '',
       },
-    });
+    };
+
+    // Discount handling (Stripe rejects `discounts` + `allow_promotion_codes`
+    // together, so it's strictly one or the other):
+    //   • Stripe coupon configured  → apply it server-side.
+    //   • inline promo discount     → already baked into line_items; no box,
+    //                                  so a second code can't be stacked.
+    //   • no promo                  → leave the promo box on for any other
+    //                                  Stripe codes, exactly as before.
+    if (couponId) {
+      params.discounts = [{ coupon: couponId }];
+    } else if (!inlineDiscount) {
+      params.allow_promotion_codes = true;
+    }
+
+    const session = await stripe.checkout.sessions.create(params);
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (err) {
     console.error('[checkout] Stripe error:', err && err.message);

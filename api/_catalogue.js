@@ -100,4 +100,43 @@ function priceEnvKey(slug) {
   return 'STRIPE_PRICE_' + slug.toUpperCase().replace(/-/g, '_');
 }
 
-module.exports = { CURRENCY, PRODUCTS, BY_SLUG, SHIPPING, priceEnvKey };
+// =============================================================
+//  PROMOTIONS
+//  A promo code can apply a % discount and/or force free shipping.
+//
+//  The percentage is realised through a Stripe coupon when its id is
+//  provided via the env var named in `couponEnv` (cleaner reporting —
+//  the discount shows as a proper promotion in the Stripe dashboard).
+//  If that env var is NOT set, the checkout function falls back to
+//  discounting the line items inline, so the code still works out of
+//  the box. Either way the customer pays the same.
+//
+//  To wire the Stripe coupon you already created:
+//    Vercel → Project → Settings → Environment Variables
+//    STRIPE_COUPON_MYSCHOOL10 = <the coupon id, e.g. aB12cD34>
+//  (Dashboard → Product catalogue → Coupons → open it → the id is the
+//   short string in the URL / details panel.)
+//
+//  The code STRING (e.g. MYSCHOOL10) is not secret — it's printed on
+//  marketing material — so the browser is allowed to know it. The
+//  coupon id (the money part) stays server-side only.
+// =============================================================
+const PROMOS = {
+  MYSCHOOL10: {
+    percentOff: 10,        // 10% off
+    freeShipping: true,    // shipping forced to £0 when applied
+    couponEnv: 'STRIPE_COUPON_MYSCHOOL10',
+    label: '10% off + free UK delivery',
+  },
+};
+
+// Normalise + look up a code. Returns the promo (with its key) or null.
+function lookupPromo(code) {
+  if (!code || typeof code !== 'string') return null;
+  const key = code.trim().toUpperCase();
+  return PROMOS[key] ? Object.assign({ code: key }, PROMOS[key]) : null;
+}
+
+module.exports = {
+  CURRENCY, PRODUCTS, BY_SLUG, SHIPPING, priceEnvKey, PROMOS, lookupPromo,
+};

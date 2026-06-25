@@ -583,6 +583,21 @@
   const hasRealItems = () => cart.some(i => i.slug !== GIFT_SLUG);
   const hasGiftCard  = () => cart.some(i => i.slug === GIFT_SLUG);
 
+  // ---- Promo code -----------------------------------------------------------
+  // The code STRING is not secret (it's on marketing material), so the browser
+  // is allowed to know which codes exist for instant feedback. The actual money
+  // (the % + free shipping) is applied authoritatively by api/checkout.js — the
+  // client only forwards the code. Keep this list in step with PROMOS in
+  // api/_catalogue.js.
+  const PROMO_KEY = 'hepple:promo';
+  const PROMO_CODES = {
+    MYSCHOOL10: { label: '10% OFF + FREE UK DELIVERY' },
+  };
+  const validPromo = (code) => PROMO_CODES[(code || '').trim().toUpperCase()] || null;
+  const getPromo = () => { try { return (localStorage.getItem(PROMO_KEY) || '').toUpperCase(); } catch(_){ return ''; } };
+  const setPromo = (v) => { try { localStorage.setItem(PROMO_KEY, (v || '').toUpperCase()); } catch(_){} };
+  const clearPromo = () => { try { localStorage.removeItem(PROMO_KEY); } catch(_){} };
+
   function addGiftCard(){
     if (!hasRealItems()){ showToast('ADD A PRODUCT FIRST'); return false; }
     if (!hasGiftCard()){ cart.push({ key: GIFT_SLUG, slug: GIFT_SLUG, qty: 1 }); saveCart(); }
@@ -650,10 +665,12 @@
 
     const items = cart.map(i => ({ slug: i.slug, qty: i.qty }));
     const giftMessage = hasGiftCard() ? getGiftMessage().slice(0, GIFT_MSG_MAX) : '';
+    const promoCode = validPromo(getPromo()) ? getPromo() : '';
     capture('checkout_started', {
       item_count: cartCount(),
       cart_value: cartTotal(),
       has_gift_card: hasGiftCard(),
+      promo_code: promoCode,
       items,
     });
 
@@ -665,7 +682,7 @@
       const resp = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage }),
+        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode }),
       });
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable right now.');
@@ -745,6 +762,14 @@
     const totalEl = $('#cartTotal');
     if (totalEl) totalEl.textContent = `£${cartTotal().toFixed(2)}`;
     renderGift();
+    renderPromo();
+    const noteEl = $('#cartNote');
+    if (noteEl){
+      const info = validPromo(getPromo());
+      noteEl.textContent = info
+        ? `${info.label} — APPLIED AT CHECKOUT`
+        : 'SHIPPING CALCULATED AT CHECKOUT';
+    }
   }
 
   // ---- Handwritten-card add-on UI (lives between cart body and footer) ----
@@ -774,6 +799,48 @@
           <div class="cart-gift__count"><span id="giftMsgCount">${msg.length}</span>/${GIFT_MSG_MAX}</div>
         </div>` : ''}
     `;
+  }
+
+  // ---- Promo code input + applied state (lives above the cart total) ----
+  function renderPromo(){
+    const wrap = $('#cartPromo');
+    if (!wrap) return;
+    const code = getPromo();
+    const info = validPromo(code);
+    if (info){
+      wrap.innerHTML = `
+        <div class="cart-promo__applied">
+          <div class="cart-promo__applied-info">
+            <span class="cart-promo__code">${escapeHtml(code)}</span>
+            <span class="cart-promo__label">${escapeHtml(info.label)}</span>
+          </div>
+          <button type="button" class="cart-promo__remove" data-promo-remove aria-label="Remove promo code">✕</button>
+        </div>`;
+    } else {
+      wrap.innerHTML = `
+        <div class="cart-promo__row">
+          <input id="promoInput" class="cart-promo__input" type="text"
+                 placeholder="PROMO CODE" autocomplete="off" spellcheck="false" maxlength="40" />
+          <button type="button" class="cart-promo__apply" data-promo-apply>APPLY</button>
+        </div>
+        <div class="cart-promo__msg" id="promoMsg" hidden></div>`;
+    }
+  }
+
+  function applyPromoFromInput(){
+    const input = $('#promoInput');
+    const val = (input ? input.value : '').trim().toUpperCase();
+    if (!val) return;
+    if (validPromo(val)){
+      setPromo(val);
+      renderCart();
+      showToast('PROMO APPLIED');
+      capture('promo_applied', { code: val });
+    } else {
+      const msg = $('#promoMsg');
+      if (msg){ msg.hidden = false; msg.textContent = 'CODE NOT RECOGNISED'; }
+      capture('promo_rejected', { code: val });
+    }
   }
 
   function bumpCart(){
@@ -938,6 +1005,19 @@
       renderCart();
       return;
     }
+    const promoApply = e.target.closest('[data-promo-apply]');
+    if (promoApply){
+      e.preventDefault();
+      applyPromoFromInput();
+      return;
+    }
+    const promoRemove = e.target.closest('[data-promo-remove]');
+    if (promoRemove){
+      e.preventDefault();
+      clearPromo();
+      renderCart();
+      return;
+    }
     const addBtn = e.target.closest('[data-add-to-cart]');
     if (addBtn){
       e.preventDefault();
@@ -1003,6 +1083,14 @@
     setGiftMessage(t.value);
     const counter = $('#giftMsgCount');
     if (counter) counter.textContent = String(t.value.length);
+  });
+
+  // Enter inside the promo field applies the code (mirrors the APPLY button).
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    if (!e.target.closest || !e.target.closest('#promoInput')) return;
+    e.preventDefault();
+    applyPromoFromInput();
   });
 
   // Page transition: show loader → wait for cover → swap page → wait → fade out
@@ -1211,6 +1299,7 @@
   $('#cartBtn')?.addEventListener('click', () => {
     $('#cartPanel').classList.add('is-open');
     $('#overlay').classList.add('is-active');
+    renderCart();
     capture('cart_opened', { cart_count: cartCount(), cart_value: cartTotal() });
   });
   $('#cartClose')?.addEventListener('click', closeDrawers);
@@ -1941,7 +2030,7 @@
     if (status === 'success'){
       const sid = params.get('session_id') || null;
       capture('purchase', { order_id: sid, source: 'client-return' });
-      cart = []; saveCart(); renderCart();
+      cart = []; saveCart(); clearPromo(); renderCart();
       showCheckoutConfirmation();
     } else if (status === 'cancel'){
       showToast('CHECKOUT CANCELLED');

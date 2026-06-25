@@ -117,6 +117,32 @@ By default the server builds each line item's price inline from
 create Products/Prices there and set `STRIPE_PRICE_<SLUG>` env vars (see
 `.env.example` for the exact names).
 
+### 7. Promo codes
+
+Promo codes are defined in `PROMOS` in `api/_catalogue.js` and validated
+server-side — the browser only forwards the code string, never decides the
+discount. The shipped code is **`MYSCHOOL10`** (10% off + free UK delivery).
+
+The percentage is realised one of two ways:
+
+- **Stripe coupon (recommended).** Create a 10% coupon in Stripe (Product
+  catalogue → Coupons), then set its id as an env var:
+  `STRIPE_COUPON_MYSCHOOL10=<coupon id>`. The discount then shows as a proper
+  promotion in the Stripe dashboard, and free shipping is applied alongside it.
+- **Inline fallback.** If that env var isn't set, the checkout function bakes
+  the 10% into the line items and still applies free shipping, so the code
+  works out of the box — it just won't appear as a separate "promotion" line in
+  Stripe. (A warning is logged so you know to wire the coupon.)
+
+Either way the customer pays the same. To add another code, drop an entry into
+`PROMOS` (server) and the matching `PROMO_CODES` set in `app.js` (client, for
+the instant "applied" feedback in the cart).
+
+> Note: `MYSCHOOL10` is handled by the cart's own promo field, not Stripe's
+> hosted promo box. Keep it as a Stripe **coupon**, not a customer-facing
+> **promotion code**, so it can't also be typed in on Stripe's page (which
+> wouldn't grant free shipping).
+
 ## Analytics events captured
 
 | Event | Fired from | Notable props |
