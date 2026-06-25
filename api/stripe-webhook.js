@@ -53,6 +53,37 @@ async function recordToSupabase(order) {
   return { ok: true };
 }
 
+// Record a promo redemption so the same visitor can't reuse a one-shot code.
+// Keyed on the PostHog distinct id (the live block) with email stored for
+// reporting. Unique (stripe_session_id, code) means Stripe retries are no-ops.
+async function recordPromoRedemption(order) {
+  if (!order.promo_code) return { skipped: 'no-promo' };
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return { skipped: 'supabase-not-configured' };
+  const endpoint = `${url.replace(/\/$/, '')}/rest/v1/promo_redemptions?on_conflict=stripe_session_id,code`;
+  const resp = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=merge-duplicates,return=minimal',
+    },
+    body: JSON.stringify([{
+      code: order.promo_code,
+      posthog_distinct_id: order.posthog_distinct_id || null,
+      customer_email: order.customer_email ? order.customer_email.toLowerCase() : null,
+      stripe_session_id: order.stripe_session_id,
+    }]),
+  });
+  if (!resp.ok) {
+    const txt = await resp.text().catch(() => '');
+    throw new Error(`Supabase promo insert failed ${resp.status}: ${txt}`);
+  }
+  return { ok: true };
+}
+
 async function capturePostHog(order) {
   const apiKey = process.env.POSTHOG_API_KEY;
   if (!apiKey) return { skipped: 'posthog-not-configured' };
@@ -134,6 +165,7 @@ module.exports = async (req, res) => {
         items: lineItems,
         cart_summary: (s.metadata && s.metadata.cart) || null,
         posthog_distinct_id: (s.metadata && s.metadata.ph_id) || null,
+        promo_code: (s.metadata && s.metadata.promo_code) || null,
         has_gift_card: (s.metadata && s.metadata.has_gift_card) === 'true',
         gift_message: (s.metadata && s.metadata.gift_message) || null,
         shipping_address: (s.shipping_details && s.shipping_details.address) || null,
@@ -145,6 +177,7 @@ module.exports = async (req, res) => {
 
       const results = await Promise.allSettled([
         recordToSupabase(order),
+        recordPromoRedemption(order),
         capturePostHog(order),
       ]);
       results.forEach((r, i) => {

@@ -14,6 +14,7 @@
 // =============================================================
 
 const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey, lookupPromo } = require('./_catalogue');
+const { hasRedeemed } = require('./_promo');
 
 function siteOrigin(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
@@ -68,6 +69,17 @@ module.exports = async (req, res) => {
       `[checkout] Promo "${promo.code}" applied via inline discount — ` +
       `set ${promo.couponEnv} in Vercel to use the Stripe coupon instead.`
     );
+  }
+
+  // ---- One-shot enforcement: has THIS visitor already used the code? ----
+  // Keyed on the PostHog distinct id (recorded against paid orders by the
+  // webhook). This is the authoritative gate; the cart's pre-check is just
+  // UX. Fails open inside hasRedeemed() if Supabase is unreachable.
+  if (promo && (await hasRedeemed(promo.code, phId))) {
+    return res.status(409).json({
+      error: 'This code has already been used.',
+      code: 'PROMO_USED',
+    });
   }
 
   // ---- Validate cart against the server catalogue ----

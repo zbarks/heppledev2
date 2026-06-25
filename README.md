@@ -143,6 +143,25 @@ the instant "applied" feedback in the cart).
 > **promotion code**, so it can't also be typed in on Stripe's page (which
 > wouldn't grant free shipping).
 
+**One use per visitor.** A code is one-shot per PostHog visitor. When a paid
+order uses a code, the webhook logs a row in `promo_redemptions` (keyed on the
+PostHog distinct id, with email stored for reporting). After that:
+
+- the cart pre-checks via `POST /api/promo-check` and shows *"you've already
+  used this code"* if the visitor tries to re-apply it;
+- `api/checkout.js` re-checks before applying any discount and returns `409`
+  (`PROMO_USED`) if it's already been redeemed — the authoritative gate, so a
+  tampered client can't bypass it.
+
+This is a deterrent, not DRM: the block is by browser id, so clearing cookies
+or switching device/browser yields a fresh id and the code works again. Email
+is recorded so you can spot that kind of reuse in the data. Both checks **fail
+open** — if Supabase is unreachable the code still works, so a database blip
+never locks out genuine customers. Enforcement therefore needs
+`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` set (the same vars the order
+webhook already uses), and the `promo_redemptions` table created (re-run
+`supabase-schema.sql`).
+
 ## Analytics events captured
 
 | Event | Fired from | Notable props |

@@ -447,6 +447,21 @@ h1, h2, h3, h4{
   color: var(--hepple-ink);
 }
 .cart-panel__total strong{ font-size:1.2rem; letter-spacing:0; }
+/* ---- Cart summary breakdown ---- */
+.cart-panel__summary{ margin-bottom:1rem; }
+.cart-sum__row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:.72rem; letter-spacing:.14em; font-weight:600;
+  color:var(--hepple-ink);
+  padding:.28rem 0;
+}
+.cart-sum__row--promo{ color:var(--juniper); font-weight:800; }
+.cart-sum__row--total{
+  margin-top:.35rem; padding-top:.7rem;
+  border-top:1px solid rgba(0,48,135,.12);
+  font-size:.85rem; letter-spacing:.2em; font-weight:700;
+}
+.cart-sum__row--total strong{ font-size:1.2rem; letter-spacing:0; }
 .cart-panel__checkout{
   width:100%;
   padding:.95rem;

@@ -591,7 +591,7 @@
   // api/_catalogue.js.
   const PROMO_KEY = 'hepple:promo';
   const PROMO_CODES = {
-    MYSCHOOL10: { label: '10% OFF + FREE UK DELIVERY' },
+    MYSCHOOL10: { label: '10% OFF + FREE UK DELIVERY', percentOff: 10, freeShipping: true },
   };
   const validPromo = (code) => PROMO_CODES[(code || '').trim().toUpperCase()] || null;
   const getPromo = () => { try { return (localStorage.getItem(PROMO_KEY) || '').toUpperCase(); } catch(_){ return ''; } };
@@ -685,6 +685,15 @@
         body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode }),
       });
       const data = await resp.json().catch(() => ({}));
+      // Server backstop: the code was already redeemed by this visitor.
+      if (resp.status === 409 && data.code === 'PROMO_USED'){
+        clearPromo();
+        renderCart();
+        showToast('CODE ALREADY USED — REMOVED');
+        if (btn){ btn.disabled = false; btn.textContent = original || 'CHECKOUT'; }
+        _checkoutInFlight = false;
+        return;
+      }
       if (!resp.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable right now.');
       // Off to Stripe's hosted checkout.
       window.location.href = data.url;
@@ -759,16 +768,52 @@
       `;
     }).join('');
     if (foot) foot.hidden = false;
-    const totalEl = $('#cartTotal');
-    if (totalEl) totalEl.textContent = `£${cartTotal().toFixed(2)}`;
     renderGift();
     renderPromo();
+    renderSummary();
     const noteEl = $('#cartNote');
     if (noteEl){
       const info = validPromo(getPromo());
       noteEl.textContent = info
-        ? `${info.label} — APPLIED AT CHECKOUT`
+        ? 'FINAL TOTAL CONFIRMED SECURELY AT CHECKOUT'
         : 'SHIPPING CALCULATED AT CHECKOUT';
+    }
+  }
+
+  // ---- Cart money breakdown ----
+  const money = (n) => `£${n.toFixed(2)}`;
+
+  // Mirrors the server's per-line discount rounding (api/checkout.js) so the
+  // figures shown here match what Stripe charges, to the penny.
+  function promoTotals(){
+    const info = validPromo(getPromo());
+    const pct = info ? (info.percentOff || 0) : 0;
+    let subtotal = 0, discounted = 0;
+    cart.forEach(i => {
+      const p = productBySlug[i.slug];
+      if (!p) return;
+      subtotal += p.price * i.qty;
+      const unit = pct ? Math.round(p.price * 100 * (1 - pct / 100)) / 100 : p.price;
+      discounted += unit * i.qty;
+    });
+    return { info, pct, subtotal, discounted, discount: subtotal - discounted };
+  }
+
+  function renderSummary(){
+    const el = $('#cartSummary');
+    if (!el) return;
+    const { info, pct, subtotal, discounted, discount } = promoTotals();
+    if (info && pct){
+      el.innerHTML = `
+        <div class="cart-sum__row"><span>SUBTOTAL</span><span>${money(subtotal)}</span></div>
+        <div class="cart-sum__row cart-sum__row--promo">
+          <span>${escapeHtml(getPromo())} (−${pct}%)</span><span>−${money(discount)}</span>
+        </div>
+        <div class="cart-sum__row"><span>SHIPPING</span><span>FREE</span></div>
+        <div class="cart-sum__row cart-sum__row--total"><span>TOTAL</span><strong>${money(discounted)}</strong></div>`;
+    } else {
+      el.innerHTML = `
+        <div class="cart-sum__row cart-sum__row--total"><span>SUBTOTAL</span><strong>${money(subtotal)}</strong></div>`;
     }
   }
 
@@ -827,20 +872,46 @@
     }
   }
 
-  function applyPromoFromInput(){
+  function showPromoMsg(text){
+    const msg = $('#promoMsg');
+    if (msg){ msg.hidden = false; msg.textContent = text; }
+  }
+
+  async function applyPromoFromInput(){
     const input = $('#promoInput');
     const val = (input ? input.value : '').trim().toUpperCase();
     if (!val) return;
-    if (validPromo(val)){
-      setPromo(val);
-      renderCart();
-      showToast('PROMO APPLIED');
-      capture('promo_applied', { code: val });
-    } else {
-      const msg = $('#promoMsg');
-      if (msg){ msg.hidden = false; msg.textContent = 'CODE NOT RECOGNISED'; }
-      capture('promo_rejected', { code: val });
+    if (!validPromo(val)){
+      showPromoMsg('CODE NOT RECOGNISED');
+      capture('promo_rejected', { code: val, reason: 'unknown' });
+      return;
     }
+
+    // Ask the server whether this visitor (PostHog id) has already used it.
+    const btn = $('[data-promo-apply]');
+    if (btn){ btn.disabled = true; btn.textContent = 'CHECKING…'; }
+    let used = false;
+    try {
+      const resp = await fetch('/api/promo-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: val, ph_id: phDistinctId() }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      used = !!data.used;
+    } catch (_) { used = false; } // fail open — never block on a network blip
+
+    if (used){
+      showPromoMsg("YOU'VE ALREADY USED THIS CODE");
+      capture('promo_rejected', { code: val, reason: 'already_used' });
+      if (btn){ btn.disabled = false; btn.textContent = 'APPLY'; }
+      return;
+    }
+
+    setPromo(val);
+    renderCart();
+    showToast('PROMO APPLIED');
+    capture('promo_applied', { code: val });
   }
 
   function bumpCart(){
