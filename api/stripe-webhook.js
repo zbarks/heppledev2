@@ -168,11 +168,15 @@ module.exports = async (req, res) => {
         promo_code: (s.metadata && s.metadata.promo_code) || null,
         has_gift_card: (s.metadata && s.metadata.has_gift_card) === 'true',
         gift_message: (s.metadata && s.metadata.gift_message) || null,
-        shipping_address:
-          (s.collected_information && s.collected_information.shipping_details && s.collected_information.shipping_details.address) ||
-          (s.shipping_details && s.shipping_details.address) ||
-          (s.customer_details && s.customer_details.address) ||
-          null,
+        shipping_address: (function () {
+  var sd = (s.collected_information && s.collected_information.shipping_details)
+    || (s.shipping_details && s.shipping_details.address ? { address: s.shipping_details.address, name: s.shipping_details.name } : null)
+    || (s.shipping && s.shipping.address ? { address: s.shipping.address, name: s.shipping.name } : null);
+  var address = (sd && sd.address) || (s.customer_details && s.customer_details.address) || null;
+  if (!address) return null;
+  var name = (sd && sd.name) || (s.customer_details && s.customer_details.name) || null;
+  return name ? Object.assign({}, address, { name: name }) : address;
+})(),
         payment_status: s.payment_status || 'paid',
         fulfilled: false,
         fulfilled_at: null,
