@@ -23,6 +23,23 @@ function siteOrigin(req) {
   return `${proto}://${host}`;
 }
 
+// Admin gift switch (flipped in the portal). Reads Supabase site_settings.
+// Fails OPEN (gift allowed) if Supabase isn't configured/reachable.
+async function isGiftEnabled() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return true;
+  try {
+    const r = await fetch(
+      `${url.replace(/\/$/, '')}/rest/v1/site_settings?key=eq.gift_enabled&select=value`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+    );
+    if (!r.ok) return true;
+    const rows = await r.json();
+    return !(rows.length && rows[0].value === false);
+  } catch (_) { return true; }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -83,7 +100,7 @@ module.exports = async (req, res) => {
   }
 
   // ---- Validate cart against the server catalogue ----
-  const clean = [];
+  let clean = [];
   let subtotal = 0;
   let goodsSubtotal = 0; // excludes add-ons (the card), for the shipping test
   for (const it of items) {
@@ -95,6 +112,13 @@ module.exports = async (req, res) => {
     if (!product.addon) goodsSubtotal += product.price * qty;
   }
   if (!clean.length) return res.status(400).json({ error: 'No valid items in cart.' });
+
+  // ---- Admin gift switch: if gifting is OFF, drop any card add-on so it can't
+  // be sneaked through with a stale page. The order proceeds without the card. ----
+  if (!(await isGiftEnabled())) {
+    clean = clean.filter(({ product }) => !product.addon);
+    if (!clean.length) return res.status(400).json({ error: 'No valid items in cart.' });
+  }
 
   // ---- GUARD: a handwritten card can never be the only thing in the basket.
   // This is the authoritative check (the browser can be bypassed). ----

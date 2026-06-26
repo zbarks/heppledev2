@@ -18,8 +18,35 @@
 //  Designed by Barker Digital
 // =============================================================
 
+const { emailsEnabled, sendOrderConfirmation } = require('./_email');
+
 // Vercel must NOT pre-parse the body or the signature check fails.
 module.exports.config = { api: { bodyParser: false } };
+
+// Atomically "claim" the confirmation email: flips confirmation_email_sent_at
+// from NULL to now() and returns the row only if WE won. Guarantees the
+// confirmation is sent at most once, even across Stripe retries / manual resends.
+async function claimConfirmationEmail(stripeSessionId) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  const endpoint = `${url.replace(/\/$/, '')}/rest/v1/orders`
+    + `?stripe_session_id=eq.${encodeURIComponent(stripeSessionId)}`
+    + `&confirmation_email_sent_at=is.null`;
+  const resp = await fetch(endpoint, {
+    method: 'PATCH',
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify({ confirmation_email_sent_at: new Date().toISOString() }),
+  });
+  if (!resp.ok) return null;
+  const rows = await resp.json().catch(() => []);
+  return rows && rows.length ? rows[0] : null;
+}
 
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -193,6 +220,21 @@ module.exports = async (req, res) => {
           console.error(`[webhook] sink ${i} failed:`, r.reason && r.reason.message);
         }
       });
+
+      // Order confirmation email — only after the row exists, and only once.
+      // The claim flips confirmation_email_sent_at NULL→now so resends/retries
+      // (and your backfill) never double-email. Disabled unless EMAILS_ENABLED.
+      if (emailsEnabled() && order.customer_email) {
+        try {
+          const claimed = await claimConfirmationEmail(order.stripe_session_id);
+          if (claimed) {
+            const r = await sendOrderConfirmation(order);
+            if (r && r.error) console.error('[webhook] confirmation email error:', r.error);
+          }
+        } catch (e) {
+          console.error('[webhook] confirmation email threw:', e && e.message);
+        }
+      }
     }
 
     return res.status(200).json({ received: true });

@@ -583,6 +583,22 @@
   const hasRealItems = () => cart.some(i => i.slug !== GIFT_SLUG);
   const hasGiftCard  = () => cart.some(i => i.slug === GIFT_SLUG);
 
+  // Admin gift switch (flipped in the portal). Defaults ON. When OFF, the
+  // storefront hides the "make it a gift" block and drops any card already
+  // in the cart. The checkout API enforces this server-side too.
+  let giftEnabled = true;
+  (function loadGiftSetting(){
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(s => {
+        giftEnabled = !s || s.gift_enabled !== false;
+        if (!giftEnabled && hasGiftCard()) removeGiftCard();
+        renderGift();
+        renderCart();
+      })
+      .catch(() => {});
+  })();
+
   // ---- Promo code -----------------------------------------------------------
   // The code STRING is not secret (it's on marketing material), so the browser
   // is allowed to know which codes exist for instant feedback. The actual money
@@ -821,6 +837,8 @@
   function renderGift(){
     const wrap = $('#cartGift');
     if (!wrap) return;
+    // Admin switched gifting off → never offer the card.
+    if (!giftEnabled){ wrap.hidden = true; wrap.innerHTML = ''; return; }
     // Only offer the card when there's a real product to attach it to.
     if (!hasRealItems()){ wrap.hidden = true; wrap.innerHTML = ''; return; }
     wrap.hidden = false;
