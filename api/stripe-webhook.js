@@ -168,7 +168,11 @@ module.exports = async (req, res) => {
         promo_code: (s.metadata && s.metadata.promo_code) || null,
         has_gift_card: (s.metadata && s.metadata.has_gift_card) === 'true',
         gift_message: (s.metadata && s.metadata.gift_message) || null,
-        shipping_address: (s.shipping_details && s.shipping_details.address) || null,
+        shipping_address:
+          (s.collected_information && s.collected_information.shipping_details && s.collected_information.shipping_details.address) ||
+          (s.shipping_details && s.shipping_details.address) ||
+          (s.customer_details && s.customer_details.address) ||
+          null,
         payment_status: s.payment_status || 'paid',
         fulfilled: false,
         fulfilled_at: null,
