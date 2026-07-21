@@ -78,3 +78,8 @@ create index if not exists promo_redemptions_code_email_idx
 
 -- Same RLS posture as orders: server (service role) only, no anon access.
 alter table public.promo_redemptions enable row level security;
+
+-- ------------------------------------------------------------
+--  Mobile number (added later). Run once if upgrading.
+-- ------------------------------------------------------------
+alter table public.orders add column if not exists customer_phone text;
