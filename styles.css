@@ -1098,6 +1098,30 @@ h1, h2, h3, h4{
   font-weight:700;
 }
 
+/* Small nudge on the Visit Us page toward the separate Hepple Wilds events site */
+.placeholder__wilds-note{
+  margin-top: 2.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid currentColor;
+  max-width: 38ch;
+}
+.placeholder__wilds-note p{
+  font-size:.82rem;
+  line-height:1.7;
+  letter-spacing:.02em;
+  opacity:.75;
+  margin: 0 0 1rem;
+  font-weight:500;
+}
+.placeholder__wilds-link{
+  font-size:.68rem;
+  letter-spacing:.22em;
+  color:var(--hepple-blue);
+  border-bottom:1px solid currentColor;
+  padding-bottom:3px;
+  font-weight:700;
+}
+
 /* =========================================================
    OUR STORY NEW HERO
    ========================================================= */
@@ -4267,11 +4291,17 @@ body [data-page="/visit"] .placeholder h1,
 body [data-page="/visit"] .placeholder h1 em,
 body [data-page="/visit"] .placeholder__latin,
 body [data-page="/visit"] .placeholder__back,
+body [data-page="/visit"] .placeholder__wilds-note,
+body [data-page="/visit"] .placeholder__wilds-link,
 body [data-page="/visit"] .script-accent{
   color: var(--hepple-blue) !important;
 }
 body [data-page="/visit"] .placeholder__latin{
   opacity: .85 !important;
+}
+body [data-page="/visit"] .placeholder__wilds-note{
+  border-top-color: var(--hepple-blue) !important;
+  opacity: .9 !important;
 }
 
 /* =========================================================
@@ -5580,6 +5610,7 @@ body .placeholder__inner .script-accent{
 }
 body .placeholder__inner .placeholder__latin{ order: 3 !important; }
 body .placeholder__inner .placeholder__back{ order: 4 !important; }
+body .placeholder__inner .placeholder__wilds-note{ order: 5 !important; }
 
 /* HOME SECTION 1 — Maristella eyebrow now BELOW headline, similar size */
 body .home-hero__panel{
