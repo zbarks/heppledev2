@@ -83,7 +83,7 @@ async function recordToSupabase(order) {
 // Record a promo redemption so the same visitor can't reuse a one-shot code.
 // Keyed on the PostHog distinct id (the live block) with email stored for
 // reporting. Unique (stripe_session_id, code) means Stripe retries are no-ops.
-async function recordPromoRedemption(order) {
+async function recordPromoRedemption(order, subtotalBefore) {
   if (!order.promo_code) return { skipped: 'no-promo' };
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -102,6 +102,8 @@ async function recordPromoRedemption(order) {
       posthog_distinct_id: order.posthog_distinct_id || null,
       customer_email: order.customer_email ? order.customer_email.toLowerCase() : null,
       stripe_session_id: order.stripe_session_id,
+      discount_amount: order.discount_amount || 0,
+      subtotal_before: subtotalBefore == null ? null : subtotalBefore,
     }]),
   });
   if (!resp.ok) {
@@ -194,6 +196,18 @@ module.exports = async (req, res) => {
         cart_summary: (s.metadata && s.metadata.cart) || null,
         posthog_distinct_id: (s.metadata && s.metadata.ph_id) || null,
         promo_code: (s.metadata && s.metadata.promo_code) || null,
+        // What the code actually took off. Two routes to the same number:
+        //  • Stripe coupon  -> Stripe reports it in total_details.amount_discount
+        //  • inline         -> checkout.js already worked it out and passed it
+        //                      through metadata (Stripe's amount_subtotal is
+        //                      net of an inline discount, so it can't be
+        //                      derived here).
+        discount_amount: (function () {
+          var fromStripe = (s.total_details && s.total_details.amount_discount) || 0;
+          if (fromStripe > 0) return fromStripe / 100;
+          var fromMeta = parseFloat((s.metadata && s.metadata.promo_discount) || '0');
+          return isNaN(fromMeta) ? 0 : fromMeta;
+        })(),
         has_gift_card: (s.metadata && s.metadata.has_gift_card) === 'true',
         gift_message: (s.metadata && s.metadata.gift_message) || null,
         shipping_address: (function () {
@@ -213,7 +227,14 @@ module.exports = async (req, res) => {
 
       const results = await Promise.allSettled([
         recordToSupabase(order),
-        recordPromoRedemption(order),
+        recordPromoRedemption(order, (function () {
+          // Pre-discount goods total. checkout.js passes it through metadata
+          // for inline discounts (where Stripe's amount_subtotal is already
+          // net); with a Stripe coupon, amount_subtotal is the gross figure.
+          var meta = parseFloat((s.metadata && s.metadata.subtotal_before) || '');
+          if (!isNaN(meta) && meta > 0) return meta;
+          return (s.amount_subtotal || 0) / 100;
+        })()),
         capturePostHog(order),
       ]);
       results.forEach((r, i) => {

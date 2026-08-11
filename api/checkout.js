@@ -14,7 +14,6 @@
 // =============================================================
 
 const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey, lookupPromo } = require('./_catalogue');
-const { hasRedeemed } = require('./_promo');
 
 function siteOrigin(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
@@ -74,30 +73,30 @@ module.exports = async (req, res) => {
     : '';
 
   // ---- Promo code (validated server-side; the browser can't be trusted) ----
-  // A recognised code can apply a % discount and/or free shipping. The % is
-  // applied via a Stripe coupon when one is configured (STRIPE_COUPON_<CODE>),
-  // otherwise it's baked into the line items so the code still works.
-  const promo = lookupPromo(body && body.promo_code);
-  const couponId = promo && promo.couponEnv ? process.env[promo.couponEnv] : null;
-  // Inline % discount only when a recognised promo has no Stripe coupon wired.
-  const inlineDiscount = promo && !couponId ? (promo.percentOff || 0) : 0;
-  if (promo && !couponId) {
-    console.warn(
-      `[checkout] Promo "${promo.code}" applied via inline discount — ` +
-      `set ${promo.couponEnv} in Vercel to use the Stripe coupon instead.`
-    );
-  }
+  // Codes live in Supabase and are managed from the portal. One call answers
+  // "is it real, what does it do, and has this visitor already used it".
+  //
+  // A code is either a % off or a fixed GBP amount off, and may force free
+  // shipping. The money is realised via a Stripe coupon when one is attached
+  // to the code (or a legacy STRIPE_COUPON_<CODE> env var exists); otherwise
+  // it is baked into the line items so portal-created codes work immediately.
+  //
+  // FAILS CLOSED: an unreachable database means no promo rather than a guess.
+  const promo = await lookupPromo(body && body.promo_code, { phId });
 
   // ---- One-shot enforcement: has THIS visitor already used the code? ----
   // Keyed on the PostHog distinct id (recorded against paid orders by the
-  // webhook). This is the authoritative gate; the cart's pre-check is just
-  // UX. Fails open inside hasRedeemed() if Supabase is unreachable.
-  if (promo && (await hasRedeemed(promo.code, phId))) {
+  // webhook). Authoritative gate; the cart's pre-check is only UX.
+  if (promo && promo.alreadyUsed) {
     return res.status(409).json({
       error: 'This code has already been used.',
       code: 'PROMO_USED',
     });
   }
+
+  const couponId = promo
+    ? (promo.stripeCouponId || (promo.couponEnv ? process.env[promo.couponEnv] : null) || null)
+    : null;
 
   // ---- Validate cart against the server catalogue ----
   let clean = [];
@@ -137,6 +136,25 @@ module.exports = async (req, res) => {
   // When an inline promo discount is in force we must build price_data (a fixed
   // Stripe Price id can't be reduced), so the Price-id shortcut is skipped in
   // that case to make sure the discount actually reaches every line.
+  // A fixed GBP code is converted to the equivalent percentage of this cart,
+  // so both kinds share one rounding path and the cart mirrors Stripe exactly.
+  // (app.js does the identical conversion, so the figures agree to the penny.)
+  let inlineDiscount = 0;
+  if (promo && !couponId) {
+    if (promo.percentOff) {
+      inlineDiscount = promo.percentOff;
+    } else if (promo.amountOff && subtotal > 0) {
+      inlineDiscount = Math.min(100, (promo.amountOff / subtotal) * 100);
+    }
+    if (inlineDiscount) {
+      console.warn(
+        `[checkout] Promo "${promo.code}" applied via inline discount — ` +
+        `attach a Stripe coupon id to the code in the portal to use a ` +
+        `Stripe coupon instead.`
+      );
+    }
+  }
+
   const discountMult = inlineDiscount ? (1 - inlineDiscount / 100) : 1;
   const line_items = clean.map(({ product, qty }) => {
     const priceId = process.env[priceEnvKey(product.slug)];
@@ -175,6 +193,15 @@ module.exports = async (req, res) => {
     },
   }];
 
+  // What the discount actually came to, so the webhook can store it on the
+  // order (Stripe's amount_subtotal is already net of an inline discount).
+  const discountedGoods = clean.reduce(function (sum, { product, qty }) {
+    return sum + (Math.round(product.price * 100 * discountMult) / 100) * qty;
+  }, 0);
+  const promoDiscount = promo
+    ? Math.round((subtotal - discountedGoods) * 100) / 100
+    : 0;
+
   // Compact cart summary stored on the session (≤ 500 chars per metadata value)
   const cartSummary = clean
     .map(({ product, qty }) => `${qty}x ${product.sku}`)
@@ -200,6 +227,8 @@ module.exports = async (req, res) => {
         has_gift_card: hasCard ? 'true' : 'false',
         gift_message: hasCard ? giftMessage : '',
         promo_code: promo ? promo.code : '',
+        promo_discount: promo ? promoDiscount.toFixed(2) : '',
+        subtotal_before: promo ? subtotal.toFixed(2) : '',
       },
     };
 

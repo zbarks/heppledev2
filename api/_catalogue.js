@@ -102,41 +102,84 @@ function priceEnvKey(slug) {
 
 // =============================================================
 //  PROMOTIONS
-//  A promo code can apply a % discount and/or force free shipping.
+//  Codes live in Supabase (public.discount_codes) and are managed from the
+//  portal — Discounts page. Nothing is hardcoded here any more.
 //
-//  The percentage is realised through a Stripe coupon when its id is
-//  provided via the env var named in `couponEnv` (cleaner reporting —
-//  the discount shows as a proper promotion in the Stripe dashboard).
-//  If that env var is NOT set, the checkout function falls back to
-//  discounting the line items inline, so the code still works out of
-//  the box. Either way the customer pays the same.
+//  A code applies EITHER a % discount or a fixed £ amount, and can also
+//  force free shipping. One redemption per visitor is the default.
 //
-//  To wire the Stripe coupon you already created:
-//    Vercel → Project → Settings → Environment Variables
-//    STRIPE_COUPON_MYSCHOOL10 = <the coupon id, e.g. aB12cD34>
-//  (Dashboard → Product catalogue → Coupons → open it → the id is the
-//   short string in the URL / details panel.)
+//  The money is realised in one of two ways, exactly as before:
+//   • Stripe coupon — when the code row carries a `stripe_coupon_id`, or a
+//     STRIPE_COUPON_<CODE> env var exists. Cleaner reporting: the discount
+//     shows as a proper promotion in the Stripe dashboard.
+//   • Inline — otherwise the discount is baked into the line items, so a
+//     code created in the portal works immediately with no Stripe setup.
+//  Either way the customer pays the same.
 //
-//  The code STRING (e.g. MYSCHOOL10) is not secret — it's printed on
-//  marketing material — so the browser is allowed to know it. The
-//  coupon id (the money part) stays server-side only.
+//  FAILS CLOSED: if Supabase is unreachable, lookupPromo returns null and no
+//  discount is applied. That is deliberate — the alternative (guessing) would
+//  mean charging the wrong amount. The cart surfaces a retry message.
 // =============================================================
-const PROMOS = {
-  MYSCHOOL10: {
-    percentOff: 10,        // 10% off
-    freeShipping: true,    // shipping forced to £0 when applied
-    couponEnv: 'STRIPE_COUPON_MYSCHOOL10',
-    label: '10% off + free UK delivery',
-  },
-};
 
-// Normalise + look up a code. Returns the promo (with its key) or null.
-function lookupPromo(code) {
+// Ask Postgres to validate the code, and optionally tell us whether this
+// visitor has already redeemed it. One round trip, all the logic in one place.
+//
+//   lookupPromo('SUMMER20')                        -> terms, or null
+//   lookupPromo('SUMMER20', { phId, subtotal })    -> terms + alreadyUsed + amount
+//
+// NOTE: async. Callers must await.
+async function lookupPromo(code, opts) {
   if (!code || typeof code !== 'string') return null;
-  const key = code.trim().toUpperCase();
-  return PROMOS[key] ? Object.assign({ code: key }, PROMOS[key]) : null;
+
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null; // not configured -> no discount
+
+  const o = opts || {};
+
+  try {
+    const resp = await fetch(`${url.replace(/\/$/, '')}/rest/v1/rpc/validate_discount_code`, {
+      method: 'POST',
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        p_code: code.trim().slice(0, 40),
+        p_subtotal: typeof o.subtotal === 'number' ? o.subtotal : null,
+        p_ph_id: o.phId || null,
+      }),
+    });
+    if (!resp.ok) return null;
+
+    const rows = await resp.json().catch(() => null);
+    const r = Array.isArray(rows) ? rows[0] : rows;
+    if (!r) return null;
+
+    // An unrecognised or inactive code is simply "no promo".
+    // An already-used one still comes back so checkout can return PROMO_USED.
+    if (!r.valid && !r.already_used) return null;
+
+    return {
+      code:           r.code,
+      label:          r.label,
+      percentOff:     r.kind === 'percent' ? Number(r.value) : 0,
+      amountOff:      r.kind === 'fixed'   ? Number(r.value) : 0,
+      freeShipping:   !!r.free_shipping,
+      alreadyUsed:    !!r.already_used,
+      reason:         r.reason || null,
+      stripeCouponId: r.stripe_coupon_id || null,
+      // Legacy escape hatch: STRIPE_COUPON_MYSCHOOL10 etc. still honoured.
+      couponEnv:      'STRIPE_COUPON_' + String(r.code).replace(/[^A-Z0-9]/gi, '_').toUpperCase(),
+      discountAmount: r.discount_amount == null ? null : Number(r.discount_amount),
+      newSubtotal:    r.new_subtotal    == null ? null : Number(r.new_subtotal),
+    };
+  } catch (_) {
+    return null; // network/other -> fail closed
+  }
 }
 
 module.exports = {
-  CURRENCY, PRODUCTS, BY_SLUG, SHIPPING, priceEnvKey, PROMOS, lookupPromo,
+  CURRENCY, PRODUCTS, BY_SLUG, SHIPPING, priceEnvKey, lookupPromo,
 };

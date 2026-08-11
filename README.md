@@ -201,3 +201,47 @@ Framework preset **Other** (configured via `vercel.json`). Vercel auto-installs
 - Respects `prefers-reduced-motion` (incl. the new confirmation modal)
 - Semantic HTML, keyboard-navigable carousels, stepper and cart
 - Confirmation modal is a labelled `role="dialog"`
+
+---
+
+## Discount codes (updated 11 Aug 2026)
+
+The hardcoded `PROMOS` map is gone. Codes now live in Supabase
+(`public.discount_codes`) and are created, switched off and reported on from the
+portal's **Discounts** page.
+
+Run `migrations/2026_discount_codes.sql` if the database hasn't got it yet
+(already applied to the live project).
+
+**What changed**
+
+| file | change |
+|---|---|
+| `api/_catalogue.js` | `lookupPromo()` is now **async** and reads from Supabase |
+| `api/promo-check.js` | returns the code's terms as well as `used` |
+| `api/checkout.js` | awaits the lookup, supports fixed £ codes, records the discount |
+| `api/stripe-webhook.js` | writes `discount_amount` / `subtotal_before` on the order and redemption |
+| `app.js` | cart fetches terms from the server instead of a local list |
+
+`api/_promo.js` is no longer used by these paths — `validate_discount_code()`
+does the already-redeemed check in the same round trip.
+
+**Two behaviour changes worth knowing:**
+
+1. **Promo lookup now fails closed.** Previously an unreachable Supabase meant
+   the cart assumed the code was unused and applied it anyway, which was safe
+   only because the browser held the code list. There is no local list now, so a
+   failed lookup shows *"COULD NOT CHECK CODE — TRY AGAIN"* rather than
+   discounting something we couldn't verify.
+
+2. **Free shipping is no longer implied by any promo.** The cart summary used to
+   print "SHIPPING — FREE" whenever a code was applied, which was right only
+   because the single code happened to include delivery. It now follows the
+   code's own `free_shipping` flag.
+
+**Rounding.** A fixed £ code is converted to the equivalent percentage of the
+cart, then rounded per line — identical logic in `app.js` and `api/checkout.js`,
+so the cart total always matches what Stripe charges. Note that
+`validate_discount_code()`'s own `discount_amount` uses simple whole-subtotal
+rounding and can differ by a penny or two; it's for reporting and previews.
+`api/checkout.js` is authoritative for money.

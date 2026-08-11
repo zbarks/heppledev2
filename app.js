@@ -600,19 +600,33 @@
   })();
 
   // ---- Promo code -----------------------------------------------------------
-  // The code STRING is not secret (it's on marketing material), so the browser
-  // is allowed to know which codes exist for instant feedback. The actual money
-  // (the % + free shipping) is applied authoritatively by api/checkout.js — the
-  // client only forwards the code. Keep this list in step with PROMOS in
-  // api/_catalogue.js.
-  const PROMO_KEY = 'hepple:promo';
-  const PROMO_CODES = {
-    MYSCHOOL10: { label: '10% OFF + FREE UK DELIVERY', percentOff: 10, freeShipping: true },
+  // Codes live in Supabase and are managed from the portal, so the browser no
+  // longer holds a list. /api/promo-check returns the terms when a shopper
+  // applies a code; we cache them locally so rendering stays synchronous.
+  // The money is still applied authoritatively by api/checkout.js.
+  const PROMO_KEY      = 'hepple:promo';
+  const PROMO_INFO_KEY = 'hepple:promoInfo';
+
+  const getPromo     = () => { try { return (localStorage.getItem(PROMO_KEY) || '').toUpperCase(); } catch(_){ return ''; } };
+  const getPromoInfo = () => { try { return JSON.parse(localStorage.getItem(PROMO_INFO_KEY) || 'null'); } catch(_){ return null; } };
+  const setPromo     = (v, info) => {
+    try {
+      localStorage.setItem(PROMO_KEY, (v || '').toUpperCase());
+      if (info) localStorage.setItem(PROMO_INFO_KEY, JSON.stringify(info));
+    } catch(_){}
   };
-  const validPromo = (code) => PROMO_CODES[(code || '').trim().toUpperCase()] || null;
-  const getPromo = () => { try { return (localStorage.getItem(PROMO_KEY) || '').toUpperCase(); } catch(_){ return ''; } };
-  const setPromo = (v) => { try { localStorage.setItem(PROMO_KEY, (v || '').toUpperCase()); } catch(_){} };
-  const clearPromo = () => { try { localStorage.removeItem(PROMO_KEY); } catch(_){} };
+  const clearPromo   = () => {
+    try { localStorage.removeItem(PROMO_KEY); localStorage.removeItem(PROMO_INFO_KEY); } catch(_){}
+  };
+
+  // Terms of the applied code, or null. Same signature as before, so every
+  // existing validPromo(getPromo()) call site keeps working untouched.
+  const validPromo = (code) => {
+    const info = getPromoInfo();
+    if (!info) return null;
+    const want = (code || '').trim().toUpperCase();
+    return want && info.code === want ? info : null;
+  };
 
   function addGiftCard(){
     if (!hasRealItems()){ showToast('ADD A PRODUCT FIRST'); return false; }
@@ -803,29 +817,48 @@
   // figures shown here match what Stripe charges, to the penny.
   function promoTotals(){
     const info = validPromo(getPromo());
-    const pct = info ? (info.percentOff || 0) : 0;
-    let subtotal = 0, discounted = 0;
+    let subtotal = 0;
+    cart.forEach(i => {
+      const p = productBySlug[i.slug];
+      if (p) subtotal += p.price * i.qty;
+    });
+
+    // A fixed GBP code is converted to the equivalent percentage of this cart
+    // before rounding, exactly as api/checkout.js does it, so the figure shown
+    // here is the figure Stripe charges.
+    let pct = 0;
+    if (info){
+      if (info.percentOff) pct = info.percentOff;
+      else if (info.amountOff && subtotal > 0) pct = Math.min(100, (info.amountOff / subtotal) * 100);
+    }
+
+    let discounted = 0;
     cart.forEach(i => {
       const p = productBySlug[i.slug];
       if (!p) return;
-      subtotal += p.price * i.qty;
       const unit = pct ? Math.round(p.price * 100 * (1 - pct / 100)) / 100 : p.price;
       discounted += unit * i.qty;
     });
-    return { info, pct, subtotal, discounted, discount: subtotal - discounted };
+
+    return { info, pct, subtotal, discounted,
+             discount: Math.round((subtotal - discounted) * 100) / 100 };
   }
 
   function renderSummary(){
     const el = $('#cartSummary');
     if (!el) return;
     const { info, pct, subtotal, discounted, discount } = promoTotals();
-    if (info && pct){
+    if (info && discount > 0){
+      // Show "(−10%)" for a percentage code; a fixed £ code just shows its name.
+      const promoLabel = info.percentOff
+        ? `${escapeHtml(getPromo())} (−${info.percentOff}%)`
+        : escapeHtml(getPromo());
       el.innerHTML = `
         <div class="cart-sum__row"><span>SUBTOTAL</span><span>${money(subtotal)}</span></div>
         <div class="cart-sum__row cart-sum__row--promo">
-          <span>${escapeHtml(getPromo())} (−${pct}%)</span><span>−${money(discount)}</span>
+          <span>${promoLabel}</span><span>−${money(discount)}</span>
         </div>
-        <div class="cart-sum__row"><span>SHIPPING</span><span>FREE</span></div>
+        ${info.freeShipping ? '<div class="cart-sum__row"><span>SHIPPING</span><span>FREE</span></div>' : ''}
         <div class="cart-sum__row cart-sum__row--total"><span>TOTAL</span><strong>${money(discounted)}</strong></div>`;
     } else {
       el.innerHTML = `
@@ -899,34 +932,50 @@
     const input = $('#promoInput');
     const val = (input ? input.value : '').trim().toUpperCase();
     if (!val) return;
-    if (!validPromo(val)){
-      showPromoMsg('CODE NOT RECOGNISED');
-      capture('promo_rejected', { code: val, reason: 'unknown' });
-      return;
-    }
 
-    // Ask the server whether this visitor (PostHog id) has already used it.
     const btn = $('[data-promo-apply]');
+    const reset = () => { if (btn){ btn.disabled = false; btn.textContent = 'APPLY'; } };
     if (btn){ btn.disabled = true; btn.textContent = 'CHECKING…'; }
-    let used = false;
+
+    // The server is the only place that knows the codes, so this one call
+    // answers "is it real, what does it do, and have you used it already".
+    let data = null;
     try {
       const resp = await fetch('/api/promo-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: val, ph_id: phDistinctId() }),
       });
-      const data = await resp.json().catch(() => ({}));
-      used = !!data.used;
-    } catch (_) { used = false; } // fail open — never block on a network blip
+      data = await resp.json().catch(() => null);
+    } catch (_) { data = null; }
 
-    if (used){
-      showPromoMsg("YOU'VE ALREADY USED THIS CODE");
+    // Fails CLOSED. The old version assumed "unused" on a network blip, which
+    // was safe only because the browser already knew the code was genuine.
+    if (!data){
+      showPromoMsg('COULD NOT CHECK CODE — TRY AGAIN');
+      reset();
+      return;
+    }
+    if (data.used){
+      showPromoMsg(data.reason || "YOU'VE ALREADY USED THIS CODE");
       capture('promo_rejected', { code: val, reason: 'already_used' });
-      if (btn){ btn.disabled = false; btn.textContent = 'APPLY'; }
+      reset();
+      return;
+    }
+    if (!data.valid){
+      showPromoMsg(data.reason || 'CODE NOT RECOGNISED');
+      capture('promo_rejected', { code: val, reason: 'unknown' });
+      reset();
       return;
     }
 
-    setPromo(val);
+    setPromo(val, {
+      code:         val,
+      label:        data.label || '',
+      percentOff:   data.percentOff || 0,
+      amountOff:    data.amountOff  || 0,
+      freeShipping: !!data.freeShipping,
+    });
     renderCart();
     showToast('PROMO APPLIED');
     capture('promo_applied', { code: val });
