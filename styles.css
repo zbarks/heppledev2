@@ -1098,28 +1098,93 @@ h1, h2, h3, h4{
   font-weight:700;
 }
 
-/* Small nudge on the Visit Us page toward the separate Hepple Wilds events site */
-.placeholder__wilds-note{
-  margin-top: 2.75rem;
-  padding-top: 1.75rem;
-  border-top: 1px solid currentColor;
-  max-width: 38ch;
+/* =========================================================
+   VISIT US — booking panel routed to the sister site
+   Deliberately the loudest thing on the page: panel + big button
+   ========================================================= */
+.visit-book{
+  margin-top: 3rem;
+  width: 100%;
+  max-width: 44rem;
+  padding: clamp(2rem, 1.4rem + 2.4vw, 3.2rem) clamp(1.4rem, 1rem + 2.4vw, 3rem);
+  background: var(--cream);
+  border: 1.5px solid var(--hepple-blue);
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 60px rgba(0,48,135,.12);
+  text-align: center;
 }
-.placeholder__wilds-note p{
-  font-size:.82rem;
-  line-height:1.7;
-  letter-spacing:.02em;
-  opacity:.75;
-  margin: 0 0 1rem;
-  font-weight:500;
+.visit-book__eyebrow{
+  font-family: var(--script);
+  font-size: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  line-height: .9;
+  color: var(--hepple-blue);
+  margin: 0 0 .85rem;
+  position: static;
+  transform: none;
 }
-.placeholder__wilds-link{
-  font-size:.68rem;
-  letter-spacing:.22em;
-  color:var(--hepple-blue);
-  border-bottom:1px solid currentColor;
-  padding-bottom:3px;
-  font-weight:700;
+.visit-book__copy{
+  font-family: var(--sans);
+  font-size: clamp(1rem, .92rem + .45vw, 1.35rem);
+  line-height: 1.5;
+  letter-spacing: .04em;
+  font-weight: 700;
+  color: var(--hepple-blue);
+  text-transform: uppercase;
+  max-width: 34ch;
+  margin: 0 auto clamp(1.6rem, 1.2rem + 1vw, 2.2rem);
+  text-wrap: balance;
+}
+.visit-book__site{
+  color: var(--hepple-blue);
+  border-bottom: 2px solid var(--juniper);
+  padding-bottom: 2px;
+  text-transform: lowercase;
+  white-space: nowrap;
+  transition: color .3s ease, border-color .3s ease;
+}
+.visit-book__site:hover{ color: var(--hepple-ink); border-bottom-color: var(--hepple-ink); }
+
+/* The button itself — full width on small screens, never wraps */
+.visit-book__btn{
+  display: inline-flex;
+  white-space: nowrap;
+  font-size: clamp(.95rem, .85rem + .5vw, 1.25rem);
+  letter-spacing: .18em;
+  padding: clamp(1.1rem, .95rem + .7vw, 1.5rem) clamp(2.4rem, 1.8rem + 3vw, 4.4rem);
+  border-width: 2px;
+  box-shadow: 0 12px 28px rgba(132,189,0,.35);
+  transform: translateY(0);
+  transition: background .3s ease, color .3s ease, border-color .3s ease,
+              transform .25s ease, box-shadow .25s ease;
+}
+.visit-book__btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(0,48,135,.28);
+}
+.visit-book__arrow{
+  display: inline-block;
+  transition: transform .25s ease;
+}
+.visit-book__btn:hover .visit-book__arrow{ transform: translateX(4px); }
+
+.visit-book__foot{
+  font-size: .68rem;
+  letter-spacing: .2em;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: .55;
+  margin: 1.1rem 0 0;
+  color: var(--hepple-blue);
+}
+
+@media (max-width: 560px){
+  .visit-book{ border-radius: 1rem; }
+  .visit-book__btn{
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    letter-spacing: .14em;
+  }
 }
 
 /* =========================================================
@@ -4291,17 +4356,20 @@ body [data-page="/visit"] .placeholder h1,
 body [data-page="/visit"] .placeholder h1 em,
 body [data-page="/visit"] .placeholder__latin,
 body [data-page="/visit"] .placeholder__back,
-body [data-page="/visit"] .placeholder__wilds-note,
-body [data-page="/visit"] .placeholder__wilds-link,
+body [data-page="/visit"] .visit-book__copy,
+body [data-page="/visit"] .visit-book__site,
 body [data-page="/visit"] .script-accent{
   color: var(--hepple-blue) !important;
 }
 body [data-page="/visit"] .placeholder__latin{
   opacity: .85 !important;
 }
-body [data-page="/visit"] .placeholder__wilds-note{
-  border-top-color: var(--hepple-blue) !important;
-  opacity: .9 !important;
+/* The booking button stays juniper on juniper — never inherit the blue above */
+body [data-page="/visit"] .visit-book__btn{
+  color: var(--hepple-ink) !important;
+}
+body [data-page="/visit"] .visit-book__btn:hover{
+  color: var(--juniper) !important;
 }
 
 /* =========================================================
@@ -5609,8 +5677,8 @@ body .placeholder__inner .script-accent{
   transform: none !important;
 }
 body .placeholder__inner .placeholder__latin{ order: 3 !important; }
-body .placeholder__inner .placeholder__back{ order: 4 !important; }
-body .placeholder__inner .placeholder__wilds-note{ order: 5 !important; }
+body .placeholder__inner .visit-book{ order: 4 !important; }
+body .placeholder__inner .placeholder__back{ order: 5 !important; margin-top: 2.5rem !important; }
 
 /* HOME SECTION 1 — Maristella eyebrow now BELOW headline, similar size */
 body .home-hero__panel{
