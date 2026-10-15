@@ -1573,6 +1573,14 @@ h1, h2, h3, h4{
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(1rem, 2.5vw, 2rem);
 }
+/* Additional expressions: two cards, centred at the same card width as the 3-up grid */
+@media (min-width: 961px){
+  #shopExtrasGrid{
+    --extras-gap: clamp(1rem, 2.5vw, 2rem);
+    grid-template-columns: repeat(2, minmax(0, calc((100% - 2 * var(--extras-gap)) / 3)));
+    justify-content: center;
+  }
+}
 @media (max-width: 960px){ .shop-grid{ grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px){ .shop-grid{ grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; } }
 
