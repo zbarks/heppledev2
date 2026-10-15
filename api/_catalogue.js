@@ -55,14 +55,6 @@ const PRODUCTS = [
     meta:  { size: '50cl', abv: '29.9%' },
   },
   {
-    slug:  'hepple-aquavit',
-    name:  'Hepple Aquavit',
-    price: 39.95,
-    sku:   'HEP-AQV-70',
-    image: 'assets/products/aquavit-main.jpg',
-    meta:  { size: '70cl', abv: '40%' },
-  },
-  {
     slug:  'hepple-negroni',
     name:  'Hepple Negroni',
     price: 32.50,
