@@ -76,8 +76,9 @@
       price:   39.95,
       meta:    { size: '70CL', abv: '45%', origin: 'NORTHUMBERLAND' },
       sku:     'juniper-pink',
-      image:   'assets/products/hepple-gin.jpg',
-      sceneImage: 'assets/products/gin-scene.jpg',
+      image:   'assets/products/new-wild-juniper-gin.jpg',
+      sceneImage: 'assets/products/new-wild-juniper-gin.jpg',
+      gallery: ['assets/products/new-wild-juniper-gin.jpg', 'assets/products/new-wild-juniper-gin-back.jpg'],
       body: [
         "The spirit that started it all.",
         "On the Hepple Estate, ancient juniper bushes grow wild across the Northumberland moorland, shaped by wind, weather and time. Each summer, we harvest the berries by hand while they are still bright green. At this stage, juniper is fresher, more vibrant and more alive, bringing citrus lift, natural zest and a remarkable brightness that ripe juniper berries alone cannot deliver.",
@@ -110,8 +111,9 @@
       price:   39.95,
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'doug-fir-green',
-      image:   'assets/products/douglas-fir.jpg',
-      sceneImage: 'assets/products/douglas-fir-scene.jpg',
+      image:   'assets/products/new-douglas-fir-vodka.jpg',
+      sceneImage: 'assets/products/new-douglas-fir-vodka.jpg',
+      gallery: ['assets/products/new-douglas-fir-vodka.jpg', 'assets/products/new-douglas-fir-vodka-back.jpg'],
       body: [
         "A vodka with a completely different point of view.",
         "Each spring, the Douglas fir trees on the Hepple Estate produce bright green tips packed with aroma and flavour. We harvest them at just the right moment, when the shoots are young, vivid and full of life, then use all three of our extraction methods to capture as much of their character as possible.",
@@ -141,11 +143,12 @@
       short:   'Moorland Vodka',
       tagline: 'PURE. SMOOTH. BALANCED.',
       kicker:  'BUILT FOR GREAT DRINKS',
-      price:   34.95,
+      price:   39.95,   // aligned with Wild Juniper Gin (Miranda, Nov 2026)
       meta:    { size: '70CL', abv: '41%', origin: 'NORTHUMBERLAND' },
       sku:     'moorland-teal',
-      image:   'assets/products/wheat-vodka.jpg',
-      sceneImage: 'assets/products/wheat-vodka-scene.jpg',
+      image:   'assets/products/new-moorland-vodka.jpg',
+      sceneImage: 'assets/products/new-moorland-vodka.jpg',
+      gallery: ['assets/products/new-moorland-vodka.jpg', 'assets/products/new-moorland-vodka-back.jpg'],
       body: [
         "Moorland Vodka is made from 100% English wheat and Hepple spring water, drawn from the estate and filtered slowly through the Northumberland landscape before it reaches us. Like everything we make, it begins with ingredients chosen for the quality of flavour they can deliver, then refined with patience and care until every element feels in balance.",
         "The spring water is an important part of the character of the spirit. It brings a softness, clarity and a gentle mineral edge that gives Moorland Vodka more presence than a neutral vodka, while keeping the finish clean and composed.",
@@ -250,13 +253,13 @@
   const GIFT_SLUG = 'handwritten-card';
   const GIFT_CARD = {
     slug:    GIFT_SLUG,
-    name:    'GIFT WRAP & HANDWRITTEN CARD',
+    name:    'PERSONALISED GIFT CARD',
     nameTop: 'MAKE IT',
     nameRest:'A GIFT',
     short:   'Gift Wrap & Card',
-    tagline: 'HAND-WRAPPED WITH A PERSONAL NOTE',
+    tagline: 'A GIFT CARD WITH YOUR MESSAGE',
     kicker:  'ADD A PERSONAL MESSAGE',
-    price:   5.00,
+    price:   2.50,
     isAddon: true,
     image:   '' // no asset — rendered with an inline mark in the cart
   };
@@ -264,9 +267,157 @@
   // Core range (unchanged) drives the home/related/cocktails displays.
   // The combined lookup also resolves the extras + the gift card so the
   // cart, totals and product-detail pages work for everything.
+
+  // =============================================
+  // CHRISTMAS 2026 · MARGO CAMPAIGN
+  // One switch: set CHRISTMAS to false in January. The festive home
+  // takeover, announcement bar, nav links and seasonal sections all hide
+  // (CSS keys off body.is-xmas) and the scroll-scrub intro returns.
+  // The /margo and /christmas pages and the MARGO products stay live.
+  // =============================================
+  const CHRISTMAS = true;
+
+  const MARGO_PRODUCTS = [
+    {
+      slug:    'margo-bright-lemon',
+      name:    'MARGO BRIGHT LEMON',
+      nameTop: 'MARGO',
+      nameRest:'BRIGHT LEMON',
+      short:   'MARGO Bright Lemon',
+      allergen: 'Contains sulphites.',
+      storage: 'Once opened, keep refrigerated. Best enjoyed within 4 weeks of opening.',
+      tagline: 'MARGO LIKES IT BRIGHT.',
+      kicker:  'INSTANT MARTINI MIX',
+      price:   19.95,
+      meta:    { size: '250ML', abv: '11.1%', origin: '10 MARTINIS', originLabel: 'PER BOTTLE' },
+      image:   'assets/christmas/margo-bright-lemon-pack.jpg',
+      sceneImage: 'assets/christmas/margo-bright-lemon-pack.jpg',
+      gallery: ['assets/christmas/margo-bright-lemon-tight.jpg', 'assets/christmas/margo-bright-lemon-pack.jpg', 'assets/christmas/margo-bright-lemon-pack-back.jpg'],
+      body: [
+        "British dry vermouth, fragrant lemon verbena and Amalfi lemons come together in a beautifully balanced mix with fresh, vibrant citrus character.",
+        "MARGO is the Instant Martini Mix from the Hepple Spirits Company, created to make beautifully balanced Martinis at home brilliantly easy. Add your favourite frozen Hepple gin or vodka, and enjoy more time with your guests.",
+        "One bottle. Ten Martinis. No piles of ice, no complicated cocktail equipment. Just great Martinis and more time to enjoy the party."
+      ],
+      howToEnjoy: {
+        lead: "Freeze. Pour. Stir. Garnish. 1 part MARGO + 3 parts frozen gin or vodka.",
+        recipe: [
+          "Keep your Hepple gin or vodka in the freezer and MARGO in the fridge.",
+          "Add one part MARGO and three parts frozen gin or vodka to a chilled Martini glass.",
+          "Give it a gentle stir and finish with a lemon twist."
+        ],
+      }
+    },
+    {
+      slug:    'margo-dirty-olive',
+      name:    'MARGO DIRTY OLIVE',
+      nameTop: 'MARGO',
+      nameRest:'DIRTY OLIVE',
+      short:   'MARGO Dirty Olive',
+      allergen: 'Contains sulphites.',
+      storage: 'Once opened, keep refrigerated. Best enjoyed within 4 weeks of opening.',
+      tagline: 'MARGO LIKES IT DIRTY.',
+      kicker:  'INSTANT MARTINI MIX',
+      price:   19.95,
+      meta:    { size: '250ML', abv: '9.1%', origin: '10 MARTINIS', originLabel: 'PER BOTTLE' },
+      image:   'assets/christmas/margo-dirty-olive-pack.jpg',
+      sceneImage: 'assets/christmas/margo-dirty-olive-pack.jpg',
+      gallery: ['assets/christmas/margo-dirty-olive-tight.jpg', 'assets/christmas/margo-dirty-olive-pack.jpg', 'assets/christmas/margo-dirty-olive-pack-back.jpg'],
+      body: [
+        "A savoury blend of vermouth, Manzanilla green olives and seasoned olive brine. Rich, balanced and deliciously dirty.",
+        "MARGO is the Instant Martini Mix from the Hepple Spirits Company, created to make beautifully balanced Martinis at home brilliantly easy. Add your favourite frozen Hepple gin or vodka, and enjoy more time with your guests.",
+        "One bottle. Ten Martinis. No piles of ice, no complicated cocktail equipment. Just great Martinis and more time to enjoy the party."
+      ],
+      howToEnjoy: {
+        lead: "Freeze. Pour. Stir. Garnish. 1 part MARGO + 3 parts frozen gin or vodka.",
+        recipe: [
+          "Keep your Hepple gin or vodka in the freezer and MARGO in the fridge.",
+          "Add one part MARGO and three parts frozen gin or vodka to a chilled Martini glass.",
+          "Give it a gentle stir and finish with olives."
+        ],
+      }
+    }
+  ];
+
+  // Party Refill Kit (5L bag-in-box) and the olives add-on.
+  const EXTRA_SKUS = [
+    { slug: 'hepple-party-refill-kit-wild-juniper-gin', name: 'THE HEPPLE PARTY REFILL KIT: WILD JUNIPER GIN', price: 280.00, isBundle: true, image: 'assets/products/new-wild-juniper-gin.jpg' },
+    { slug: 'hepple-party-refill-kit-moorland-vodka', name: 'THE HEPPLE PARTY REFILL KIT: MOORLAND VODKA', price: 280.00, isBundle: true, image: 'assets/products/new-moorland-vodka.jpg' },
+    { slug: 'perello-gordal-olives', name: 'PERELLÓ GORDAL PICANTE OLIVES, 350G', price: 4.50, isBundle: true, image: 'assets/christmas/olives-tin.jpg' }
+  ];
+
+  // Martini Gift Box: four fixed pairings (server prices them in
+  // api/_catalogue.js). Party Box includes the gift card for free.
+  const GB_MARGO  = { 'bright-lemon': 'Bright Lemon', 'dirty-olive': 'Dirty Olive' };
+  const GB_SPIRIT = { 'wild-juniper-gin': 'Wild Juniper Gin', 'moorland-vodka': 'Moorland Vodka' };
+  const GIFT_BOXES = [];
+  Object.keys(GB_MARGO).forEach(m => Object.keys(GB_SPIRIT).forEach(sp => {
+    GIFT_BOXES.push({
+      slug:  `martini-gift-box-${m}-${sp}`,
+      name:  `THE MARGO MARTINI GIFT BOX: ${GB_SPIRIT[sp].toUpperCase()} + MARGO ${GB_MARGO[m].toUpperCase()}`,
+      short: 'The MARGO Martini Gift Box',
+      price: 65.00,
+      preorder: 'PRE-ORDER: SHIPS NOVEMBER 23',
+      isBundle: true,
+      image: `assets/christmas/giftbox-${sp}-${m}.jpg`
+    });
+  }));
+  GIFT_BOXES.push({
+    slug:  'margo-martini-party-box',
+    name:  "MARGO'S MARTINI PARTY IN A BOX",
+    short: "MARGO's Martini Party in a Box",
+    price: 120.00,
+    isBundle: true,
+    image: 'assets/christmas/box-party.jpg'
+  });
+
+  // ---- Christmas cocktail edit (recipes from the supplied deck) ----
+  // image: drop finished-drink photography into assets/christmas/ and set
+  // the path here; cards switch to a photo header automatically.
+  const XMAS_COCKTAILS = [
+    {
+      id: 'red-vesper',
+      name: 'RED VESPER',
+      image: 'assets/cocktails/red-vesper.jpg',
+      blurb: 'A richer take on the classic Vesper. Hepple Wild Juniper Gin and Hepple Moorland Vodka combine with Lillet Rouge for a smooth, aromatic Martini with a bittersweet edge and a fresh lift of orange.',
+      ingredients: ['40ML HEPPLE WILD JUNIPER GIN', '20ML HEPPLE MOORLAND VODKA', '20ML LILLET ROUGE'],
+      steps: [
+        'Combine all ingredients in a mixing glass with good-quality ice.',
+        'Stir until icy cold.',
+        'Double strain into a chilled cocktail glass and garnish with an expressed orange zest.'
+      ]
+    },
+    {
+      id: 'first-frost',
+      name: 'FIRST FROST',
+      image: 'assets/cocktails/first-frost.jpg',
+      blurb: 'Hepple Wild Juniper Gin meets the distinctive caraway spice of Kümmel and fresh lemon. Crisp, aromatic and gently warming, with a beautifully clean finish.',
+      ingredients: ['45ML HEPPLE WILD JUNIPER GIN', '20ML KÜMMEL', '10ML FRESHLY SQUEEZED LEMON JUICE'],
+      steps: [
+        'Combine all ingredients in a cocktail shaker with good-quality ice.',
+        'Shake hard until icy cold and the tin is frosty.',
+        'Double strain into a chilled cocktail glass.',
+        'Express and discard a lemon zest, then garnish with an edible flower.'
+      ]
+    },
+    {
+      id: 'winter-cosmopolitan',
+      name: 'WINTER COSMOPOLITAN',
+      image: 'assets/cocktails/winter-cosmopolitan.jpg',
+      blurb: 'A winter interpretation of the Cosmopolitan. Hepple Douglas Fir Vodka adds a fresh, resinous note to cranberry, lime and orange liqueur, balanced by Hepple Moorland Vodka.',
+      ingredients: ['25ML HEPPLE DOUGLAS FIR VODKA', '25ML HEPPLE MOORLAND VODKA', '25ML COINTREAU', '25ML CRANBERRY JUICE', '25ML FRESHLY SQUEEZED LIME JUICE'],
+      steps: [
+        'Combine all ingredients in a cocktail shaker with good-quality ice.',
+        'Shake hard until icy cold and the tin is frosty.',
+        'Double strain into a chilled cocktail glass.',
+        'Express an orange zest over the drink and garnish with fresh or candied cranberries.'
+      ]
+    }
+  ];
+
   const productBySlug = Object.fromEntries(
-    PRODUCTS.concat(EXTRA_PRODUCTS).concat([GIFT_CARD]).map(p => [p.slug, p])
+    PRODUCTS.concat(EXTRA_PRODUCTS).concat(MARGO_PRODUCTS).concat(GIFT_BOXES).concat(EXTRA_SKUS).concat([GIFT_CARD]).map(p => [p.slug, p])
   );
+  if (CHRISTMAS) document.body.classList.add('is-xmas');
 
   // =============================================
   // COCKTAILS — 9 drinks grouped by SKU per feedback
@@ -595,6 +746,11 @@
     return want && info.code === want ? info : null;
   };
 
+  // The gift card is free when MARGO's Martini Party in a Box is in the cart
+  // (mirrored server-side in api/checkout.js).
+  function cardIncluded(){ return cart.some(i => (productBySlug[i.slug] || {}).includesGiftCard); }
+  function unitPrice(p){ return (p && p.isAddon && cardIncluded()) ? 0 : (p ? p.price : 0); }
+
   function addGiftCard(){
     if (!hasRealItems()){ showToast('ADD A PRODUCT FIRST'); return false; }
     if (!hasGiftCard()){ cart.push({ key: GIFT_SLUG, slug: GIFT_SLUG, qty: 1 }); saveCart(); }
@@ -626,6 +782,10 @@
     showToast('ADDED TO CART');
     bumpCart();
     const p = productBySlug[slug];
+    // Party Box ships with a gift card: add it (free) so the message box shows.
+    if (p && p.includesGiftCard && giftEnabled && !hasGiftCard()){
+      cart.push({ key: GIFT_SLUG, slug: GIFT_SLUG, qty: 1 }); saveCart(); renderCart();
+    }
     capture('product_added_to_cart', {
       slug, qty,
       name: p ? p.name : slug,
@@ -705,7 +865,7 @@
     return cart.reduce((s, i) => {
       const p = productBySlug[i.slug];
       if (!p) return s;
-      const unit = p.price;
+      const unit = unitPrice(p);
       return s + unit * i.qty;
     }, 0);
   }
@@ -740,13 +900,13 @@
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
             </div>
             <div class="cart-item__info">
-              <h4>MAKE IT A GIFT</h4>
+              <h4>GIFT CARD</h4>
               ${msg
                 ? `<div class="cart-item__msg">&ldquo;${escapeHtml(msg)}&rdquo;</div>`
-                : `<div class="qty">Gift-wrapped + handwritten card</div>`}
+                : `<div class="qty">Gift card with your message</div>`}
               <button class="cart-item__remove" data-remove-gift>REMOVE</button>
             </div>
-            <div class="cart-item__price">£${p.price.toFixed(2)}</div>
+            <div class="cart-item__price">${cardIncluded() ? 'INCLUDED' : '£' + p.price.toFixed(2)}</div>
           </div>
         `;
       }
@@ -758,6 +918,7 @@
           <div class="cart-item__info">
             <h4>${p.name}</h4>
             <div class="qty">QTY ${i.qty} · £${unit.toFixed(2)} EA</div>
+            ${p.preorder ? `<div class="cart-item__preorder">${p.preorder}</div>` : ''}
             <button class="cart-item__remove" data-remove="${i.key}">REMOVE</button>
           </div>
           <div class="cart-item__price">£${(unit * i.qty).toFixed(2)}</div>
@@ -787,7 +948,7 @@
     let subtotal = 0;
     cart.forEach(i => {
       const p = productBySlug[i.slug];
-      if (p) subtotal += p.price * i.qty;
+      if (p) subtotal += unitPrice(p) * i.qty;
     });
 
     // A fixed GBP code is converted to the equivalent percentage of this cart
@@ -803,12 +964,30 @@
     cart.forEach(i => {
       const p = productBySlug[i.slug];
       if (!p) return;
-      const unit = pct ? Math.round(p.price * 100 * (1 - pct / 100)) / 100 : p.price;
+      const base = unitPrice(p);
+      const unit = pct ? Math.round(base * 100 * (1 - pct / 100)) / 100 : base;
       discounted += unit * i.qty;
     });
 
     return { info, pct, subtotal, discounted,
              discount: Math.round((subtotal - discounted) * 100) / 100 };
+  }
+
+  // Free UK shipping on £60 or more of products (the gift card add-on does
+  // not count, matching api/checkout.js).
+  const FREE_SHIP_AT = 60;
+  function shippingNudge(){
+    const info = validPromo(getPromo());
+    if (info && info.freeShipping) return '';
+    const goods = cart.reduce((sum, i) => {
+      const p = productBySlug[i.slug];
+      return (p && !p.isAddon) ? sum + p.price * i.qty : sum;
+    }, 0);
+    if (goods <= 0) return '';
+    if (goods >= FREE_SHIP_AT) return `<div class="cart-ship cart-ship--done">YOU'VE UNLOCKED FREE UK SHIPPING</div>`;
+    const left = FREE_SHIP_AT - goods;
+    const pct = Math.round(goods / FREE_SHIP_AT * 100);
+    return `<div class="cart-ship"><span>SPEND ${money(left)} MORE FOR FREE UK SHIPPING</span><span class="cart-ship__bar"><span style="width:${pct}%"></span></span></div>`;
   }
 
   function renderSummary(){
@@ -831,6 +1010,7 @@
       el.innerHTML = `
         <div class="cart-sum__row cart-sum__row--total"><span>SUBTOTAL</span><strong>${money(subtotal)}</strong></div>`;
     }
+    el.insertAdjacentHTML('afterbegin', shippingNudge());
   }
 
   // ---- Handwritten-card add-on UI (lives between cart body and footer) ----
@@ -847,14 +1027,14 @@
     wrap.innerHTML = `
       <div class="cart-gift__head">
         <div class="cart-gift__label">
-          <span class="cart-gift__title">MAKE IT A GIFT</span>
-          <span class="cart-gift__price">£5.00</span>
+          <span class="cart-gift__title">ADD A GIFT CARD</span>
+          <span class="cart-gift__price">£2.50</span>
         </div>
         <button type="button" class="cart-gift__toggle ${on ? 'is-on' : ''}" data-gift-toggle aria-pressed="${on}">
           ${on ? 'ADDED ✓' : 'ADD'}
         </button>
       </div>
-      <p class="cart-gift__note">Beautifully hand-wrapped and finished with a handwritten card carrying your message.</p>
+      <p class="cart-gift__note">A personalised Christmas gift card with your own message.</p>
       ${on ? `
         <div class="cart-gift__field">
           <textarea id="giftMsgInput" maxlength="${GIFT_MSG_MAX}" rows="3"
@@ -995,7 +1175,7 @@
 
 
   function getRoute(){
-    const h = location.hash.replace(/^#/, '') || '/';
+    const h = location.hash.replace(/^#/, '') || window.__HEPPLE_ROUTE__ || '/';
     return h.startsWith('/') ? h : '/' + h;
   }
   function matchPage(route){
@@ -1008,6 +1188,8 @@
     return matched || pages.find(p => p.dataset.page === '/');
   }
   function setActivePage(route){
+    // One shop (Miranda): the old Christmas gifts URL lands on the shop.
+    if (route === '/christmas'){ history.replaceState(null, '', '#/shop'); route = '/shop'; }
     $$('.page').forEach(p => p.classList.remove('is-active'));
     const page = matchPage(route);
     if (page) page.classList.add('is-active');
@@ -1029,9 +1211,12 @@
     if (route === '/'){ renderHomeRange(); renderHomeCocktails(); }
     if (route === '/cocktails') renderCocktailsPage();
     if (route === '/story') renderTeam();
+    if (route === '/margo' || route === '/shop' || route === '/' || route === '/cocktails') renderXmas();
   }
   function showIntroOrNot(route, forceIntro=false){
-    const onHome = route === '/';
+    // During the Christmas campaign the home page opens on the MARGO hero,
+    // so the scroll-scrub intro is skipped.
+    const onHome = route === '/' && !CHRISTMAS;
     if (onHome){
       const hasSeen = sessionStorage.getItem('hepple:seenIntro') === '1';
       if (hasSeen && !forceIntro){
@@ -1575,6 +1760,360 @@
   }
 
   // =============================================
+  // CHRISTMAS / MARGO RENDERING
+  // =============================================
+  function shopCardHtml(p, opts = {}){
+    return `
+      <a href="#/shop/${p.slug}" data-route="/shop/${p.slug}" class="shop-card ${opts.cls || ''}">
+        ${opts.badge ? `<span class="shop-card__badge">${opts.badge}</span>` : ''}
+        <div class="shop-card__img">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+        </div>
+        <h3 class="shop-card__title"><span class="shop-card__brand">${p.nameTop}</span><span class="shop-card__variant">${p.nameRest}</span></h3>
+        <div class="shop-card__kicker">${p.kicker}</div>
+        <div class="shop-card__tagline">${p.tagline}</div>
+        <div class="shop-card__meta">${p.meta.size} · ${p.meta.abv}</div>
+        <div class="shop-card__price">£${p.price.toFixed(2)}</div>
+        <div class="shop-card__actions">
+          <span class="btn btn--tiny shop-card__add" data-add-to-cart="${p.slug}" role="button" tabindex="0">ADD</span>
+          <span class="btn btn--tiny shop-card__view">VIEW</span>
+        </div>
+      </a>`;
+  }
+
+  // Keep key lines on ONE line: shrink the font until the text fits its box.
+  function fitText(scope = document){
+    $$('.xfit', scope).forEach(el => {
+      if (!el.offsetParent) return;           // hidden page, skip
+      el.style.fontSize = '';
+      const box = el.clientWidth;
+      const need = el.scrollWidth;
+      if (need > box + 1){
+        const cur = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = Math.floor(cur * (box / need) * 0.985 * 10) / 10 + 'px';
+      }
+    });
+  }
+
+  function renderXmas(){
+    $$('[data-margo-grid]').forEach(g => {
+      if (!g._r){ g._r = true; g.innerHTML = MARGO_PRODUCTS.map(p => shopCardHtml(p)).join(''); }
+    });
+    $$('[data-spirits-grid]').forEach(g => {
+      if (!g._r){
+        g._r = true;
+        g.innerHTML = PRODUCTS.filter(p => p.slug !== 'hepple-douglas-fir-vodka').map(p => shopCardHtml(p)).join('');
+      }
+    });
+    // Same flip-card recipe template as every other Hepple cocktail.
+    $$('[data-xmas-cocktails]').forEach(g => {
+      if (!g._r){ g._r = true; g.innerHTML = XMAS_COCKTAILS.map(cocktailCardHtml).join(''); initFlipCards(g); }
+    });
+    // Film slot: only shown once a file has been set.
+    $$('[data-film]').forEach(f => {
+      const b = $('[data-film-play]', f);
+      f.hidden = !(b && b.dataset.src);
+    });
+    requestAnimationFrame(() => fitText());
+  }
+
+  // ---- Martini Gift Box selector ----
+  const gbState = { margo: 'bright-lemon', spirit: 'moorland-vodka' };
+  function updateGiftBox(){
+    const slug = `martini-gift-box-${gbState.margo}-${gbState.spirit}`;
+    const add = $('[data-gb-add]');
+    if (add){ add.dataset.addToCart = slug; add.dataset.label = 'ADD TO CART · £60'; }
+    const sum = $('[data-gb-summary]');
+    if (sum) sum.textContent = `MARGO ${GB_MARGO[gbState.margo]} + Hepple ${GB_SPIRIT[gbState.spirit]}`;
+    const img = $('[data-gb-img]');
+    if (img){
+      // Box photography: Bright Lemon box shot / Dirty Olive box shot.
+      const src = gbState.margo === 'bright-lemon' ? 'assets/christmas/box-vodka-lemon.jpg' : 'assets/christmas/box-gin-olive.jpg';
+      if (!img.src.endsWith(src)){ img.classList.add('is-swapping'); setTimeout(() => { img.src = src; img.classList.remove('is-swapping'); }, 180); }
+    }
+    $$('[data-gb-margo]').forEach(b => { const on = b.dataset.gbMargo === gbState.margo; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
+    $$('[data-gb-spirit]').forEach(b => { const on = b.dataset.gbSpirit === gbState.spirit; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
+  }
+  document.addEventListener('click', (e) => {
+    const m = e.target.closest('[data-gb-margo]');
+    if (m){ gbState.margo = m.dataset.gbMargo; updateGiftBox(); return; }
+    const sp = e.target.closest('[data-gb-spirit]');
+    if (sp){ gbState.spirit = sp.dataset.gbSpirit; updateGiftBox(); return; }
+    const to = e.target.closest('[data-scroll-to]');
+    if (to){
+      e.preventDefault();
+      const t = document.getElementById(to.dataset.scrollTo);
+      if (t){
+        const off = (CHRISTMAS ? 34 : 0) + (nav ? nav.offsetHeight : 0);
+        window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - off + 1, behavior: 'smooth' });
+      }
+      return;
+    }
+    const thumb = e.target.closest('[data-gal-src]');
+    if (thumb){
+      const gal = thumb.closest('[data-gal]'); const main = gal && $('[data-gal-main]', gal);
+      if (main){ main.src = thumb.dataset.galSrc; }
+      $$('[data-gal-src]', gal).forEach(b => b.classList.toggle('is-on', b === thumb));
+      return;
+    }
+    const play = e.target.closest('[data-film-play]');
+    if (play && play.dataset.src){
+      const wrap = play.closest('[data-film]');
+      const v = $('video', wrap);
+      if (v){ v.src = play.dataset.src; play.hidden = true; v.play().catch(()=>{}); }
+    }
+  });
+  // Slim the nav once the page scrolls (styles in christmas.css).
+  (function(){
+    let ticking = false;
+    const update = () => {
+      document.body.classList.toggle('nav-slim', window.scrollY > 24);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking){ ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  let _fitT;
+  window.addEventListener('resize', () => { clearTimeout(_fitT); _fitT = setTimeout(() => fitText(), 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitText());
+
+
+  // =============================================
+  // GIFT BOX / REFILL KIT PRODUCT PAGES  (/shop/<page>)
+  // Copy: Miranda's "HEPPLE WEBSITE TEXTS UPDATED" document, word for word.
+  // Each choice resolves to a fixed server-side SKU (api/_catalogue.js).
+  // =============================================
+  const OLIVES_SLUG = 'perello-gordal-olives';
+  const BUNDLE_PAGES = {
+    'margo-martini-gift-box': {
+      name: 'THE MARGO MARTINI GIFT BOX',
+      headline: 'ALL THEY WANT FOR CHRISTMAS IS MARGO.',
+      price: 65,
+      priceLine: '£65 | FREE UK SHIPPING',
+      gallery: [],
+      galleryFor: (s) => [{
+        src: `assets/christmas/giftbox-${s.spirit}-${s.margo}.jpg`,
+        alt: `The MARGO Martini Gift Box: a 700ml bottle of Hepple ${s.spirit === 'wild-juniper-gin' ? 'Wild Juniper Gin' : 'Moorland Vodka'} with a 250ml bottle of MARGO ${s.margo === 'bright-lemon' ? 'Bright Lemon' : 'Dirty Olive'} Instant Martini Mix`
+      }],
+      body: [
+        'Some Christmas presents are just better served with a Martini.',
+        "Meet the MARGO Martini Gift Box. A rather lovely pairing of Hepple spirits and MARGO Instant Martini Mix, beautifully boxed and ready to make someone's Christmas.",
+        'Choose Hepple Wild Juniper Gin or Hepple Moorland Vodka, then pair it with MARGO Bright Lemon or Dirty Olive. Four delicious combinations, one very good Christmas present.',
+        "Created by the Martini-loving team at Hepple, MARGO takes care of the tricky bits, so all that's left to do is pour, garnish and enjoy. No shaker, no ice, no fuss.",
+        'Perfect for the Martini lover in your life, the host with the most, or anyone who deserves something a little more exciting under the tree.'
+      ],
+      sign: 'CHRISTMAS SHOPPING. SORTED.',
+      contents: [
+        '1 × 700ml Hepple Wild Juniper Gin or Hepple Moorland Vodka',
+        '1 × 250ml MARGO Instant Martini Mix, choose Bright Lemon or Dirty Olive',
+        '1 × Stainless steel Martini measure',
+        'Beautifully presented in a gift box'
+      ],
+      allergen: 'Contains sulphites.',
+      extrasTitle: 'MAKE IT EXTRA SPECIAL.',
+      extrasCopy: 'Add a personalised Christmas gift card with your own message for £2.50, or include a 350g can of Perelló Gordal Picante olives for £4.50. Plump, juicy Spanish Gordal olives with a deliciously spicy kick. The perfect Martini companion.',
+      extras: ['card', 'olives'],
+      preorder: 'PRE-ORDER ONLY. WILL SHIP NOVEMBER 23.',
+      footer: 'BEAUTIFULLY BOXED. DELIVERED FREE. CHRISTMAS CHEER GUARANTEED.',
+      pickers: [
+        { key: 'spirit', legend: 'HEPPLE SPIRIT', options: [['wild-juniper-gin', 'WILD JUNIPER GIN'], ['moorland-vodka', 'MOORLAND VODKA']], def: 'moorland-vodka' },
+        { key: 'margo', legend: 'MARGO', options: [['bright-lemon', 'BRIGHT LEMON'], ['dirty-olive', 'DIRTY OLIVE']], def: 'bright-lemon' }
+      ],
+      sku: (s) => `martini-gift-box-${s.margo}-${s.spirit}`
+    },
+    'margo-martini-party-box': {
+      name: "MARGO'S MARTINI PARTY IN A BOX",
+      headline: 'GOOD FRIENDS. GREAT MARTINIS. EVERYTHING ELSE IS OPTIONAL.',
+      price: 120,
+      priceLine: '£120 | FREE UK SHIPPING',
+      gallery: [
+        { src: 'assets/christmas/box-party.jpg', alt: "MARGO's Martini Party in a Box, open: Hepple Wild Juniper Gin, Hepple Moorland Vodka, MARGO Bright Lemon, MARGO Dirty Olive, Perelló olives, a Martini measure and bamboo cocktail picks" },
+        { fit: 'contain', src: 'assets/christmas/party-box-laid-out.jpg', alt: "MARGO's Martini Party in a Box with everything laid out in front: Hepple Wild Juniper Gin, Hepple Moorland Vodka, MARGO Dirty Olive, MARGO Bright Lemon, Perelló Gordal Picante olives, a stainless steel Martini measure and bamboo cocktail picks" },
+        { src: 'assets/christmas/box-gin-olive.jpg', alt: "Hepple Wild Juniper Gin and MARGO Dirty Olive inside MARGO's Martini Party in a Box" },
+        { src: 'assets/christmas/box-vodka-lemon.jpg', alt: "Hepple Moorland Vodka, MARGO Bright Lemon and Perelló olives inside MARGO's Martini Party in a Box" }
+      ],
+      body: [
+        'Some nights are simply made for Martinis. And MARGO has thought of just about everything.',
+        'Meet the ultimate Martini party in a box, bringing together our two delicious Instant Martini Mixes, Bright Lemon and Dirty Olive, with Hepple Wild Juniper Gin and Hepple Moorland Vodka.',
+        "We've even included the olives, a stainless steel Martini measure and bamboo cocktail picks. Because the little details matter.",
+        'Created by the Martini-loving team at Hepple, this is everything you need to serve beautifully balanced Martinis at home, without spending the evening playing bartender.',
+        'Just freeze your spirits, invite your favourite people and let MARGO take care of the rest.',
+        'Perfect for gifting, celebrating, entertaining or turning an ordinary Friday into a rather excellent one.'
+      ],
+      sign: 'JUST ADD FRIENDS.',
+      contents: [
+        '1 × 250ml MARGO Bright Lemon Instant Martini Mix',
+        '1 × 250ml MARGO Dirty Olive Instant Martini Mix',
+        '1 × 700ml Hepple Wild Juniper Gin',
+        '1 × 700ml Hepple Moorland Vodka',
+        '1 × Stainless steel Martini measure',
+        'Bamboo cocktail picks, ready for the perfect garnish',
+        '1 × 350g can of Perelló Gordal Picante olives'
+      ],
+      allergen: 'Contains sulphites.',
+      extrasTitle: 'MAKE IT PERSONAL.',
+      extrasCopy: 'Sending a little Martini magic to someone special? Add a personalised gift card with your own message for just £2.50.',
+      extras: ['card'],
+      footer: 'Beautifully boxed. Delivered free. Ready to party.',
+      pickers: [],
+      sku: () => 'margo-martini-party-box'
+    },
+    'hepple-party-refill-kit': {
+      name: 'THE HEPPLE PARTY REFILL KIT',
+      headline: 'BIG PLANS. BIG MARTINIS. BIG SAVINGS.',
+      price: 280,
+      priceLine: '£280 | SAVE £103',
+      gallery: [],
+      body: [
+        'Throwing a party? Hosting the whole gang? Or simply making sure the Martini supply never runs dry?',
+        'Meet the Hepple Party Refill Kit. A generous 5-litre bag-in-box, a beautiful 75cl bottle of Hepple and a handy funnel to keep the good times flowing.',
+        'Choose from Hepple Wild Juniper Gin or Hepple Moorland Vodka and enjoy all the flavour and craftsmanship you love from Hepple, just a whole lot more of it.',
+        "With 5.75 litres of Hepple spirits for just £280, you're saving £103 compared with buying the same quantity in individual bottles. That's 27% off.",
+        'Perfect for parties, celebrations, Martini nights and very well-stocked drinks cabinets. Simply refill your Hepple bottle whenever you need to.'
+      ],
+      sign: 'MORE HEPPLE. LESS SPEND. MORE REASONS TO GET TOGETHER.',
+      contentsTitle: 'Includes:',
+      contents: [
+        '5L Hepple Wild Juniper Gin or Hepple Moorland Vodka bag-in-box',
+        '1 × 75cl bottle of your chosen spirit',
+        '1 × refill funnel'
+      ],
+      extras: [],
+      pickers: [
+        { key: 'spirit', legend: 'HEPPLE SPIRIT', options: [['wild-juniper-gin', 'WILD JUNIPER GIN'], ['moorland-vodka', 'MOORLAND VODKA']], def: 'wild-juniper-gin' }
+      ],
+      sku: (s) => `hepple-party-refill-kit-${s.spirit}`
+    }
+  };
+
+  const bundleState = {};
+  function bundleSel(page){
+    const b = BUNDLE_PAGES[page];
+    if (!bundleState[page]){
+      bundleState[page] = { extras: {} };
+      b.pickers.forEach(p => { bundleState[page][p.key] = p.def; });
+    }
+    return bundleState[page];
+  }
+
+  function renderBundleDetail(page){
+    const root = $('#productDetail');
+    const b = BUNDLE_PAGES[page];
+    const st = bundleSel(page);
+    const gallery = b.galleryFor ? b.galleryFor(st) : b.gallery;
+    const gal = gallery.length ? `
+      <div class="pd-gallery pd-gallery--wide ${page === 'margo-martini-party-box' ? 'pd-gallery--landscape' : ''}" data-pd-gallery>
+        <div class="pd-gallery__stage">
+          ${gallery.map((g, i) => `<div class="pd-gallery__slide ${i === 0 ? 'is-active' : ''} ${g.fit === 'contain' ? 'pd-gallery__slide--contain' : ''}" data-slide="${i}"><img src="${g.src}" alt="${g.alt}" /></div>`).join('')}
+          ${gallery.length > 1 ? `
+          <button class="pd-gallery__btn pd-gallery__btn--prev" data-pd-prev aria-label="Previous image"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <button class="pd-gallery__btn pd-gallery__btn--next" data-pd-next aria-label="Next image"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="pd-gallery__dots">${gallery.map((_, i) => `<button class="pd-gallery__dot ${i === 0 ? 'is-active' : ''}" data-goto-slide="${i}" aria-label="Image ${i + 1}"></button>`).join('')}</div>` : ''}
+        </div>
+      </div>` : `
+      <div class="bundle-ph" aria-hidden="true"><span class="bundle-ph__big">5L</span><span class="bundle-ph__name">THE HEPPLE PARTY REFILL KIT</span></div>`;
+
+    const pickers = b.pickers.map(p => `
+      <fieldset class="cpick">
+        <legend class="cpick__legend">${p.legend}</legend>
+        <div class="cpick__opts">
+          ${p.options.map(([v, l]) => `<button type="button" class="cpick__opt ${st[p.key] === v ? 'is-on' : ''}" data-bpick="${page}|${p.key}|${v}" aria-pressed="${st[p.key] === v}">${l}</button>`).join('')}
+        </div>
+      </fieldset>`).join('');
+
+    const extras = b.extras.map(x => {
+      const label = x === 'card' ? 'ADD A PERSONALISED GIFT CARD · £2.50' : 'ADD PERELLÓ GORDAL PICANTE OLIVES, 350G · £4.50';
+      return `<label class="bx-extra"><input type="checkbox" data-bextra="${page}|${x}" ${st.extras[x] ? 'checked' : ''} /> <span>${label}</span></label>`;
+    }).join('');
+
+    root.innerHTML = `
+      <div class="product-detail__grid">
+        ${gal}
+        <div class="product-detail__body">
+          <div class="product-detail__crumbs"><a href="#/shop" data-route="/shop">SHOP</a> / ${b.name}</div>
+          <h1 class="product-detail__title bundle__title"><span class="xfit">${b.name}</span></h1>
+          <p class="bundle__headline xfit">${b.headline}</p>
+          <div class="product-detail__price">${b.priceLine}</div>
+          <div class="product-detail__body-copy bundle__copy">${b.body.map(t => `<p>${t}</p>`).join('')}</div>
+          <p class="bundle__sign">${b.sign}</p>
+          <div class="product-detail__section">
+            <h4>${b.contentsTitle || "What's in the box:"}</h4>
+            <ul class="bundle__contents">${b.contents.map(c => `<li>${c}</li>`).join('')}</ul>
+          </div>
+          ${b.allergen ? `<div class="product-detail__section product-detail__allergen">
+            <h4>ALLERGEN INFORMATION</h4>
+            <p>${b.allergen}</p>
+          </div>` : ''}
+          ${pickers ? `<div class="bundle__pickers">${pickers}</div>` : ''}
+          ${b.extras.length ? `
+          <div class="product-detail__section">
+            <h4>${b.extrasTitle}</h4>
+            <p>${b.extrasCopy}</p>
+            <div class="bx-extras">${extras}</div>
+          </div>` : ''}
+          ${b.preorder ? `<p class="bundle__preorder" role="status">${b.preorder}</p>` : ''}
+          <button class="product-detail__add" data-bundle-add="${page}">ADD TO CART · £${b.price}</button>
+          ${b.footer ? `<p class="bundle__footer">${b.footer}</p>` : ''}
+        </div>
+      </div>`;
+    initProductGallery();
+    requestAnimationFrame(() => fitText());
+    capture('product_viewed', { slug: page, name: b.name, price: b.price });
+
+    const track = $('#relatedTrack');
+    if (track){
+      track.innerHTML = MARGO_PRODUCTS.concat(PRODUCTS).map(rp => `
+        <div class="embla__slide">
+          <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">
+            <div class="product-card__img"><img src="${rp.image}" alt="${rp.name}" loading="lazy" /></div>
+            <div class="product-card__body">
+              <h3 class="product-card__title"><span class="product-card__brand">${rp.nameTop}</span><span class="product-card__variant">${rp.nameRest}</span></h3>
+              <div class="product-card__kicker">${rp.kicker}</div>
+              <div class="product-card__price">£${rp.price.toFixed(2)}</div>
+              <div class="product-card__actions"><span class="btn btn--tiny">BUY NOW</span><span class="product-card__about">ABOUT</span></div>
+            </div>
+          </a>
+        </div>`).join('');
+      const embla = track.closest('[data-embla]');
+      if (embla){ embla._emblaInit = false; initEmbla(embla); }
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const pk = e.target.closest('[data-bpick]');
+    if (pk){
+      const [page, key, val] = pk.dataset.bpick.split('|');
+      bundleSel(page)[key] = val;
+      $$(`[data-bpick^="${page}|${key}|"]`).forEach(b => { const on = b === pk; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
+      if (BUNDLE_PAGES[page].galleryFor){
+        const img = $('[data-pd-gallery] .pd-gallery__slide img');
+        const g = BUNDLE_PAGES[page].galleryFor(bundleSel(page))[0];
+        if (img){ img.src = g.src; img.alt = g.alt; }
+      }
+      return;
+    }
+    const add = e.target.closest('[data-bundle-add]');
+    if (add){
+      e.preventDefault();
+      const page = add.dataset.bundleAdd; const b = BUNDLE_PAGES[page]; const st = bundleSel(page);
+      addToCart(b.sku(st), 1);
+      if (st.extras.olives) addToCart(OLIVES_SLUG, 1);
+      if (st.extras.card && giftEnabled && !hasGiftCard()){ addGiftCard(); renderCart(); }
+      add.textContent = 'ADDED ✓';
+      setTimeout(() => { add.textContent = `ADD TO CART · £${b.price}`; }, 1800);
+    }
+  });
+  document.addEventListener('change', (e) => {
+    const x = e.target.closest('[data-bextra]');
+    if (!x) return;
+    const [page, key] = x.dataset.bextra.split('|');
+    bundleSel(page).extras[key] = x.checked;
+  });
+
+  // =============================================
   // SHOP GRID
   // =============================================
   function renderShopGrid(){
@@ -1630,6 +2169,12 @@
     const root = $('#productDetail');
     const p = productBySlug[slug];
     if (!root) return;
+    if (BUNDLE_PAGES[slug]){ renderBundleDetail(slug); return; }
+    if (p && p.isBundle){
+      const page = slug.indexOf('martini-gift-box') === 0 ? 'margo-martini-gift-box'
+        : slug.indexOf('hepple-party-refill-kit') === 0 ? 'hepple-party-refill-kit' : 'margo-martini-party-box';
+      location.hash = '#/shop/' + page; return;
+    }
     if (!p || p.isAddon || !Array.isArray(p.body)){
       root.innerHTML = `<div class="wrap" style="padding:6rem 0; text-align:center;">
         <p>PRODUCT NOT FOUND.</p>
@@ -1641,9 +2186,9 @@
     // Single image only (gift box removed per feedback)
     // Use the scene image if available, fall back to bottle card image.
     const sceneImg = p.sceneImage || p.image;
-    const galleryImgs = [
-      { src: sceneImg, label: `${p.name}` }
-    ];
+    const galleryImgs = Array.isArray(p.gallery)
+      ? p.gallery.map((src, i) => ({ src, label: `${p.name} ${i + 1}` }))
+      : [{ src: sceneImg, label: `${p.name}` }];
 
     const slidesHtml = galleryImgs.map((img, i) =>
       `<div class="pd-gallery__slide ${i === 0 ? 'is-active' : ''}" data-slide="${i}">
@@ -1687,19 +2232,27 @@
           <div class="product-detail__tagline">${p.tagline}</div>
           <div class="product-detail__price">£${p.price.toFixed(2)}</div>
           <div class="product-detail__body-copy">${bodyHtml}</div>
-          <div class="product-detail__section">
+          ${p.tasting ? `<div class="product-detail__section">
             <h4>TASTING NOTES</h4>
             <div class="product-detail__tasting">
               <div><strong>NOSE</strong> ${p.tasting.nose}</div>
               <div><strong>PALATE</strong> ${p.tasting.palate}</div>
               <div><strong>FINISH</strong> ${p.tasting.finish}</div>
             </div>
-          </div>
+          </div>` : ''}
           ${howHtml}
+          ${p.allergen ? `<div class="product-detail__section product-detail__allergen">
+            <h4>ALLERGEN INFORMATION</h4>
+            <p>${p.allergen}</p>
+          </div>` : ''}
+          ${p.storage ? `<div class="product-detail__section">
+            <h4>STORAGE &amp; CARE</h4>
+            <p>${p.storage}</p>
+          </div>` : ''}
           <div class="product-detail__meta">
             <div><strong>${p.meta.size}</strong>SIZE</div>
             <div><strong>${p.meta.abv}</strong>ABV</div>
-            <div><strong>${p.meta.origin}</strong>ORIGIN</div>
+            <div><strong>${p.meta.origin}</strong>${p.meta.originLabel || 'ORIGIN'}</div>
           </div>
 <div class="product-detail__qty">
             <label for="pdQty">QTY</label>
@@ -1723,7 +2276,9 @@
 
     const track = $('#relatedTrack');
     if (track){
-      const related = PRODUCTS.concat(EXTRA_PRODUCTS).filter(x => x.slug !== slug && !x.isAddon);
+      const isMargo = MARGO_PRODUCTS.some(m => m.slug === slug);
+      const related = (isMargo ? MARGO_PRODUCTS.concat(PRODUCTS) : PRODUCTS.concat(EXTRA_PRODUCTS).concat(CHRISTMAS ? MARGO_PRODUCTS : []))
+        .filter(x => x.slug !== slug && !x.isAddon);
       track.innerHTML = related.map(rp => `
         <div class="embla__slide">
           <a href="#/shop/${rp.slug}" data-route="/shop/${rp.slug}" class="product-card">

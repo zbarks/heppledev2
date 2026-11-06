@@ -14,6 +14,7 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23003087'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Helvetica, Arial, sans-serif' font-size='64' font-weight='800' fill='%23EDE8E0' letter-spacing='-2'%3EH%3C/text%3E%3C/svg%3E" />
 
+<link rel="preload" as="image" href="assets/christmas/margo-bar-wide.jpg" fetchpriority="high" />
 <link rel="preload" as="image" href="assets/hero-poster.jpg" fetchpriority="high" />
 <link rel="preload" as="image" href="assets/hero-frames/frame-001.jpg" fetchpriority="high" />
 <link rel="preload" as="image" href="assets/gallery/klj-hepple-may2022-shot-09-468.jpg" fetchpriority="high" />
@@ -23,6 +24,7 @@
 <link rel="dns-prefetch" href="https://hepplespirits.com" />
 
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="assets/christmas/christmas.css" />
 
 <!-- =====================================================================
      ADDITIONS (Dec edits) — scoped styles for the new shop line, the
@@ -205,12 +207,13 @@
     // Critical assets that MUST be loaded before the page reveals
     var critical = [
       'assets/brand/hepple-logotype-blue.png',
+      'assets/christmas/margo-bar-wide.jpg',
       'assets/hero-poster.jpg',
       'assets/hero-frames/frame-001.jpg',
       'assets/hero-frames/frame-013.jpg',
       'assets/hero-frames/frame-026.jpg',
       'assets/gallery/klj-hepple-may2022-shot-09-468.jpg',
-      'assets/products/group-shot-hero.jpg',
+      'assets/products/range-new-labels-plain.jpg',
       'assets/estate/estate-hero-poster.jpg'
     ];
 
@@ -291,6 +294,13 @@
   </div>
 </div>
 
+<!-- CHRISTMAS ANNOUNCEMENT BAR (only while body.is-xmas) -->
+<a class="xbar" href="#/shop" data-route="/shop" data-xmas>
+  <span class="xbar__txt">THE CHRISTMAS SHOP IS OPEN</span>
+  <span class="xbar__dot" aria-hidden="true">·</span>
+  <span class="xbar__txt">FREE UK DELIVERY ON ORDERS OF £60 OR MORE</span>
+</a>
+
 <!-- NAV — Visit US removed from main menu per feedback -->
 <nav class="nav" id="nav" aria-label="Primary">
   <a href="#/" class="nav__brand" data-route="/" data-brand aria-label="Hepple home">
@@ -298,6 +308,7 @@
   </a>
 
   <ul class="nav__links">
+    <li data-xmas><a href="#/margo" data-route="/margo">MARGO</a></li>
     <li><a href="#/story"     data-route="/story">OUR STORY</a></li>
     <li><a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a></li>
     <li><a href="#/craft"     data-route="/craft">OUR CRAFT</a></li>
@@ -306,6 +317,7 @@
   </ul>
 
   <div class="nav__right">
+    <a href="#/shop" class="nav__xmas" data-route="/shop" data-xmas>SHOP CHRISTMAS GIFTS</a>
     <a href="#/shop" class="nav__cta nav__cta--juniper" data-route="/shop">SHOP</a>
     <button class="nav__cart" id="cartBtn" aria-label="Open cart">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -322,6 +334,8 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
   <button class="drawer__close" id="drawerClose" aria-label="Close menu">CLOSE ✕</button>
   <a href="#/"          data-route="/">HOME</a>
+  <a href="#/margo"     data-route="/margo" data-xmas>MEET MARGO</a>
+  <a href="#/shop"      data-route="/shop" data-xmas class="drawer__xmas">SHOP CHRISTMAS GIFTS</a>
   <a href="#/story"     data-route="/story">OUR STORY</a>
   <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
   <a href="#/craft"     data-route="/craft">OUR CRAFT</a>
@@ -377,6 +391,110 @@
   <!-- HOME -->
   <div class="page is-active" data-page="/">
 
+    <!-- ================================================================
+         CHRISTMAS 2026 TAKEOVER (MARGO)  ·  temporary
+         All copy below is Miranda's "HEPPLE WEBSITE TEXTS UPDATED" document,
+         word for word. Everything marked data-xmas only shows while
+         CHRISTMAS = true in app.js (body.is-xmas).
+         ================================================================ -->
+    <section class="xh xh--centred" data-xmas aria-label="Meet MARGO">
+      <picture class="xh__media">
+        <source media="(max-width: 760px)" srcset="assets/christmas/margo-bar-portrait.jpg" />
+        <img src="assets/christmas/margo-bar-wide.jpg" alt="Both MARGO blends with Hepple Wild Juniper Gin and Hepple Moorland Vodka on the bar cart" fetchpriority="high" />
+      </picture>
+      <div class="xh__shade" aria-hidden="true"></div>
+      <div class="xh__inner">
+        <h1 class="xh__title">
+          <span class="xh__line xh__line--big xfit">MEET MARGO.</span>
+          <span class="xh__line xh__line--sub xfit">YOUR MARTINI ERA STARTS HERE.</span>
+        </h1>
+        <span class="xh__rule" aria-hidden="true"></span>
+        <div class="xh__body">
+          <p>The newest member of the Hepple family. Our Instant Martini Mix, created for beautifully balanced Martinis without the fuss.</p>
+          <p>Whether you're having a few friends over or throwing the Christmas party, MARGO makes great Martinis brilliantly easy.</p>
+          <p class="xh__choice xfit">Bright Lemon or Dirty Olive? The choice is yours.</p>
+          <p class="xh__add">Just add frozen Hepple gin or vodka.</p>
+        </div>
+        <p class="xh__tag">NO SHAKER. NO ICE. NO FUSS.</p>
+        <div class="xh__actions">
+          <a href="#/margo" data-route="/margo" class="btn btn--cream">DISCOVER MARGO</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="xgift" data-xmas aria-labelledby="xgiftTitle">
+      <div class="xwrap">
+        <header class="xhead">
+          <h2 class="xhead__title xfit" id="xgiftTitle">PERFECT GIFTS FOR MARTINI LOVERS.</h2>
+        </header>
+
+        <div class="xgift__grid xgift__grid--four">
+          <a class="xgcard" href="/shop/margo-martini-gift-box" data-route="/shop/margo-martini-gift-box">
+            <div class="xgcard__img"><img src="assets/christmas/giftbox-moorland-vodka-bright-lemon.jpg" alt="The MARGO Martini Gift Box: a 700ml bottle of Hepple Moorland Vodka with a 250ml bottle of MARGO Bright Lemon Instant Martini Mix" loading="lazy" /></div>
+            <div class="xgcard__body">
+              <h3 class="xgcard__title xfit">THE MARGO MARTINI GIFT BOX</h3>
+              <p class="xgcard__kicker">ALL THEY WANT FOR CHRISTMAS IS MARGO.</p>
+              <p class="xgcard__copy">Some Christmas presents are just better served with a Martini. The perfect Christmas Martini gift set for someone who loves a good drink. Choose your favourite Hepple gin or vodka, pair it with MARGO Bright Lemon or Dirty Olive, and we'll wrap up a little Martini magic in one beautiful gift box.</p>
+              <p class="xgcard__price">£65 | FREE UK SHIPPING</p>
+            </div>
+          </a>
+          <a class="xgcard xgcard--margo" href="#/shop/margo-bright-lemon" data-route="/shop/margo-bright-lemon">
+            <div class="xgcard__img"><img src="assets/christmas/margo-bright-lemon-tight.jpg" alt="MARGO Bright Lemon Instant Martini Mix with Hepple Wild Juniper Gin and a lemon Martini" loading="lazy" /></div>
+            <div class="xgcard__body">
+              <h3 class="xgcard__title xfit">MARGO BRIGHT LEMON</h3>
+              <p class="xgcard__kicker">MARGO LIKES IT BRIGHT.</p>
+              <p class="xgcard__copy">British dry vermouth, fragrant lemon verbena and Amalfi lemons come together in a beautifully balanced mix with fresh, vibrant citrus character.</p>
+              <p class="xgcard__price">£19.95</p>
+            </div>
+          </a>
+          <a class="xgcard xgcard--margo" href="#/shop/margo-dirty-olive" data-route="/shop/margo-dirty-olive">
+            <div class="xgcard__img"><img src="assets/christmas/margo-dirty-olive-tight.jpg" alt="MARGO Dirty Olive Instant Martini Mix with Hepple Moorland Vodka and an olive Martini" loading="lazy" /></div>
+            <div class="xgcard__body">
+              <h3 class="xgcard__title xfit">MARGO DIRTY OLIVE</h3>
+              <p class="xgcard__kicker">MARGO LIKES IT DIRTY.</p>
+              <p class="xgcard__copy">A savoury blend of vermouth, Manzanilla green olives and seasoned olive brine. Rich, balanced and deliciously dirty.</p>
+              <p class="xgcard__price">£19.95</p>
+            </div>
+          </a>
+          <a class="xgcard" href="/shop/margo-martini-party-box" data-route="/shop/margo-martini-party-box">
+            <div class="xgcard__img"><img src="assets/christmas/box-party.jpg" alt="MARGO's Martini Party in a Box, open: Hepple Wild Juniper Gin, Hepple Moorland Vodka, MARGO Bright Lemon, MARGO Dirty Olive, Perelló olives, a Martini measure and bamboo cocktail picks" loading="lazy" /></div>
+            <div class="xgcard__body">
+              <h3 class="xgcard__title xfit">MARGO'S MARTINI PARTY IN A BOX</h3>
+              <p class="xgcard__kicker">GOOD FRIENDS. GREAT MARTINIS. EVERYTHING ELSE IS OPTIONAL.</p>
+              <p class="xgcard__copy">For the people who love a good party (and an even better Martini). The ultimate Martini cocktail gift set, with two MARGO blends, Hepple gin and vodka, olives and all the little extras for a seriously good Martini night. Beautifully boxed, ready to give. Or keep. We won't judge.</p>
+              <p class="xgcard__price">£120 | FREE UK SHIPPING</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="xcenter">
+          <a href="#/shop" data-route="/shop" class="btn btn--solid-blue btn--huge">SHOP CHRISTMAS GIFTS</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="xritual-teaser" data-xmas aria-label="How MARGO works">
+      <div class="xwrap xritual-teaser__inner">
+        <p class="xritual-teaser__steps xfit">FREEZE. POUR. STIR. GARNISH.</p>
+        <p class="xritual-teaser__ratio"><span>1 PART MARGO + 3 PARTS FROZEN GIN OR VODKA.</span><span class="xritual-teaser__sep"> · </span><span>ONE BOTTLE. TEN MARTINIS.</span></p>
+        <a href="#/margo" data-route="/margo" class="btn btn--outline-light">HOW IT WORKS</a>
+      </div>
+    </section>
+
+    <section class="xcock" data-xmas aria-labelledby="xcockTitleHome">
+      <div class="xwrap">
+        <header class="xhead xhead--light">
+          <h2 class="xhead__title xfit" id="xcockTitleHome">THE CHRISTMAS COCKTAIL EDIT.</h2>
+          <p class="xhead__lede">
+            Three seasonal serves from Hepple: Red Vesper, First Frost and Winter Cosmopolitan.
+            Distinctive spirits, thoughtful ingredients and a little something for the first
+            drink of the evening.
+          </p>
+        </header>
+        <div class="flip-row" data-xmas-cocktails></div>
+      </div>
+    </section>
+
     <!-- MERGED Section 1+2: founders-on-the-hill bg image + single text panel
          "AN INDEPENDENT..." headline + body copy + buttons. No two-box layout. -->
     <section class="home-hero">
@@ -410,7 +528,7 @@
     <!-- SHOP THE RANGE — full-bleed product hero, big button, no carousel -->
     <section class="shop-range">
       <div class="shop-range__bg">
-        <img src="assets/products/group-shot-hero.jpg" alt="The Hepple range: Wild Juniper Gin, Moorland Vodka and Douglas Fir Vodka" loading="lazy" />
+        <img src="assets/products/range-new-labels-plain.jpg" alt="The Hepple range: Moorland Vodka, Wild Juniper Gin and Douglas Fir Vodka" loading="lazy" />
       </div>
       <div class="shop-range__overlay">
         <h2 class="shop-range__headline">SHOP THE RANGE</h2>
@@ -863,11 +981,24 @@
 
     <section class="cocktails-hero">
       <div class="cocktails-hero__bg">
-        <img src="assets/cocktails/cocktails-hero.jpg" alt="The Hepple range with cocktails in the greenhouse" />
+        <img src="assets/products/range-new-labels.jpg" alt="Hepple Moorland Vodka, Wild Juniper Gin and Douglas Fir Vodka with Martinis" />
       </div>
       <div class="cocktails-hero__overlay">
         <h1 class="cocktails-hero__title">LET'S MAKE COCKTAILS</h1>
         <p class="cocktails-hero__sub script-accent">Delicious drinks start here</p>
+      </div>
+    </section>
+
+
+    <!-- CHRISTMAS COCKTAIL EDIT (seasonal, data-xmas). Same flip-card
+         recipe template as the rest of the cocktails page. -->
+    <section class="xcock xcock--page" id="christmasCocktails" data-xmas aria-labelledby="xcockTitlePage">
+      <div class="xwrap">
+        <header class="xhead xhead--light">
+          <h2 class="xhead__title xfit" id="xcockTitlePage">THE CHRISTMAS COCKTAIL EDIT.</h2>
+          <p class="xhead__lede">Three seasonal serves from Hepple: Red Vesper, First Frost and Winter Cosmopolitan. Distinctive spirits, thoughtful ingredients and a little something for the first drink of the evening.</p>
+        </header>
+        <div class="flip-row" data-xmas-cocktails></div>
       </div>
     </section>
 
@@ -882,6 +1013,151 @@
     </section>
   </div>
 
+
+
+  <!-- ================================================================
+       MARGO  ·  dedicated page (#/margo). Copy: Miranda's brief, verbatim.
+       ================================================================ -->
+  <div class="page" data-page="/margo">
+
+    <section class="mh" aria-label="Meet MARGO">
+      <picture class="mh__media">
+        <source media="(max-width: 760px)" srcset="assets/christmas/margo-party-hero-mobile.jpg" />
+        <img src="assets/christmas/margo-party-hero.jpg" alt="MARGO Dirty Olive and MARGO Bright Lemon with Martinis by the Christmas tree" fetchpriority="high" />
+      </picture>
+      <div class="mh__shade" aria-hidden="true"></div>
+      <div class="mh__copy">
+        <h1 class="mh__title">
+          <span class="mh__big xfit">MEET MARGO.</span>
+          <span class="mh__sub xfit">YOUR MARTINI ERA STARTS HERE.</span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="mstory" aria-labelledby="mstoryTitle">
+      <div class="xwrap mstory__grid">
+        <h2 class="mstory__title" id="mstoryTitle">
+          <span class="xfit">EVERYONE LOVES A MARTINI.</span>
+          <span class="xfit">MAKING ONE IS ANOTHER STORY.</span>
+        </h2>
+        <div class="mstory__copy">
+          <p>There's nothing quite like a perfectly cold Martini to start an evening. But when you've got a house full of friends, the last thing you want is to spend the night measuring, stirring and straining drinks.</p>
+          <p>Meet MARGO. The Instant Martini Mix from the Hepple Spirits Company, created to make beautifully balanced Martinis at home brilliantly easy.</p>
+          <p>At Hepple, we've always had a thing for Martinis. They're at the heart of what we do, from the spirits we make to the drinks we love to share. And we know that getting a Martini just right takes a little more than good gin or vodka. It's about balance, flavour, temperature and knowing exactly how the ingredients work together.</p>
+          <p>So we put our experience to good use. Drawing on years of spirits-making expertise and a healthy obsession with the perfect Martini, we carefully developed MARGO to take the guesswork out of making a great drink. All the flavour, balance and attention to detail you'd expect from Hepple, with none of the complicated preparation.</p>
+          <p>Made with British dry vermouth, MARGO comes in two distinct blends: Bright Lemon, with fragrant lemon verbena and Amalfi lemons; and Dirty Olive, with Manzanilla green olives and seasoned olive brine. Each recipe has been thoughtfully developed to complement your favourite gin or vodka, delivering a beautifully balanced Martini, every time.</p>
+          <p>Simply add your favourite frozen Hepple gin or vodka, give it a gentle stir and garnish. No specialist equipment, no complicated cocktail recipes and, most importantly, no disappearing into the kitchen while everyone else is having fun.</p>
+          <p>Because a great Martini should be a pleasure to drink, not a performance to make.</p>
+        </div>
+        <p class="mstory__tag">NO SHAKER. NO ICE. NO FUSS.</p>
+      </div>
+    </section>
+
+    <!-- The ritual: kept high on the page (brief: steps, 1:3 ratio and
+         ten-Martini yield must be visible early, especially on mobile). -->
+    <section class="mritual" id="mritual" aria-labelledby="mritualTitle">
+      <div class="xwrap">
+        <header class="mritual__head">
+          <h2 class="mritual__title xfit" id="mritualTitle">FREEZE. POUR. STIR. GARNISH.</h2>
+          <div class="mritual__facts">
+            <div class="mritual__fact">
+              <span class="mritual__fact-big">1 : 3</span>
+              <span class="mritual__fact-label xfit">1 PART MARGO + 3 PARTS FROZEN GIN OR VODKA.</span>
+            </div>
+            <div class="mritual__fact">
+              <span class="mritual__fact-big">10</span>
+              <span class="mritual__fact-label xfit">ONE BOTTLE. TEN MARTINIS.</span>
+            </div>
+          </div>
+        </header>
+
+        <ol class="mritual__steps">
+          <li class="mstep"><span class="mstep__num">01</span><h3 class="mstep__title">FREEZE.</h3><p>Keep your Hepple gin or vodka in the freezer and MARGO in the fridge.</p></li>
+          <li class="mstep"><span class="mstep__num">02</span><h3 class="mstep__title">POUR.</h3><p>Add one part MARGO and three parts frozen gin or vodka to a chilled Martini glass.</p></li>
+          <li class="mstep"><span class="mstep__num">03</span><h3 class="mstep__title">STIR.</h3><p>Give it a gentle stir.</p></li>
+          <li class="mstep"><span class="mstep__num">04</span><h3 class="mstep__title">GARNISH.</h3><p>Finish with a lemon twist or olives.</p></li>
+        </ol>
+
+        <!-- STEP-BY-STEP FILM. Drop the file into assets/christmas/ and set
+             data-src on the button below, e.g.
+             data-src="assets/christmas/margo-ritual.mp4". While data-src is
+             empty this whole block stays hidden. -->
+        <div class="mfilm" data-film hidden>
+          <video class="mfilm__video" playsinline controls preload="none" poster="assets/christmas/margo-bar-wide.jpg"></video>
+          <button class="mfilm__play" type="button" data-film-play data-src="" aria-label="Play the MARGO step-by-step film">
+            <span class="mfilm__btn" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+          </button>
+        </div>
+
+        <p class="mritual__more">
+          Each 250ml bottle of MARGO makes ten Martinis when based on a 25ml:75ml serve. No piles of ice, no complicated cocktail equipment. Just great Martinis and more time to enjoy the party.
+        </p>
+      </div>
+    </section>
+
+    <section class="mways" id="mways" aria-labelledby="mwaysTitle">
+      <div class="xwrap">
+        <header class="xhead">
+          <h2 class="xhead__title xfit" id="mwaysTitle">TWO WAYS TO MARTINI.</h2>
+        </header>
+        <div class="mways__grid">
+          <article class="mway mway--lemon">
+            <a class="mway__img" href="#/shop/margo-bright-lemon" data-route="/shop/margo-bright-lemon">
+              <img src="assets/christmas/margo-bright-lemon-tight.jpg" alt="MARGO Bright Lemon with Hepple Wild Juniper Gin and a lemon Martini" loading="lazy" />
+            </a>
+            <div class="mway__body">
+              <p class="mway__kicker">BRIGHT LEMON 250ML 11.1% ABV</p>
+              <h3 class="mway__title xfit">MARGO LIKES IT BRIGHT.</h3>
+              <p class="mway__copy">British dry vermouth, fragrant lemon verbena and Amalfi lemons come together in a beautifully balanced mix with fresh, vibrant citrus character.</p>
+              <div class="mway__foot">
+                <span class="mway__price">£19.95</span>
+                <button class="btn btn--solid-blue" data-add-to-cart="margo-bright-lemon">SHOP BRIGHT LEMON</button>
+              </div>
+            </div>
+          </article>
+          <article class="mway mway--olive">
+            <a class="mway__img" href="#/shop/margo-dirty-olive" data-route="/shop/margo-dirty-olive">
+              <img src="assets/christmas/margo-dirty-olive-tight.jpg" alt="MARGO Dirty Olive with Hepple Moorland Vodka and an olive Martini" loading="lazy" />
+            </a>
+            <div class="mway__body">
+              <p class="mway__kicker">DIRTY OLIVE 250ML 9.1% ABV</p>
+              <h3 class="mway__title xfit">MARGO LIKES IT DIRTY.</h3>
+              <p class="mway__copy">A savoury blend of vermouth, Manzanilla green olives and seasoned olive brine. Rich, balanced and deliciously dirty.</p>
+              <div class="mway__foot">
+                <span class="mway__price">£19.95</span>
+                <button class="btn btn--solid-blue" data-add-to-cart="margo-dirty-olive">SHOP DIRTY OLIVE</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="mwild" aria-labelledby="mwildTitle">
+      <div class="mwild__bg">
+        <picture>
+          <source media="(max-width: 760px)" srcset="assets/christmas/margo-wild-gin-mobile.jpg" />
+          <img src="assets/christmas/margo-wild-gin.jpg" alt="Hepple Wild Juniper Gin with MARGO Dirty Olive in the gift box" loading="lazy" />
+        </picture>
+      </div>
+      <div class="mwild__panel">
+        <h2 class="mwild__title" id="mwildTitle"><span>BORN IN THE WILD.</span><span>MADE FOR MARTINIS.</span></h2>
+        <p>Hepple Wild Juniper Gin was created with the Martini firmly in mind. MARGO is the next chapter: the same dedication to flavour and balance, made brilliantly easy for enjoying at home.</p>
+      </div>
+    </section>
+
+    <section class="mhost" aria-labelledby="mhostTitle">
+      <div class="xwrap mhost__grid">
+        <figure class="mhost__img"><img src="assets/christmas/margo-bar-lemon.jpg" alt="MARGO Bright Lemon on the bar with lemons, Perelló olives and two Martinis" loading="lazy" /></figure>
+        <div class="mhost__copy">
+          <h2 class="mhost__title" id="mhostTitle"><span>GOOD FOOD.</span><span>GREAT MARTINIS.</span><span>BETTER COMPANY.</span></h2>
+          <p>Whether it’s Friday drinks, a dinner party or a house full of friends at Christmas, MARGO makes hosting easier. Because the best part of throwing a party should be enjoying it.</p>
+          <a href="#/shop" data-route="/shop" class="btn btn--solid-blue">SHOP MARGO’S MARTINI GIFTS</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
 
   <!-- VISIT -->
   <div class="page" data-page="/visit">
@@ -914,21 +1190,105 @@
   </div>
 
 
-  <!-- SHOP -->
+  <!-- SHOP · during Christmas this is the Christmas shop (one shop, per
+       Miranda): gifts first, then Hepple spirits, then MARGO. -->
   <div class="page" data-page="/shop">
-    <section class="shop-hero">
+
+    <section class="ch" data-xmas aria-label="The Christmas Shop">
+      <div class="ch__bg">
+        <picture>
+          <source media="(max-width: 760px)" srcset="assets/christmas/margo-bar-mobile.jpg" />
+          <img src="assets/christmas/margo-bar-wide.jpg" alt="A Hepple Christmas bar set for Martinis" />
+        </picture>
+      </div>
+      <div class="ch__shade" aria-hidden="true"></div>
+      <div class="ch__inner">
+        <p class="xscript xscript--light">The Christmas Shop</p>
+        <h1 class="ch__title xfit">PERFECT GIFTS FOR MARTINI LOVERS.</h1>
+        <p class="ch__body">Choose your favourites, add a gift message and <span class="nowrap">leave the drinks to us.</span></p>
+      </div>
+    </section>
+
+    <!-- FREE DELIVERY — big and bold -->
+    <section class="cdeliver" data-xmas aria-label="Free UK delivery">
+      <div class="cdeliver__inner">
+        <span class="cdeliver__big xfit">FREE UK DELIVERY ON ORDERS OF £60 OR MORE</span>
+      </div>
+    </section>
+
+    <!-- CHRISTMAS GIFTS: party box first, then the gift box, then the refill kit.
+         Each card links to its own indexable product page (/shop/<slug>). -->
+    <section class="cgifts" data-xmas aria-label="Christmas gifts">
+      <div class="xwrap cgifts__grid">
+
+        <a class="cgift cgift--link" href="/shop/margo-martini-party-box" data-route="/shop/margo-martini-party-box">
+          <figure class="cgift__img"><img src="assets/christmas/box-party.jpg" alt="MARGO's Martini Party in a Box, open: Hepple Wild Juniper Gin, Hepple Moorland Vodka, MARGO Bright Lemon, MARGO Dirty Olive, Perelló olives, a Martini measure and bamboo cocktail picks" loading="lazy" /></figure>
+          <div class="cgift__body">
+            <h2 class="cgift__title xfit">MARGO'S MARTINI PARTY IN A BOX</h2>
+            <p class="cgift__kicker xfit">GOOD FRIENDS. GREAT MARTINIS. EVERYTHING ELSE IS OPTIONAL.</p>
+            <p class="cgift__copy">For the people who love a good party (and an even better Martini). The ultimate Martini cocktail gift set, with two MARGO blends, Hepple gin and vodka, olives and all the little extras for a seriously good Martini night. Beautifully boxed, ready to give. Or keep. We won't judge.</p>
+            <p class="cgift__price">£120 | FREE UK SHIPPING</p>
+            <span class="btn btn--solid-blue cgift__add">SHOP NOW</span>
+          </div>
+        </a>
+
+        <a class="cgift cgift--link" href="/shop/margo-martini-gift-box" data-route="/shop/margo-martini-gift-box">
+          <figure class="cgift__img"><img src="assets/christmas/giftbox-moorland-vodka-bright-lemon-wide.jpg" alt="The MARGO Martini Gift Box: a 700ml bottle of Hepple Moorland Vodka with a 250ml bottle of MARGO Bright Lemon Instant Martini Mix" loading="lazy" /></figure>
+          <div class="cgift__body">
+            <h2 class="cgift__title xfit">THE MARGO MARTINI GIFT BOX</h2>
+            <p class="cgift__kicker xfit">ALL THEY WANT FOR CHRISTMAS IS MARGO.</p>
+            <p class="cgift__copy">Some Christmas presents are just better served with a Martini. The perfect Christmas Martini gift set for someone who loves a good drink. Choose your favourite Hepple gin or vodka, pair it with MARGO Bright Lemon or Dirty Olive, and we'll wrap up a little Martini magic in one beautiful gift box.</p>
+            <p class="cgift__price">£65 | FREE UK SHIPPING</p>
+            <span class="btn btn--solid-blue cgift__add">SHOP NOW</span>
+          </div>
+        </a>
+
+      </div>
+      <div class="xwrap cpro5wrap">
+        <a class="cpro5 cgift--link" href="/shop/hepple-party-refill-kit" data-route="/shop/hepple-party-refill-kit">
+          <div class="cpro5__body">
+            <div class="cgift__head">
+              <h2 class="cgift__title xfit">THE HEPPLE PARTY REFILL KIT</h2>
+              <p class="cgift__price">£280 | SAVE £103</p>
+            </div>
+            <p class="cgift__kicker">BIG PLANS. BIG MARTINIS. BIG SAVINGS.</p>
+            <p class="cgift__copy">A generous 5-litre bag-in-box, a beautiful 75cl bottle of Hepple and a handy funnel to keep the good times flowing.</p>
+          </div>
+          <span class="btn btn--solid-blue">SHOP NOW</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Evergreen shop header (hidden during Christmas) -->
+    <section class="shop-hero" data-evergreen>
       <div class="wrap">
         <h1>FOR DRINKS WORTH MAKING</h1>
         <p class="shop-hero__lede">
           The Hepple range, from the estate to your glass. Free UK delivery on
-          orders over £45.
+          orders of £60 or more.
         </p>
       </div>
     </section>
 
-    <section class="shop-grid-sec">
+    <!-- HEPPLE SPIRITS -->
+    <section class="shop-grid-sec" id="shopSpirits">
       <div class="wrap">
+        <div class="shop-extra__head sxhead" data-xmas>
+          <h2 class="shop-extra__title xfit">FOR DRINKS WORTH MAKING</h2>
+          <p class="shop-extra__note">The Hepple range, from the estate to your glass.</p>
+        </div>
         <div class="shop-grid" id="shopGrid"></div>
+      </div>
+    </section>
+
+    <!-- MARGO -->
+    <section class="sxmas" data-xmas aria-labelledby="sxmasTitle">
+      <div class="wrap">
+        <div class="shop-extra__head sxhead">
+          <h2 class="shop-extra__title xfit" id="sxmasTitle">MARGO INSTANT MARTINI MIX</h2>
+          <p class="shop-extra__note">Bright Lemon or Dirty Olive. Just add frozen gin or vodka: one part MARGO to three parts spirit. Each 250ml bottle makes ten Martinis. No shaker. No ice. No fuss.</p>
+        </div>
+        <div class="shop-grid" data-margo-grid></div>
       </div>
     </section>
 
@@ -1025,6 +1385,7 @@
       </a>
 
       <nav class="footer__nav" aria-label="Footer">
+        <a href="#/margo"     data-route="/margo" data-xmas>MARGO</a>
         <a href="#/story"     data-route="/story">OUR STORY</a>
         <a href="#/estate"    data-route="/estate">THE HEPPLE ESTATE</a>
         <a href="#/craft"     data-route="/craft">OUR CRAFT</a>

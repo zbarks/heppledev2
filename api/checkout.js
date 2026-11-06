@@ -119,6 +119,14 @@ module.exports = async (req, res) => {
     if (!clean.length) return res.status(400).json({ error: 'No valid items in cart.' });
   }
 
+  // ---- Christmas: the gift card is included free with the Party Box ----
+  if (clean.some(({ product }) => product.includesGiftCard)) {
+    clean = clean.map((line) => line.product.addon
+      ? { product: Object.assign({}, line.product, { price: 0, name: line.product.name + ' (included)', _included: true }), qty: 1 }
+      : line);
+    subtotal = clean.reduce((s, { product, qty }) => s + product.price * qty, 0);
+  }
+
   // ---- GUARD: a handwritten card can never be the only thing in the basket.
   // This is the authoritative check (the browser can be bypassed). ----
   const hasCard = clean.some(({ product }) => product.addon);
@@ -158,7 +166,7 @@ module.exports = async (req, res) => {
   const discountMult = inlineDiscount ? (1 - inlineDiscount / 100) : 1;
   const line_items = clean.map(({ product, qty }) => {
     const priceId = process.env[priceEnvKey(product.slug)];
-    if (priceId && !inlineDiscount) return { price: priceId, quantity: qty };
+    if (priceId && !inlineDiscount && !product._included) return { price: priceId, quantity: qty };
     const product_data = {
       name: product.name,
       metadata: { slug: product.slug, sku: product.sku },

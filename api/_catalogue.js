@@ -25,7 +25,7 @@ const PRODUCTS = [
     name:  'Hepple Wild Juniper Gin',
     price: 39.95,                // GBP, inc. VAT
     sku:   'HEP-GIN-70',
-    image: 'assets/products/hepple-gin.jpg',
+    image: 'assets/products/new-wild-juniper-gin.jpg',
     meta:  { size: '70cl', abv: '45%' },
   },
   {
@@ -33,15 +33,15 @@ const PRODUCTS = [
     name:  'Hepple Douglas Fir Vodka',
     price: 39.95,
     sku:   'HEP-DFV-70',
-    image: 'assets/products/douglas-fir.jpg',
+    image: 'assets/products/new-douglas-fir-vodka.jpg',
     meta:  { size: '70cl', abv: '41%' },
   },
   {
     slug:  'hepple-moorland-vodka',
     name:  'Hepple Moorland Vodka',
-    price: 34.95,
+    price: 39.95, // aligned with Wild Juniper Gin (Nov 2026)
     sku:   'HEP-WHV-70',
-    image: 'assets/products/wheat-vodka.jpg',
+    image: 'assets/products/new-moorland-vodka.jpg',
     meta:  { size: '70cl', abv: '41%' },
   },
 
@@ -63,14 +63,86 @@ const PRODUCTS = [
     meta:  { size: '70cl', abv: '24%' },
   },
 
-  // ---- Add-on: handwritten card (£5) ----
+  // ---- MARGO Instant Martini Mix (Christmas 2026 launch) ----
+  {
+    slug:  'margo-bright-lemon',
+    name:  'MARGO Bright Lemon Instant Martini Mix',
+    price: 19.95,
+    sku:   'MAR-LEM-25',
+    image: 'assets/christmas/margo-bright-lemon-pack.jpg',
+    meta:  { size: '250ml', abv: '11.1%' },
+  },
+  {
+    slug:  'margo-dirty-olive',
+    name:  'MARGO Dirty Olive Instant Martini Mix',
+    price: 19.95,
+    sku:   'MAR-OLV-25',
+    image: 'assets/christmas/margo-dirty-olive-pack.jpg',
+    meta:  { size: '250ml', abv: '9.1%' },
+  },
+
+  // ---- Christmas gifting ----
+  // The Martini Gift Box is sold as four fixed pairings so the server always
+  // knows exactly what is in the box. The client picks the slug from the two
+  // selectors on the Christmas page.
+  ...[
+    ['bright-lemon', 'Bright Lemon', 'wild-juniper-gin', 'Wild Juniper Gin', 'LG'],
+    ['bright-lemon', 'Bright Lemon', 'moorland-vodka',   'Moorland Vodka',   'LV'],
+    ['dirty-olive',  'Dirty Olive',  'wild-juniper-gin', 'Wild Juniper Gin', 'OG'],
+    ['dirty-olive',  'Dirty Olive',  'moorland-vodka',   'Moorland Vodka',   'OV'],
+  ].map(([m, mName, s, sName, code]) => ({
+    slug:  `martini-gift-box-${m}-${s}`,
+    name:  `The MARGO Martini Gift Box: Hepple ${sName} + MARGO ${mName} (Pre-order, ships 23 November)`,
+    price: 65.0,
+    sku:   `GIFT-MGB-${code}`,
+    image: `assets/christmas/giftbox-${s}-${m}.jpg`,
+    meta:  { contents: `MARGO ${mName}, Hepple ${sName}, gift box` },
+  })),
+  {
+    slug:  'margo-martini-party-box',
+    name:  "MARGO's Martini Party in a Box",
+    price: 120.0,
+    sku:   'GIFT-MPB',
+    image: 'assets/christmas/box-party.jpg',
+    meta:  { contents: 'MARGO Bright Lemon, MARGO Dirty Olive, Hepple Wild Juniper Gin, Hepple Moorland Vodka, stainless steel Martini measure, bamboo cocktail picks, Perello Gordal Picante olives 350g' },
+  },
+
+  // ---- Hepple Party Refill Kit (5L bag-in-box + 75cl bottle + funnel) ----
+  {
+    slug:  'hepple-party-refill-kit-wild-juniper-gin',
+    name:  'The Hepple Party Refill Kit: Wild Juniper Gin',
+    price: 280.0,
+    sku:   'HEP-REFILL-GIN',
+    image: 'assets/products/new-wild-juniper-gin.jpg',
+    meta:  { contents: '5L bag-in-box, 75cl bottle, refill funnel' },
+  },
+  {
+    slug:  'hepple-party-refill-kit-moorland-vodka',
+    name:  'The Hepple Party Refill Kit: Moorland Vodka',
+    price: 280.0,
+    sku:   'HEP-REFILL-VOD',
+    image: 'assets/products/new-moorland-vodka.jpg',
+    meta:  { contents: '5L bag-in-box, 75cl bottle, refill funnel' },
+  },
+
+  // ---- Gift box add-on: Perello olives ----
+  {
+    slug:  'perello-gordal-olives',
+    name:  'Perello Gordal Picante Olives, 350g',
+    price: 4.50,
+    sku:   'ADD-OLIVES',
+    image: 'assets/christmas/olives-tin.jpg',
+    meta:  {},
+  },
+
+  // ---- Add-on: gift card + message (£2; free with the Party Box) ----
   // `addon: true` lets checkout.js (a) reject a card-only basket and
   // (b) exclude the card from the free-shipping threshold. No image, so it
   // renders as a plain line on the Stripe page.
   {
     slug:  'handwritten-card',
-    name:  'Gift Wrap & Handwritten Card',
-    price: 5.00,
+    name:  'Personalised Gift Card',
+    price: 2.50,
     sku:   'HEP-CARD',
     image: '',
     addon: true,
@@ -82,7 +154,7 @@ const BY_SLUG = Object.fromEntries(PRODUCTS.map((p) => [p.slug, p]));
 
 // Shipping: free over the threshold, flat fee below it.
 const SHIPPING = {
-  freeThreshold: 45.0, // GBP — matches the shop hero copy
+  freeThreshold: 60.0, // GBP — Christmas 2026: free UK delivery on £60+ (was £45)
   flatFee: 4.95,       // GBP
   label: 'UK standard delivery',
 };

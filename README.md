@@ -245,3 +245,28 @@ so the cart total always matches what Stripe charges. Note that
 `validate_discount_code()`'s own `discount_amount` uses simple whole-subtotal
 rounding and can differ by a penny or two; it's for reporting and previews.
 `api/checkout.js` is authoritative for money.
+
+## Christmas 2026 · MARGO campaign
+
+- **Switch:** `const CHRISTMAS = true;` in `app.js`. Set to `false` in January and the
+  festive home takeover, announcement bar, nav links and seasonal sections hide
+  (CSS keys off `body.is-xmas`); the scroll-scrub intro returns on the home page.
+- **New page:** `#/margo` (dedicated MARGO page). The shop (`#/shop`) is the Christmas shop during the campaign: party box, gift box, spirits, then MARGO. `#/christmas` redirects to it.
+- **Styles:** `assets/christmas/christmas.css` · **Images:** `assets/christmas/`.
+- **New SKUs** (server-priced in `api/_catalogue.js`): MARGO Bright Lemon / Dirty Olive
+  (£19.95), The Martini Gift Box (£60, four fixed pairings), MARGO's Martini Party in a
+  Box (£115, gift card included free).
+- **Gift card add-on** is now £2 (was £5) and free with the Party Box (`api/checkout.js`).
+- **Free UK shipping threshold** raised to £60 (was £45).
+- **Step-by-step film:** set `data-src` on the `[data-film-play]` button on the MARGO page.
+- **Christmas cocktails** use the standard flip-card recipe template; photos from Miranda's cocktail deck.
+- **Prices:** Moorland Vodka now £39.95, matching Wild Juniper Gin (client + server).
+- **Shop images:** new-label packshots in `assets/products/new-*.jpg`.
+
+### Gift box product pages + SEO (Nov 2026)
+- Product pages: `/shop/margo-martini-gift-box`, `/shop/margo-martini-party-box`, `/shop/hepple-party-refill-kit` (copy in `BUNDLE_PAGES`, app.js).
+- SEO title, meta description, price and images per gift box live in `seo/products.json`.
+  After editing, run `node tools/build-seo.js` to rebuild `shop/*.html` (real, indexable URLs with
+  canonical, Open Graph and Product schema), `sitemap.xml` and `robots.txt`.
+- Set `siteUrl` in `seo/products.json` to the live domain before launch.
+- Prices: gift box £65, party box £120, refill kit £280, gift card £2.50, Perelló olives add-on £4.50.

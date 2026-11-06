@@ -1,0 +1,777 @@
+/* ==========================================================================
+   HEPPLE × MARGO · CHRISTMAS 2026
+   Seasonal layer on top of styles.css. Uses the existing brand tokens
+   (Hepple Blue, Ground, Proxima Nova, Maristella) and adds a restrained
+   evergreen + warm gold for the festive moments. No snowflakes, no red.
+   Designed by Barker Digital.
+   ========================================================================== */
+
+:root{
+  --x-green:      #143a2c;   /* rich evergreen, pulled from the marble + bottles */
+  --x-green-deep: #0d281e;
+  --x-gold:       #b8955a;   /* candlelight brass, used as hairlines + small type */
+  --x-gold-soft:  #d8c49c;
+  --x-bar-h:      34px;
+}
+
+/* Everything seasonal disappears when CHRISTMAS = false in app.js */
+body:not(.is-xmas) [data-xmas]{ display:none !important; }
+
+/* Single-line helper (JS shrinks the font until it fits) */
+.xfit{ display:block; white-space:nowrap; max-width:100%; overflow:visible; }
+
+.xwrap{ max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+.xcenter{ text-align:center; margin-top: clamp(2.2rem, 4vw, 3.4rem); display:flex; flex-direction:column; align-items:center; gap:1rem; }
+.xnote{ margin:0; font-size:.68rem; letter-spacing:.22em; font-weight:700; color: var(--hepple-blue); opacity:.75; }
+
+.xeyebrow{
+  margin:0 0 .9rem; font-size:.7rem; letter-spacing:.26em; font-weight:700;
+  color: var(--hepple-blue); white-space:nowrap;
+}
+.xeyebrow--gold{ color: var(--x-gold-soft); }
+.xscript{
+  font-family: var(--script); font-weight:400; line-height:.95;
+  font-size: clamp(2.2rem, 1.7rem + 2.4vw, 4rem);
+  color: var(--x-gold-soft); margin: 0 0 .1em; white-space:nowrap;
+}
+.xscript--blue{ color: var(--hepple-blue); }
+.xscript--light{ color: var(--cream); }
+
+.xhead{ text-align:center; max-width: 900px; margin: 0 auto clamp(2.2rem, 4vw, 3.4rem); }
+.xhead__title{
+  font-weight:800; letter-spacing:.01em; line-height:1;
+  font-size: clamp(1.7rem, 1.1rem + 2.8vw, 3.6rem);
+  color: var(--hepple-blue); margin:0;
+}
+.xhead__lede{
+  margin: 1.2rem auto 0; max-width: 60ch;
+  font-size: var(--body-lg); line-height:1.7; color: var(--hepple-ink); opacity:.85;
+}
+.xhead--light .xhead__title{ color: var(--cream); }
+.xhead--light .xhead__lede{ color: var(--cream); opacity:.82; }
+
+/* Buttons */
+.btn--cream{ background: var(--cream); color: var(--hepple-blue); border:1.5px solid var(--cream); }
+.btn--cream:hover{ background: var(--hepple-blue); color: var(--cream); border-color: var(--hepple-blue); opacity:1; }
+.btn{ white-space:nowrap; }
+
+/* --------------------------------------------------------------------------
+   ANNOUNCEMENT BAR + NAV
+   -------------------------------------------------------------------------- */
+.xbar{
+  position:fixed; top:0; left:0; right:0; z-index:41;
+  height: var(--x-bar-h);
+  display:flex; align-items:center; justify-content:center; gap:.9rem;
+  background: var(--hepple-blue); color: var(--cream);
+  font-size:.64rem; letter-spacing:.24em; font-weight:700;
+  white-space:nowrap; overflow:hidden; padding: 0 1rem;
+}
+.xbar:hover{ opacity:1; background: var(--hepple-ink); }
+.xbar__dot{ color: var(--x-gold-soft); }
+body.is-xmas .nav{ top: var(--x-bar-h); }
+body.is-xmas .content{ padding-top: var(--x-bar-h); }
+body.is-xmas .drawer, body.is-xmas .cart-panel{ z-index: 60; }
+
+.nav__links a, .nav__right a{ white-space:nowrap; }
+.nav__xmas{
+  display:inline-flex; align-items:center;
+  padding:.62rem 1.1rem; border-radius:999px;
+  border:1.5px solid var(--hepple-blue); color: var(--hepple-blue);
+  font-size:.62rem; letter-spacing:.22em; font-weight:700;
+  transition: background .25s ease, color .25s ease;
+}
+.nav__xmas:hover, .nav__xmas.is-active{ background: var(--hepple-blue); color: var(--cream); opacity:1; }
+.nav__right{ gap:.8rem; }
+.drawer a.drawer__xmas{ color: var(--hepple-blue); }
+
+@media (max-width: 1280px){
+  body.is-xmas .nav__links{ gap: clamp(.8rem, 1.4vw, 1.4rem); font-size:.64rem; letter-spacing:.18em; }
+}
+@media (max-width: 1100px){
+  .nav__xmas{ display:none; }
+}
+@media (max-width: 640px){
+  .xbar{ font-size:.55rem; letter-spacing:.16em; gap:.5rem; }
+  .xbar__txt:first-child, .xbar__dot{ display:none; }
+}
+
+/* --------------------------------------------------------------------------
+   HOME · CHRISTMAS HERO (photo 1)
+   -------------------------------------------------------------------------- */
+.xh{
+  position:relative; overflow:hidden; isolation:isolate;
+  min-height: 620px;
+  height: calc(100svh - var(--x-bar-h));
+  max-height: 1000px;
+  background: var(--x-green-deep);
+  display:flex; align-items:center;
+}
+.xh__media, .xh__media img{ position:absolute; inset:0; width:100%; height:100%; }
+.xh__media img{ object-fit:cover; object-position: 62% 50%; animation: xhZoom 14s ease-out both; }
+@keyframes xhZoom{ from{ transform:scale(1.06); } to{ transform:scale(1); } }
+.xh__shade{
+  position:absolute; inset:0; z-index:1;
+  background:
+    linear-gradient(90deg, rgba(10,30,22,.86) 0%, rgba(10,30,22,.62) 30%, rgba(10,30,22,.12) 58%, rgba(10,30,22,0) 75%),
+    linear-gradient(0deg, rgba(10,30,22,.45) 0%, rgba(10,30,22,0) 35%);
+}
+.xh__inner{
+  position:relative; z-index:2;
+  width: min(46rem, 52vw);
+  margin-left: clamp(1.4rem, 6vw, 7rem);
+  padding-top: 4rem;
+  color: var(--cream);
+}
+.xh__script{
+  font-family: var(--script); color: var(--x-gold-soft);
+  font-size: clamp(2.2rem, 1.6rem + 2.2vw, 3.8rem); line-height:.9; margin: 0 0 .25em;
+  white-space:nowrap;
+}
+.xh__title{ margin:0; color: var(--cream); }
+.xh__line{ display:block; white-space:nowrap; font-weight:800; line-height:.95; }
+.xh__line--big{ font-size: clamp(3rem, 1.6rem + 5.6vw, 7.2rem); letter-spacing:-.01em; }
+.xh__line--sub{ font-size: clamp(1rem, .7rem + 1.4vw, 2rem); letter-spacing:.06em; margin-top:.55em; font-weight:700; }
+.xh__body{ margin: 1.5rem 0 0; max-width: 46ch; font-size: var(--body-lg); line-height:1.7; opacity:.92; }
+.xh__tag{ margin: 1.1rem 0 0; font-size:.72rem; letter-spacing:.28em; font-weight:700; color: var(--x-gold-soft); white-space:nowrap; }
+.xh__actions{ display:flex; flex-wrap:wrap; gap:.8rem; margin-top: 2rem; }
+
+@media (max-width: 760px){
+  /* Mobile: headline on evergreen, then the separately framed portrait shot */
+  .xh{ height:auto; max-height:none; min-height:0; display:flex; flex-direction:column; padding-top: 4.6rem; }
+  .xh__shade{ display:none; }
+  .xh__inner{ display:contents; }
+  .xh__script{ order:1; padding: 0 var(--gutter); margin-bottom:.15em; color: var(--x-gold-soft); }
+  .xh__title{ order:2; padding: 0 var(--gutter); }
+  .xh__media{ order:3; position:relative; display:block; aspect-ratio: 4/5; height:auto; margin-top: 1.4rem; }
+  .xh__media img{ position:absolute; object-position: 50% 50%; }
+  .xh__body{ order:4; padding: 1.6rem var(--gutter) 0; margin:0; }
+  .xh__tag{ order:5; padding: 0 var(--gutter); }
+  .xh__actions{ order:6; padding: 0 var(--gutter) 2.8rem; flex-direction:column; align-items:stretch; }
+  .xh__actions .btn{ width:100%; }
+  .xh__line--big{ font-size: 16vw; }
+  .xh__line--sub{ font-size: 5.2vw; letter-spacing:.04em; }
+}
+
+/* --------------------------------------------------------------------------
+   HOME · GIFTING
+   -------------------------------------------------------------------------- */
+.xgift{ padding: clamp(4rem, 8vw, 7rem) 0 clamp(4rem, 7vw, 6rem); background: var(--ground); }
+.xgift__grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(1.2rem, 2.4vw, 2.2rem); max-width: 1180px; margin: 0 auto; }
+.xgcard{
+  display:grid; grid-template-columns: minmax(0,1fr); background: var(--cream);
+  border: 1px solid rgba(0,48,135,.1); overflow:hidden;
+  transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+}
+.xgcard:hover{ opacity:1; transform: translateY(-4px); box-shadow: 0 22px 44px -26px rgba(13,40,30,.45); }
+.xgcard__img{ position:relative; aspect-ratio: 3/2; overflow:hidden; }
+.xgcard__img img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition: transform .8s cubic-bezier(.16,1,.3,1); }
+.xgcard:hover .xgcard__img img{ transform: scale(1.04); }
+.xgcard__body{ padding: clamp(1.4rem, 2.4vw, 2.2rem); display:flex; flex-direction:column; border-top: 1px solid rgba(184,149,90,.4); }
+.xgcard__kicker{ margin:0 0 .8rem; font-size:.6rem; letter-spacing:.22em; font-weight:700; color: var(--x-gold); }
+.xgcard__title{ width:100%; font-size: clamp(1.15rem, .9rem + .9vw, 1.6rem); font-weight:800; line-height:1.05; letter-spacing:.01em; }
+.xgcard__price{ margin: .8rem 0 0; font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem); font-weight:800; color: var(--hepple-ink); }
+.xgcard__copy{ margin: .8rem 0 1.2rem; font-size:.9rem; line-height:1.6; opacity:.85; }
+.xgcard__cta{ margin-top:auto; font-size:.66rem; letter-spacing:.22em; font-weight:700; color: var(--hepple-blue); border-bottom: 1.5px solid currentColor; align-self:flex-start; padding-bottom:.2rem; white-space:nowrap; }
+
+@media (max-width: 1000px){
+  .xgift__grid{ grid-template-columns: 1fr; max-width: 620px; }
+}
+@media (max-width: 520px){
+  .xgcard__img{ aspect-ratio: 4/3; }
+}
+
+/* --------------------------------------------------------------------------
+   HOME · RITUAL TEASER (Hepple Blue band)
+   -------------------------------------------------------------------------- */
+.xritual-teaser{ background: var(--hepple-blue); color: var(--cream); padding: clamp(3rem, 6vw, 5rem) 0; text-align:center; }
+.xritual-teaser__inner{ display:flex; flex-direction:column; align-items:center; gap: 1.2rem; }
+.xritual-teaser__steps{
+  margin:0; font-weight:800; letter-spacing:.01em; line-height:1;
+  font-size: clamp(2rem, 1rem + 4.6vw, 5.6rem); color: var(--cream); width:100%;
+}
+.xritual-teaser__ratio{ margin:0; font-size:.72rem; letter-spacing:.22em; font-weight:700; color: var(--x-gold-soft); line-height:1.8; }
+
+/* --------------------------------------------------------------------------
+   CHRISTMAS COCKTAIL EDIT
+   -------------------------------------------------------------------------- */
+.xcock{
+  background: var(--x-green);
+  background-image: radial-gradient(120% 80% at 50% 0%, rgba(184,149,90,.14) 0%, rgba(184,149,90,0) 55%);
+  padding: clamp(4rem, 8vw, 7rem) 0; color: var(--cream);
+}
+.xcock__grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 1.8rem); }
+.xcard{
+  background: var(--cream); color: var(--hepple-ink);
+  display:flex; flex-direction:column; overflow:hidden;
+  border-top: 3px solid var(--x-gold);
+}
+.xcard__photo{ aspect-ratio: 4/5; overflow:hidden; }
+.xcard__photo img{ width:100%; height:100%; object-fit:cover; }
+.xcard__head{
+  padding: clamp(1.6rem, 2.6vw, 2.4rem) clamp(1.4rem, 2.2vw, 2rem) 1.4rem;
+  position:relative;
+}
+.xcard__head::after{
+  content:""; display:block; width: 2.2rem; height:1.5px; background: var(--x-gold); margin-top: 1.1rem;
+}
+.xcard__spirit{ margin:0 0 .7rem; font-size:.58rem; letter-spacing:.22em; font-weight:700; color: var(--x-gold); }
+.xcard__name{ font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.2rem); font-weight:800; line-height:1; white-space:nowrap; color: var(--hepple-blue); }
+.xcard__body{ padding: 0 clamp(1.4rem, 2.2vw, 2rem) clamp(1.6rem, 2.4vw, 2.2rem); display:flex; flex-direction:column; flex:1; }
+.xcard__blurb{ margin:0 0 1.4rem; font-size:.92rem; line-height:1.65; opacity:.88; }
+.xcard__label{ margin: 0 0 .6rem; font-size:.6rem; letter-spacing:.24em; font-weight:700; color: var(--hepple-blue); }
+.xcard__ing, .xcard__steps{ margin:0 0 1.4rem; padding:0; list-style:none; font-size:.74rem; letter-spacing:.08em; font-weight:600; line-height:1.5; }
+.xcard__ing li{ padding:.5rem 0; border-bottom: 1px solid rgba(0,48,135,.12); }
+.xcard__ing li:first-child{ border-top: 1px solid rgba(0,48,135,.12); }
+.xcard__steps{ counter-reset: st; letter-spacing:.01em; font-weight:400; font-size:.88rem; line-height:1.6; }
+.xcard__steps li{ counter-increment: st; position:relative; padding: .35rem 0 .35rem 2rem; }
+.xcard__steps li::before{ content: counter(st, decimal-leading-zero); position:absolute; left:0; top:.42rem; font-size:.66rem; font-weight:800; letter-spacing:.08em; color: var(--x-gold); }
+.xcard__more{ margin-top:auto; align-self:flex-start; font-size:.64rem; letter-spacing:.22em; font-weight:700; color: var(--hepple-blue); border-bottom:1.5px solid currentColor; padding-bottom:.2rem; }
+/* tone accents: a quiet colour cue per drink, never loud */
+.xcard--claret{ border-top-color: #6e2a35; }
+.xcard--frost{ border-top-color: var(--mist); }
+.xcard--fir{ border-top-color: var(--doug-fir-green); }
+
+.xcock--page{ padding-top: clamp(3.5rem, 7vw, 6rem); }
+
+@media (max-width: 980px){
+  .xcock__grid{ grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+}
+
+/* --------------------------------------------------------------------------
+   MARGO PAGE
+   -------------------------------------------------------------------------- */
+.mh{ position:relative; background: var(--ground); }
+.mh__media{ display:block; position:relative; height: calc(100svh - var(--x-bar-h)); min-height: 640px; max-height: 1040px; overflow:hidden; background: var(--x-green-deep); }
+.mh__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 50% 30%; animation: xhZoom 14s ease-out both; }
+.mh__card{
+  position:absolute; left:50%; bottom:0; transform: translate(-50%, 34%); z-index:3;
+  width: min(40rem, 86vw);
+  background: rgba(246,242,234,.97);
+  padding: clamp(2rem, 3.6vw, 3.2rem) clamp(1.6rem, 3.4vw, 3.2rem);
+  text-align:center;
+  border-top: 3px solid var(--x-gold);
+  box-shadow: 0 40px 80px -40px rgba(10,30,22,.55);
+}
+.mh__title{ margin:0; }
+.mh__big{ display:block; white-space:nowrap; font-weight:800; line-height:.92; font-size: clamp(3rem, 1.6rem + 4.8vw, 6.4rem); letter-spacing:-.01em; }
+.mh__sub{ margin-top:.6em; font-weight:700; letter-spacing:.06em; font-size: clamp(1rem, .7rem + 1vw, 1.6rem); color: var(--hepple-blue); }
+.mh__tag{ margin: 1.2rem 0 0; font-size:.7rem; letter-spacing:.28em; font-weight:700; color: var(--x-gold); white-space:nowrap; }
+.mh__actions{ display:flex; justify-content:center; flex-wrap:wrap; gap:.8rem; margin-top: 1.6rem; }
+
+@media (max-width: 760px){
+  .mh{ padding-top: 4.2rem; }
+  .mh__media{ height:auto; min-height:0; max-height:none; aspect-ratio: 1190/1245; }
+  .mh__media img{ object-position: 50% 50%; }
+  .mh__card{ position:relative; left:auto; top:auto; transform:none; width:auto; margin: -2.4rem var(--gutter) 0; }
+  .mh__big{ font-size: 13.5vw; }
+  .mh__actions{ flex-direction:column; }
+  .mh__actions .btn{ width:100%; }
+}
+
+/* Ritual */
+.mritual{ background: var(--hepple-blue); color: var(--cream); padding: clamp(4rem, 8vw, 7rem) 0; }
+@media (min-width: 761px){ .mh{ z-index:2; } .mh + .mritual{ padding-top: clamp(9rem, 14vw, 12rem); } }
+@media (max-width: 760px){ .mritual{ margin-top: 2.6rem; padding-top: 3.4rem; } }
+.mritual__head{ text-align:center; }
+.mritual__title{ color: var(--cream); font-weight:800; line-height:1; letter-spacing:.01em; font-size: clamp(2rem, 1rem + 4.8vw, 6rem); width:100%; }
+.mritual__facts{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 1px; margin: clamp(2rem, 4vw, 3rem) auto 0; max-width: 900px; background: rgba(216,196,156,.35); border:1px solid rgba(216,196,156,.35); }
+.mritual__fact{ min-width:0; background: var(--hepple-blue); padding: 1.6rem 1.2rem; display:flex; flex-direction:column; align-items:center; gap:.6rem; }
+.mritual__fact-big{ font-size: clamp(2.4rem, 1.8rem + 2.6vw, 4.2rem); font-weight:800; line-height:1; color: var(--x-gold-soft); white-space:nowrap; }
+.mritual__fact-label{ width:100%; font-size:.66rem; letter-spacing:.2em; font-weight:700; line-height:1.6; text-align:center; }
+.mritual__steps{ list-style:none; margin: clamp(2.4rem, 5vw, 4rem) 0 0; padding:0; display:grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1rem, 2vw, 2rem); }
+.mstep{ border-top: 1.5px solid rgba(216,196,156,.55); padding-top: 1.3rem; }
+.mstep__num{ display:block; font-size:.72rem; letter-spacing:.2em; font-weight:800; color: var(--x-gold-soft); margin-bottom: .9rem; }
+.mstep__title{ color: var(--cream); font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem); font-weight:800; margin-bottom: .7rem; }
+.mstep p{ margin:0; line-height:1.65; opacity:.88; font-size:.95rem; }
+.mritual__more{ margin: clamp(2.4rem, 4vw, 3.4rem) auto 0; max-width: 56ch; text-align:center; opacity:.85; line-height:1.7; }
+
+.mfilm{ position:relative; margin: clamp(2.4rem, 5vw, 3.6rem) auto 0; max-width: 1000px; aspect-ratio: 16/9; background:#000; overflow:hidden; }
+.mfilm[hidden]{ display:none; }
+.mfilm__video{ width:100%; height:100%; object-fit:cover; display:block; }
+.mfilm__play{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; background: rgba(10,30,22,.35); color: var(--cream); }
+.mfilm__btn{ width: 84px; height: 84px; border-radius:50%; background: var(--cream); color: var(--hepple-blue); display:flex; align-items:center; justify-content:center; padding-left:4px; transition: transform .3s ease; }
+.mfilm__play:hover .mfilm__btn{ transform: scale(1.07); }
+.mfilm__label{ font-size:.7rem; letter-spacing:.24em; font-weight:700; }
+
+@media (max-width: 900px){
+  .mritual__steps{ grid-template-columns: 1fr 1fr; row-gap: 2rem; }
+}
+@media (max-width: 520px){
+  .mritual__facts{ grid-template-columns: minmax(0,1fr); }
+  .mritual__steps{ grid-template-columns: 1fr; row-gap: 1.4rem; }
+  .mstep{ display:grid; grid-template-columns: 2.6rem 1fr; column-gap: .6rem; padding-top: 1rem; }
+  .mstep__num{ grid-row: span 2; margin:.35rem 0 0; }
+  .mstep__title{ margin-bottom:.3rem; }
+}
+
+/* Story */
+.mstory{ padding: clamp(4rem, 8vw, 7rem) 0; }
+.mstory__grid{ display:grid; grid-template-columns: minmax(0,1fr); gap: clamp(1.6rem, 3vw, 2.6rem); max-width: 1000px; }
+.mstory__title{ width:100%; }
+.mstory__copy{ columns: 2; column-gap: clamp(2rem, 4vw, 3.4rem); }
+@media (max-width: 760px){ .mstory__copy{ columns: 1; } }
+.mstory__img{ margin:0; aspect-ratio: 4/5; overflow:hidden; }
+.mstory__img img{ width:100%; height:100%; object-fit:cover; object-position: 50% 45%; }
+.mstory__title{ font-weight:800; font-size: clamp(1.6rem, 1rem + 2.4vw, 3.2rem); line-height:1.05; letter-spacing:.005em; }
+.mstory__title span{ display:block; }
+.mstory__title span + span{ color: var(--hepple-ink); opacity:.55; margin-top:.25em; }
+.mstory__copy p{ margin: 0 0 1.2rem; font-size: var(--body-lg); line-height:1.75; }
+@media (max-width: 900px){ .mstory__grid{ grid-template-columns: minmax(0,1fr); } }
+
+/* Two ways */
+.mways{ padding: 0 0 clamp(4rem, 8vw, 7rem); }
+.mways__grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(1.2rem, 2.4vw, 2.2rem); max-width: 1240px; margin: 0 auto; }
+.mway{ background: var(--cream); display:flex; flex-direction:column; border: 1px solid rgba(0,48,135,.1); }
+.mway__img{ display:block; aspect-ratio: 4/5; overflow:hidden; }
+.mway__img img{ width:100%; height:100%; object-fit:cover; transition: transform .9s cubic-bezier(.16,1,.3,1); }
+.mway__img:hover{ opacity:1; }
+.mway__img:hover img{ transform: scale(1.035); }
+.mway__body{ padding: clamp(1.5rem, 2.6vw, 2.4rem); display:flex; flex-direction:column; flex:1; }
+.mway__kicker{ margin:0 0 .8rem; font-size:.62rem; letter-spacing:.22em; font-weight:700; color: var(--x-gold); white-space:nowrap; }
+.mway__title{ font-weight:800; font-size: clamp(1.5rem, 1rem + 1.6vw, 2.5rem); white-space:nowrap; }
+.mway__copy{ margin: 1rem 0 1.6rem; line-height:1.7; opacity:.88; }
+.mway__foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; padding-top: 1.2rem; border-top: 1px solid rgba(0,48,135,.12); }
+.mway__price{ font-size: 1.5rem; font-weight:800; }
+@media (max-width: 820px){ .mways__grid{ grid-template-columns: 1fr; max-width: 560px; } }
+@media (max-width: 420px){ .mway__foot .btn{ width:100%; } }
+
+/* Born in the wild */
+.mwild{ position:relative; min-height: 640px; display:flex; align-items:center; overflow:hidden; }
+.mwild__bg, .mwild__bg picture, .mwild__bg img{ position:absolute; inset:0; width:100%; height:100%; }
+.mwild__bg img{ object-fit:cover; object-position: 50% 55%; }
+.mwild__panel{
+  position:relative; z-index:2; margin-left: clamp(1.2rem, 6vw, 7rem);
+  max-width: 34rem; background: rgba(246,242,234,.96);
+  padding: clamp(2rem, 3.4vw, 3rem); border-top: 3px solid var(--x-gold);
+}
+.mwild__title{ font-weight:800; font-size: clamp(1.5rem, 1rem + 1.8vw, 2.6rem); line-height:1.05; margin-bottom: 1.1rem; }
+.mwild__title span{ display:block; white-space:nowrap; }
+.mwild__panel p:not(.xscript){ line-height:1.75; margin: 0 0 1.6rem; }
+@media (max-width: 760px){
+  .mwild{ display:block; min-height:0; }
+  .mwild__bg{ position:relative; aspect-ratio: 5/6; }
+  .mwild__panel{ margin: -3rem var(--gutter) 3rem; }
+}
+
+/* Hosting */
+.mhost{ padding: clamp(4rem, 8vw, 7rem) 0; }
+.mhost__grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items:center; max-width: 1240px; }
+.mhost__img{ margin:0; aspect-ratio: 5/6; overflow:hidden; }
+.mhost__img img{ width:100%; height:100%; object-fit:cover; object-position: 50% 50%; }
+.mhost__title{ font-weight:800; font-size: clamp(1.6rem, 1rem + 2.4vw, 3.4rem); line-height:1.02; margin-bottom: 1.4rem; }
+.mhost__title span{ display:block; white-space:nowrap; }
+.mhost__title span:nth-child(2){ color: var(--x-gold); }
+.mhost__copy p{ line-height:1.75; font-size: var(--body-lg); margin: 0 0 1.8rem; max-width: 46ch; }
+@media (max-width: 860px){ .mhost__grid{ grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------------------
+   CHRISTMAS SHOP PAGE
+   -------------------------------------------------------------------------- */
+.ch{ position:relative; min-height: 560px; height: 78svh; max-height: 820px; display:flex; align-items:flex-end; overflow:hidden; background: var(--x-green-deep); }
+.ch__bg, .ch__bg picture, .ch__bg img{ position:absolute; inset:0; width:100%; height:100%; }
+.ch__bg img{ object-fit:cover; object-position: 50% 35%; }
+.ch__shade{ position:absolute; inset:0; background: linear-gradient(0deg, rgba(10,30,22,.9) 0%, rgba(10,30,22,.55) 38%, rgba(10,30,22,0) 70%); }
+.ch__inner{ position:relative; z-index:2; width:100%; max-width: 1100px; margin: 0 auto; padding: 0 var(--gutter) clamp(2.6rem, 6vw, 4.6rem); text-align:center; color: var(--cream); }
+.ch__title{ color: var(--cream); font-weight:800; font-size: clamp(1.8rem, 1rem + 3.6vw, 4.6rem); line-height:1; width:100%; }
+.ch__body{ margin: 1rem auto 0; max-width: 48ch; font-size: var(--body-lg); opacity:.9; }
+.ch__note{ margin: 1rem 0 0; font-size:.68rem; letter-spacing:.24em; font-weight:700; color: var(--x-gold-soft); }
+
+/* Gift box configurator */
+.cbox{ padding: clamp(4rem, 8vw, 7rem) 0; }
+.cbox__grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items:center; max-width: 1240px; }
+.cbox__img{ margin:0; position:relative; aspect-ratio: 4/5; overflow:hidden; background: var(--x-green-deep); }
+.cbox__img img{ width:100%; height:100%; object-fit:cover; transition: opacity .18s ease; }
+.cbox__img img.is-swapping{ opacity:0; }
+.cbox__badge{ position:absolute; left:1rem; top:1rem; background: var(--hepple-blue); color: var(--cream); font-size:.58rem; letter-spacing:.22em; font-weight:700; padding:.45em .8em; }
+.cbox__title{ font-weight:800; font-size: clamp(1.8rem, 1.1rem + 2.4vw, 3.4rem); line-height:1; white-space:nowrap; }
+.cbox__price{ margin:.7rem 0 0; font-size: clamp(1.8rem, 1.3rem + 1.6vw, 2.8rem); font-weight:800; }
+.cbox__copy{ margin: 1rem 0 1.6rem; line-height:1.75; font-size: var(--body-lg); max-width: 50ch; }
+.cpick{ border:0; padding:0; margin: 0 0 1.2rem; }
+.cpick__legend{ padding:0; margin-bottom:.6rem; font-size:.62rem; letter-spacing:.22em; font-weight:700; color: var(--hepple-blue); }
+.cpick__opts{ display:grid; grid-template-columns: 1fr 1fr; gap:.6rem; }
+.cpick__opt{
+  padding: 1rem .8rem; border:1.5px solid rgba(0,48,135,.3); background: transparent;
+  font-size:.68rem; letter-spacing:.18em; font-weight:700; color: var(--hepple-blue); white-space:nowrap;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.cpick__opt:hover{ border-color: var(--hepple-blue); }
+.cpick__opt.is-on{ background: var(--hepple-blue); border-color: var(--hepple-blue); color: var(--cream); }
+.cpick__opt:focus-visible{ outline: 2px solid var(--x-gold); outline-offset: 2px; }
+.cbox__summary{ margin: .4rem 0 1rem; font-size:.95rem; font-weight:600; color: var(--hepple-ink); }
+.cbox__add{ width:100%; }
+.cbox__perks{ list-style:none; margin: 1.2rem 0 0; padding:0; display:flex; flex-wrap:wrap; gap: .5rem 1.4rem; font-size:.62rem; letter-spacing:.2em; font-weight:700; color: var(--x-gold); }
+.cbox__perks li::before{ content:"✓  "; }
+.cbox__perks--light{ color: var(--x-gold-soft); }
+@media (max-width: 860px){
+  .cbox__grid{ grid-template-columns: 1fr; }
+  .cbox__img{ aspect-ratio: 1/1; }
+}
+@media (max-width: 400px){ .cpick__opt{ font-size:.6rem; letter-spacing:.1em; } }
+
+/* Party box */
+.cparty{ background: var(--x-green); color: var(--cream); padding: clamp(4rem, 8vw, 7rem) 0; }
+.cparty__grid{ display:grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items:center; max-width: 1240px; }
+.cparty__title{ color: var(--cream); font-weight:800; font-size: clamp(1.8rem, 1.1rem + 2.4vw, 3.4rem); line-height:1; }
+.cparty__title span{ display:block; white-space:nowrap; }
+.cparty__price{ margin:.7rem 0 0; font-size: clamp(1.8rem, 1.3rem + 1.6vw, 2.8rem); font-weight:800; color: var(--x-gold-soft); }
+.cparty__copy{ margin: 1rem 0 1.4rem; line-height:1.75; font-size: var(--body-lg); opacity:.9; max-width: 46ch; }
+.cparty__list{ list-style:none; margin: 0 0 1.8rem; padding:0; display:grid; grid-template-columns: 1fr 1fr; gap: 0 1.4rem; }
+.cparty__list li{ padding:.6rem 0; border-bottom: 1px solid rgba(216,196,156,.25); font-size:.9rem; }
+.cparty__img{ margin:0; aspect-ratio: 5/6; overflow:hidden; }
+.cparty__img img{ width:100%; height:100%; object-fit:cover; }
+@media (max-width: 860px){
+  .cparty__grid{ grid-template-columns: 1fr; }
+  .cparty__img{ order:-1; aspect-ratio: 1/1; }
+  .cparty .btn--huge{ width:100%; }
+}
+
+/* Bottles + spirits rows */
+.cbottles{ padding: clamp(4rem, 8vw, 7rem) 0 clamp(2rem, 4vw, 3rem); }
+.cspirits{ padding: clamp(2rem, 4vw, 3rem) 0 clamp(4rem, 8vw, 6rem); }
+.cbottles__grid, .cspirits .shop-grid{ max-width: 900px; margin: 0 auto; }
+.cbottles .shop-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cspirits .shop-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 560px){ .cbottles .shop-grid, .cspirits .shop-grid{ grid-template-columns: 1fr; } }
+
+/* 5L placeholder */
+.cpro{ padding: 0 0 clamp(4rem, 8vw, 6rem); }
+.cpro__inner{ max-width: 900px; text-align:center; border: 1px solid rgba(184,149,90,.6); padding: clamp(2rem, 4vw, 3rem) clamp(1.4rem, 4vw, 3rem); }
+.cpro__badge{ display:inline-block; font-size:.58rem; letter-spacing:.24em; font-weight:700; color: var(--x-gold); border:1px solid var(--x-gold); padding:.4em .8em; margin-bottom: 1rem; }
+.cpro__title{ font-weight:800; font-size: clamp(1.3rem, 1rem + 1.4vw, 2.2rem); }
+.cpro__copy{ margin: 1rem auto 0; max-width: 54ch; line-height:1.7; opacity:.85; }
+
+/* --------------------------------------------------------------------------
+   SHOP PAGE · Christmas banner + MARGO line
+   -------------------------------------------------------------------------- */
+.sxmas{ padding: 0 0 1rem; }
+.sxmas__banner{
+  position:relative; display:flex; align-items:center; overflow:hidden;
+  min-height: 300px; max-width: 1240px; margin: 0 auto 1rem; background: var(--x-green-deep);
+}
+.sxmas__banner:hover{ opacity:1; }
+.sxmas__banner img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 60% 80%; transition: transform .9s cubic-bezier(.16,1,.3,1); }
+.sxmas__banner:hover img{ transform: scale(1.03); }
+.sxmas__banner::before{ content:""; position:absolute; inset:0; z-index:1; background: linear-gradient(90deg, rgba(10,30,22,.88) 0%, rgba(10,30,22,.55) 40%, rgba(10,30,22,0) 70%); }
+.sxmas__text{ position:relative; z-index:2; padding: 2rem clamp(1.4rem, 4vw, 3.4rem); display:flex; flex-direction:column; gap:.5rem; color: var(--cream); }
+.sxmas__script{ font-family: var(--script); font-size: clamp(1.8rem, 1.4rem + 1.6vw, 3rem); color: var(--x-gold-soft); line-height:1; white-space:nowrap; }
+.sxmas__title{ display:block; max-width:100%; font-size: clamp(1.4rem, 1rem + 1.6vw, 2.6rem); font-weight:800; white-space:nowrap; }
+.sxmas__cta{ margin-top:.6rem; font-size:.66rem; letter-spacing:.22em; font-weight:700; }
+.sxmas__head{ margin-top: 2rem; }
+.sxmas .shop-grid{ max-width: 900px; margin: 0 auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 560px){
+  .sxmas .shop-grid{ grid-template-columns: 1fr; }
+  .sxmas__banner{ flex-direction:column; align-items:stretch; min-height:0; }
+  .sxmas__banner::before{ display:none; }
+  .sxmas__banner img{ position:relative; inset:auto; height: 230px; object-position: 88% 76%; }
+  .sxmas__text{ width:100%; padding: 1.4rem 1.4rem 1.6rem; }
+  .sxmas__banner{ min-height: 220px; }
+  .sxmas__banner::before{ background: linear-gradient(90deg, rgba(10,30,22,.9) 0%, rgba(10,30,22,.6) 70%, rgba(10,30,22,.3) 100%); }
+}
+
+/* Shop-card badge colour for NEW */
+.shop-card__badge{ white-space:nowrap; }
+
+@media (prefers-reduced-motion: reduce){
+  .xh__media img{ animation:none; }
+}
+
+/* mobile fine-tuning */
+.xritual-teaser__ratio span{ white-space:nowrap; }
+@media (max-width: 640px){
+  .xritual-teaser__ratio span{ display:block; }
+  .xritual-teaser__sep{ display:none !important; }
+  .xnote, .ch__note{ font-size:.58rem; letter-spacing:.14em; white-space:nowrap; }
+  .xhead{ margin-bottom: 2rem; }
+}
+
+/* ==========================================================================
+   NOV 2026 · Miranda's feedback round
+   ========================================================================== */
+body.is-xmas [data-evergreen]{ display:none !important; }
+.nowrap{ white-space:nowrap; }
+.ch__body{ text-wrap: balance; }
+
+/* Big free-delivery banner */
+.cdeliver{ background: var(--hepple-blue); color: var(--cream); padding: clamp(1.4rem, 3vw, 2.4rem) var(--gutter); text-align:center; border-bottom: 3px solid var(--x-gold); }
+.cdeliver__inner{ max-width: 1240px; margin: 0 auto; }
+.cdeliver__big{ font-weight:800; letter-spacing:.02em; line-height:1; font-size: clamp(1.4rem, .6rem + 3vw, 3.4rem); color: var(--cream); width:100%; }
+
+/* Party box gallery */
+.cgal{ display:flex; flex-direction:column; gap:.7rem; }
+.cgal__main{ margin:0; aspect-ratio: 9/8; overflow:hidden; background: var(--x-green-deep); }
+.cgal__main img{ width:100%; height:100%; object-fit:cover; }
+.cgal__thumbs{ display:grid; grid-template-columns: repeat(4, 1fr); gap:.6rem; }
+.cgal__thumb{ aspect-ratio: 1/1; overflow:hidden; border: 2px solid transparent; opacity:.7; transition: opacity .2s ease, border-color .2s ease; }
+.cgal__thumb img{ width:100%; height:100%; object-fit:cover; }
+.cgal__thumb:hover{ opacity:1; }
+.cgal__thumb.is-on{ border-color: var(--x-gold-soft); opacity:1; }
+.cparty__title span{ display:block; }
+.cparty__add{ margin-top: .4rem; }
+@media (max-width: 860px){
+  .cgal{ order:-1; }
+  .cparty__add{ width:100%; }
+}
+
+/* gift box image is portrait box photography now */
+.cbox__img{ aspect-ratio: 2/3; }
+@media (max-width: 860px){ .cbox__img{ aspect-ratio: 4/5; } }
+
+/* shop section heads */
+.sxhead{ border-top: 0; padding-top: clamp(3rem, 6vw, 4.5rem); }
+.sxmas{ padding: 0 0 3rem; }
+
+/* MARGO page */
+.mstory__tag{ margin:0; font-size:.78rem; letter-spacing:.28em; font-weight:700; color: var(--x-gold); }
+.mh__card{ padding: clamp(1.8rem, 3vw, 2.6rem) clamp(1.6rem, 3.4vw, 3.2rem); }
+.mh__sub{ margin-top:.5em; }
+
+/* Christmas cocktails use the standard flip cards */
+.xcock .flip-row{ max-width: 1100px; margin: 0 auto; }
+.cparty__grid, .cbox__grid{ grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.cgal, .cparty__body, .cbox__body{ min-width:0; }
+@media (max-width: 860px){ .cparty__grid, .cbox__grid{ grid-template-columns: minmax(0,1fr); } }
+.ch__body{ max-width: 62ch; }
+@media (max-width: 640px){ .xritual-teaser__ratio{ font-size:.6rem; letter-spacing:.12em; } }
+
+/* ==========================================================================
+   NOV 2026 round 2 · both gift boxes in one section
+   ========================================================================== */
+.cgifts{ padding: clamp(2.6rem, 5vw, 4rem) 0 clamp(2.4rem, 4vw, 3.4rem); background: var(--x-green); }
+.cgifts__grid{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(1rem, 2.4vw, 2rem); max-width: 1240px; align-items:stretch; }
+.cgift{ background: var(--cream); display:flex; flex-direction:column; min-width:0; border-top: 3px solid var(--x-gold); }
+.cgift .cgal{ gap:.5rem; padding: .7rem .7rem 0; }
+.cgift .cgal__main{ aspect-ratio: 3/2; }
+.cgift .cgal__thumbs{ gap:.5rem; }
+.cgift .cgal__thumb{ aspect-ratio: 3/2; }
+.cgift__img{ margin:0; padding: .7rem .7rem 0; }
+.cgift__img img{ width:100%; aspect-ratio: 3/2; object-fit:cover; object-position: 50% 40%; display:block; transition: opacity .18s ease; }
+.cgift__img img.is-swapping{ opacity:0; }
+.cgift__body{ padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.1rem, 2.2vw, 1.8rem) clamp(1.3rem, 2.2vw, 1.8rem); display:flex; flex-direction:column; flex:1; min-width:0; }
+.cgift__head{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; }
+.cgift__title{ flex:1; min-width:0; font-weight:800; font-size: clamp(1rem, .7rem + 1vw, 1.5rem); line-height:1; color: var(--hepple-blue); }
+.cgift__price{ margin:0; font-weight:800; font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem); color: var(--hepple-ink); white-space:nowrap; }
+.cgift__copy{ margin: .8rem 0 1rem; font-size:.9rem; line-height:1.6; opacity:.88; }
+.cgift__add{ margin-top:auto; width:100%; }
+.cpick__row{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: .8rem; margin-bottom: 1rem; }
+.cpick__row .cpick{ margin:0; }
+.cpick__row .cpick__opts{ grid-template-columns: minmax(0,1fr); gap:.4rem; }
+.cpick__row .cpick__opt{ padding:.65rem .5rem; font-size:.6rem; letter-spacing:.14em; }
+@media (max-width: 900px){
+  .cgifts__grid{ grid-template-columns: minmax(0,1fr); max-width: 620px; }
+}
+
+/* centre the straightened bar cart in the home hero */
+.xh__media img{ object-position: 55% 50%; }
+.shop-range__bg img{ object-position: 50% 60%; }
+/* Born in the wild: gin sits centre-right, panel on the left */
+.mwild__bg img{ object-position: 60% 45%; }
+.cgift .cgal__main img{ object-position: 50% 50%; }
+@media (min-width: 761px){
+  .mwild__panel{ margin-left:auto; margin-right: clamp(1.2rem, 6vw, 7rem); }
+  .mwild__bg img{ object-position: 35% 45%; }
+}
+/* Born in the wild: photo and copy side by side so the gin label is never covered */
+@media (min-width: 761px){
+  .mwild{ display:grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); min-height:0; align-items:stretch; background: var(--ground); max-width: 1240px; margin: 0 auto clamp(2rem,4vw,3rem); padding: 0 var(--gutter); }
+  .mwild__bg{ position:relative; aspect-ratio: 3/2; }
+  .mwild__bg img{ object-position: 50% 50%; }
+  .mwild__panel{ margin:0 !important; max-width:none; align-self:center; box-shadow:none; }
+}
+
+/* Nov 4: identical packshot sizing in every browser (all packshots are 4:5) */
+.shop-card__img img, .product-card__img img{ height:100%; width:auto; max-width:100%; aspect-ratio: 4/5; object-fit:contain; }
+
+/* 5L Holiday Box, Pro Edition */
+.cpro5{ max-width: 1240px; margin: clamp(1rem, 2.4vw, 2rem) auto 0; background: var(--cream); border-top: 3px solid var(--x-gold); display:flex; align-items:center; gap: 1.5rem; padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.1rem, 2.2vw, 1.8rem); }
+.cpro5__body{ flex:1; min-width:0; }
+.cpro5 .cgift__copy{ margin-bottom:0; }
+.cpro5__soon{ flex:none; font-size:.62rem; letter-spacing:.22em; font-weight:700; color: var(--x-gold); border:1.5px solid var(--x-gold); padding:.7em 1.2em; border-radius:999px; white-space:nowrap; }
+@media (max-width: 700px){ .cpro5{ flex-direction:column; align-items:stretch; } .cpro5__soon{ align-self:flex-start; } }
+.cpro5wrap{ max-width:1240px; } .cpro5{ max-width:none; margin-left:0; margin-right:0; }
+
+/* ==========================================================================
+   NOV 4 · Miranda's updated texts + voice notes
+   ========================================================================== */
+/* Home hero: text centred over the centred bar cart */
+@media (min-width: 761px){
+  .xh--centred{ justify-content:center; }
+  .xh--centred .xh__media img{ object-position: 50% 50%; }
+  .xh--centred .xh__shade{ background: radial-gradient(ellipse 62% 70% at 50% 55%, rgba(10,30,22,.78) 0%, rgba(10,30,22,.55) 55%, rgba(10,30,22,.2) 100%); }
+  .xh--centred .xh__inner{ width: min(50rem, 88vw); margin: 0 auto; padding-top: 3rem; text-align:center; }
+  .xh--centred .xh__body{ margin-left:auto; margin-right:auto; max-width: 44rem; }
+  .xh--centred .xh__actions{ justify-content:center; }
+}
+.xh__body p{ margin: 0 0 .5rem; }
+.xh__body p:last-child{ margin-bottom:0; }
+@media (max-width: 760px){
+  .xh--centred .xh__script, .xh--centred .xh__title, .xh--centred .xh__body, .xh--centred .xh__tag{ text-align:center; }
+}
+
+/* Home gift cards: name, headline, copy, price */
+.xgcard__title{ margin-bottom:.6rem; }
+.xgcard__kicker{ margin: 0 0 .8rem; letter-spacing:.12em; width:100%; }
+.xgcard__price{ font-size: 1rem; letter-spacing:.14em; margin-top:auto; color: var(--hepple-blue); }
+
+/* Shop gift cards (link to product pages) */
+.cgift--link{ color: inherit; }
+.cgift--link:hover{ opacity:1; }
+.cgift--link:hover .cgift__img img{ transform: scale(1.03); }
+.cgift .cgift__img{ overflow:hidden; }
+.cgift .cgift__img img{ aspect-ratio: 3/2; transition: transform .8s cubic-bezier(.16,1,.3,1); }
+.cgift__title{ margin-bottom:.5rem; }
+.cgift__kicker{ margin: 0 0 .7rem; font-size:.62rem; letter-spacing:.14em; font-weight:700; color: var(--x-gold); width:100%; }
+.cgift__price{ font-size: 1rem; letter-spacing:.12em; color: var(--hepple-blue); margin: 0 0 1rem; }
+.cgift__add{ pointer-events:none; }
+.cpro5{ text-decoration:none; }
+.cpro5 .cgift__price{ margin:0; }
+.cpro5 .btn{ flex:none; }
+
+/* Gift box / party box / refill kit product pages */
+.bundle__title{ display:block; width:100%; }
+.bundle__title span{ display:block; }
+.bundle__headline{ margin:.6rem 0 1rem; font-size:.78rem; letter-spacing:.16em; font-weight:700; color: var(--x-gold); }
+.bundle__copy p{ text-transform:none; }
+.bundle__sign{ margin: 1.2rem 0 1.4rem; font-weight:800; letter-spacing:.06em; color: var(--hepple-blue); }
+.bundle__contents{ margin:0; padding-left:1.1rem; line-height:1.8; }
+.bundle__pickers{ margin: 1.6rem 0 .4rem; }
+.bundle__pickers .cpick{ margin-bottom: 1rem; }
+.bx-extras{ display:flex; flex-direction:column; gap:.6rem; margin-top:.8rem; }
+.bx-extra{ display:flex; align-items:center; gap:.7rem; font-size:.7rem; letter-spacing:.12em; font-weight:700; color: var(--hepple-blue); cursor:pointer; }
+.bx-extra input{ width:18px; height:18px; accent-color: var(--hepple-blue); }
+.bundle__footer{ margin: 1rem 0 0; font-size:.72rem; letter-spacing:.16em; font-weight:700; color: var(--hepple-ink); opacity:.75; }
+.bundle-ph{ aspect-ratio: 4/5; background: var(--hepple-blue); color: var(--cream); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; border-top: 3px solid var(--x-gold); }
+.bundle-ph__big{ font-size: clamp(5rem, 12vw, 9rem); font-weight:800; line-height:1; color: var(--x-gold-soft); }
+.bundle-ph__name{ font-size:.75rem; letter-spacing:.24em; font-weight:700; }
+@media (min-width: 761px){
+  .xh--centred{ align-items:flex-end; }
+  .xh--centred .xh__inner{ padding: 0 0 clamp(1.6rem, 4vh, 3rem); }
+  .xh--centred .xh__line--big{ font-size: clamp(2.8rem, 1.4rem + 4.6vw, 6.2rem); }
+  .xh--centred .xh__body{ font-size: .98rem; line-height:1.55; margin-top: 1rem; }
+  .xh--centred .xh__body p{ margin-bottom:.25rem; }
+  .xh--centred .xh__actions{ margin-top: 1.2rem; }
+  .xh--centred .xh__shade{ background:
+    radial-gradient(ellipse 48% 52% at 50% 74%, rgba(10,30,22,.86) 0%, rgba(10,30,22,.6) 55%, rgba(10,30,22,0) 100%),
+    linear-gradient(0deg, rgba(10,30,22,.5) 0%, rgba(10,30,22,0) 45%); }
+}
+.product-detail__grid{ grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.product-detail__grid > *{ min-width:0; }
+@media (max-width: 860px){ .product-detail__grid{ grid-template-columns: minmax(0,1fr); } }
+.bundle-ph__name{ white-space:nowrap; font-size: clamp(.55rem, .4rem + .5vw, .75rem); }
+/* Gift box photography fills its frame (lifestyle shots, not cut-out packshots) */
+.pd-gallery--wide .pd-gallery__stage{ aspect-ratio: 4/5; padding:0; }
+.pd-gallery--wide .pd-gallery__slide{ padding:0; }
+.pd-gallery--wide .pd-gallery__slide img{ width:100%; height:100%; max-height:none; object-fit:cover; filter:none; }
+.bundle__headline{ width:100%; }
+.pd-gallery--landscape .pd-gallery__stage{ aspect-ratio: 9/8; }
+
+/* ==========================================================================
+   NOV 4 PM · Zach's review
+   ========================================================================== */
+/* Home hero (desktop): copy sits in a dark glass panel with a gold hairline */
+@media (min-width: 761px){
+  .xh--centred .xh__media img{ object-position: 50% 72%; }
+  .xh--centred .xh__shade{ background: linear-gradient(0deg, rgba(10,30,22,.55) 0%, rgba(10,30,22,0) 40%); }
+  .xh--centred .xh__inner{
+    width: min(40rem, 86vw); padding: clamp(1.4rem, 2.4vw, 2rem) clamp(1.6rem, 3vw, 2.6rem) clamp(1.4rem, 2.2vw, 1.8rem);
+    margin-bottom: clamp(1.4rem, 3vh, 2.4rem);
+    background: rgba(13,40,30,.74); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(216,196,156,.45); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6);
+  }
+  .xh--centred .xh__line--big{ font-size: clamp(2.6rem, 1.4rem + 3.4vw, 4.8rem); }
+  .xh--centred .xh__line--sub{ color: var(--x-gold-soft); letter-spacing:.14em; font-size: clamp(.8rem, .6rem + .5vw, 1.05rem); }
+  .xh--centred .xh__body{ font-size: .95rem; line-height:1.6; margin-top:0; }
+  .xh--centred .xh__actions{ margin-top: 1rem; }
+  .xh--centred .xh__tag{ margin-top:.7rem; }
+}
+.xh__rule{ display:block; width: 3rem; height:1.5px; background: var(--x-gold); margin: 1rem auto 1rem; }
+.xh__choice{ font-family: var(--script); color: var(--x-gold-soft); font-size: clamp(1.9rem, 1.4rem + 1.2vw, 2.6rem); line-height:1.1; margin: .7rem 0 .3rem !important; white-space:nowrap; }
+.xh__add{ font-size:.7rem; letter-spacing:.2em; font-weight:700; text-transform:uppercase; }
+@media (max-width: 760px){
+  .xh__rule{ order:4; }
+  .xh__choice{ font-size: 1.7rem; white-space:normal; }
+}
+
+/* Home gifts: four across, MARGO in the middle */
+.xgift__grid--four{ grid-template-columns: repeat(4, minmax(0,1fr)); max-width: 1320px; gap: clamp(.8rem, 1.4vw, 1.4rem); }
+.xgift__grid--four .xgcard__img{ aspect-ratio: 4/5; }
+.xgift__grid--four .xgcard__body{ padding: 1.1rem 1.1rem 1.3rem; }
+.xgift__grid--four .xgcard__title{ font-size: clamp(.95rem, .6rem + .6vw, 1.15rem); }
+.xgift__grid--four .xgcard__kicker{ font-size:.58rem; letter-spacing:.1em; line-height:1.5; text-wrap: balance; }
+.xgift__grid--four .xgcard__copy{ font-size:.84rem; }
+.xgcard--margo .xgcard__img{ background: var(--x-green-deep); }
+@media (max-width: 1100px){ .xgift__grid--four{ grid-template-columns: repeat(2, minmax(0,1fr)); max-width: 760px; } }
+@media (max-width: 560px){ .xgift__grid--four{ grid-template-columns: minmax(0,1fr); max-width: 420px; } }
+
+/* Fewer full-width stripes: the ritual strips become contained panels */
+.xritual-teaser{ background: transparent; padding: 0 var(--gutter) clamp(3rem, 6vw, 5rem); }
+.xritual-teaser__inner{ max-width: 1240px; background: var(--hepple-blue); padding: clamp(2.4rem, 5vw, 4rem) clamp(1.2rem, 4vw, 3rem); border-top: 3px solid var(--x-gold); }
+.mritual{ background: transparent; color: var(--cream); padding: 0 var(--gutter) clamp(3rem, 6vw, 5rem) !important; margin-top:0 !important; }
+.mritual > .xwrap{ max-width: 1240px; background: var(--hepple-blue); padding: clamp(2.6rem, 5vw, 4.4rem) clamp(1.2rem, 4vw, 3.4rem); border-top: 3px solid var(--x-gold); }
+
+/* MARGO page hero: title over the dark hedge, top left, never over the bottles */
+.mh{ padding-top:0; }
+.mh__media img{ object-position: 50% 60%; }
+.mh__shade{ position:absolute; inset:0; pointer-events:none; background: linear-gradient(115deg, rgba(10,30,22,.72) 0%, rgba(10,30,22,.35) 30%, rgba(10,30,22,0) 52%); }
+.mh__copy{ position:absolute; left: clamp(1.4rem, 6vw, 7rem); top: clamp(2rem, 9vh, 6rem); max-width: 42%; color: var(--cream); }
+.mh__copy .mh__big{ color: var(--cream); }
+.mh__copy .mh__sub{ color: var(--x-gold-soft); }
+@media (max-width: 760px){
+  .mh{ padding-top: 4.4rem; }
+  .mh__shade{ display:none; }
+  .mh__copy{ position:static; max-width:none; padding: 1.6rem var(--gutter) 1.2rem; text-align:center; }
+  .mh__copy .mh__big{ color: var(--hepple-blue); }
+  .mh__copy .mh__sub{ color: var(--hepple-blue); }
+}
+.mh + .mstory{ padding-top: clamp(3rem, 6vw, 5rem); }
+/* Hero tall enough to show the whole cart, so the panel only ever sits on the lower cart */
+@media (min-width: 761px){
+  .xh--centred{ height: max(calc(100svh - var(--x-bar-h)), 64vw); max-height: none; }
+  .xh--centred .xh__media img{ object-position: 50% 50%; }
+}
+.xgift__grid--four .xgcard{ display:flex; flex-direction:column; }
+.xgift__grid--four .xgcard__img{ flex:none; width:100%; }
+.xgift__grid--four .xgcard__body{ flex:1; }
+.xh__choice{ white-space:nowrap !important; }
+@media (max-width: 760px){
+  .xh__choice{ font-size: 1.7rem; }
+  .mh{ display:flex; flex-direction:column; }
+  .mh__copy{ order:-1; }
+}
+/* MARGO page hero: clear space below the nav for the title */
+@media (min-width: 761px){
+  .mh__copy{ top: calc(var(--x-bar-h) + clamp(5.5rem, 12vh, 8rem)); }
+}
+@media (max-width: 760px){
+  .mh{ padding-top: 6rem; }
+  .mh__copy{ padding-top: 1.4rem; }
+}
+.product-detail__allergen p{ font-weight:700; }
+
+/* Slim nav on scroll (laptop/desktop) */
+@media (min-width: 761px){
+  .nav{ transition: transform .7s cubic-bezier(.16,1,.3,1), background .4s ease, padding .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease; }
+  .nav__brand img{ transition: height .45s cubic-bezier(.16,1,.3,1); }
+  .nav__links a, .nav__xmas, .nav__cta{ transition: padding .45s cubic-bezier(.16,1,.3,1), font-size .45s cubic-bezier(.16,1,.3,1), background .25s ease, color .25s ease; }
+  body.nav-slim .nav{ padding-top: .45rem; padding-bottom: .45rem; box-shadow: 0 10px 30px -22px rgba(0,48,135,.45); }
+  body.nav-slim .nav__brand img{ height: 20px; }
+  body.nav-slim .nav__xmas{ padding: .45rem .95rem; }
+  body.nav-slim .nav__cta{ padding-top: .45rem; padding-bottom: .45rem; }
+}
+@media (prefers-reduced-motion: reduce){
+  .nav, .nav__brand img, .nav__links a, .nav__xmas, .nav__cta{ transition: none !important; }
+}
+
+/* Pre-order banner (gift box purchase area) */
+.bundle__preorder{ margin: 1.4rem 0 .9rem; padding: .85rem 1rem; background: var(--hepple-blue); color: var(--cream); text-align:center; font-size:.72rem; letter-spacing:.2em; font-weight:700; border-left: 3px solid var(--x-gold); white-space:nowrap; }
+@media (max-width: 420px){ .bundle__preorder{ font-size:.58rem; letter-spacing:.12em; } }
+.cart-item__preorder{ font-size:.6rem; letter-spacing:.14em; font-weight:700; color: var(--hepple-blue); margin:.15rem 0 .3rem; }
+
+/* Free shipping prompt in the cart */
+.cart-ship{ display:flex; flex-direction:column; gap:.45rem; padding: .8rem 0 .9rem; margin-bottom:.6rem; border-bottom: 1px solid rgba(0,48,135,.12); font-size:.64rem; letter-spacing:.16em; font-weight:700; color: var(--hepple-blue); }
+.cart-ship__bar{ display:block; height:4px; background: rgba(0,48,135,.12); border-radius:2px; overflow:hidden; }
+.cart-ship__bar span{ display:block; height:100%; background: var(--hepple-blue); border-radius:2px; transition: width .4s ease; }
+.cart-ship--done{ color: var(--doug-fir-green); }
+/* Shop gift cards: portrait photography */
+.cgift .cgift__img--tall img{ aspect-ratio: 4/5; }
+.pd-gallery--wide .pd-gallery__slide--contain{ background: var(--cream); }
+.pd-gallery--wide .pd-gallery__slide--contain img{ object-fit: contain; }

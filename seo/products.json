@@ -1,0 +1,27 @@
+{
+  "_readme": "SEO fields for the gift box product pages. Edit here, then run: node tools/build-seo.js (regenerates /shop/*.html, sitemap.xml and robots.txt).",
+  "siteUrl": "https://hepplespirits.com",
+  "brand": "Hepple",
+  "products": [
+    {
+      "slug": "margo-martini-gift-box",
+      "name": "The MARGO Martini Gift Box",
+      "title": "Martini Gift Set for Christmas | MARGO by Hepple",
+      "description": "The perfect Christmas gift for Martini lovers. Choose Hepple gin or vodka with MARGO Instant Martini Mix. Beautifully boxed, £65 with free UK shipping.",
+      "price": "65.00",
+      "sku": "GIFT-MGB",
+      "availability": "PreOrder",
+      "images": ["assets/christmas/giftbox-moorland-vodka-bright-lemon.jpg", "assets/christmas/giftbox-wild-juniper-gin-dirty-olive.jpg"]
+    },
+    {
+      "slug": "margo-martini-party-box",
+      "name": "MARGO's Martini Party in a Box",
+      "title": "Martini Cocktail Gift Set | MARGO by Hepple",
+      "description": "The ultimate Martini party gift box with Hepple gin, vodka, two MARGO Martini Mixes, olives and accessories. Beautifully boxed, £120 with free UK shipping.",
+      "price": "120.00",
+      "sku": "GIFT-MPB",
+      "availability": "InStock",
+      "images": ["assets/christmas/box-party.jpg", "assets/christmas/party-box-laid-out.jpg", "assets/christmas/box-gin-olive.jpg", "assets/christmas/box-vodka-lemon.jpg"]
+    }
+  ]
+}
