@@ -47,14 +47,6 @@ const PRODUCTS = [
 
   // ---- Additional / limited expressions ----
   {
-    slug:  'hepple-sloe-hawthorn',
-    name:  'Hepple Sloe & Hawthorn',
-    price: 32.50,
-    sku:   'HEP-SLO-50',
-    image: 'assets/products/sloe-hawthorn-main.jpg',
-    meta:  { size: '50cl', abv: '29.9%' },
-  },
-  {
     slug:  'hepple-negroni',
     name:  'Hepple Negroni',
     price: 32.50,
