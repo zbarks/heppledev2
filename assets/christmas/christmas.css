@@ -495,6 +495,7 @@ body.is-xmas [data-evergreen]{ display:none !important; }
 .cdeliver{ background: var(--hepple-blue); color: var(--cream); padding: clamp(1.4rem, 3vw, 2.4rem) var(--gutter); text-align:center; border-bottom: 3px solid var(--x-gold); }
 .cdeliver__inner{ max-width: 1240px; margin: 0 auto; }
 .cdeliver__big{ font-weight:800; letter-spacing:.02em; line-height:1; font-size: clamp(1.4rem, .6rem + 3vw, 3.4rem); color: var(--cream); width:100%; }
+.cdeliver__cutoff{ font-weight:700; letter-spacing:.08em; line-height:1; margin-top:.9rem; font-size: clamp(.7rem, .35rem + 1.5vw, 1.5rem); color: var(--x-gold-soft, var(--cream)); width:100%; }
 
 /* Party box gallery */
 .cgal{ display:flex; flex-direction:column; gap:.7rem; }

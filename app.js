@@ -323,7 +323,6 @@
       name:  `THE MARGO MARTINI GIFT BOX: ${GB_SPIRIT[sp].toUpperCase()} + MARGO ${GB_MARGO[m].toUpperCase()}`,
       short: 'The MARGO Martini Gift Box',
       price: 65.00,
-      preorder: 'PRE-ORDER: SHIPS NOVEMBER 23',
       isBundle: true,
       image: `assets/christmas/giftbox-${sp}-${m}.jpg`
     });
@@ -1883,7 +1882,6 @@
       extrasTitle: 'MAKE IT EXTRA SPECIAL.',
       extrasCopy: 'Add a personalised Christmas gift card with your own message for £2.50, or include a 350g can of Perelló Gordal Picante olives for £4.50. Plump, juicy Spanish Gordal olives with a deliciously spicy kick. The perfect Martini companion.',
       extras: ['card', 'olives'],
-      preorder: 'PRE-ORDER ONLY. WILL SHIP NOVEMBER 23.',
       footer: 'BEAUTIFULLY BOXED. DELIVERED FREE. CHRISTMAS CHEER GUARANTEED.',
       pickers: [
         { key: 'spirit', legend: 'HEPPLE SPIRIT', options: [['wild-juniper-gin', 'WILD JUNIPER GIN'], ['moorland-vodka', 'MOORLAND VODKA']], def: 'moorland-vodka' },

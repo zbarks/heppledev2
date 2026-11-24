@@ -84,7 +84,7 @@ const PRODUCTS = [
     ['dirty-olive',  'Dirty Olive',  'moorland-vodka',   'Moorland Vodka',   'OV'],
   ].map(([m, mName, s, sName, code]) => ({
     slug:  `martini-gift-box-${m}-${s}`,
-    name:  `The MARGO Martini Gift Box: Hepple ${sName} + MARGO ${mName} (Pre-order, ships 23 November)`,
+    name:  `The MARGO Martini Gift Box: Hepple ${sName} + MARGO ${mName}`,
     price: 65.0,
     sku:   `GIFT-MGB-${code}`,
     image: `assets/christmas/giftbox-${s}-${m}.jpg`,
