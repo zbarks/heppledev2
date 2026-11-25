@@ -30,11 +30,7 @@
   function metaPixelEvent(event, p){
     try {
       if (typeof window.fbq !== 'function') return;
-      // ViewContent and AddToCart fire for everyone (demo). Checkout and sale
-      // events still need the visitor to have accepted the cookie banner.
-      let consented = false;
-      try { consented = localStorage.getItem('hepple:cookie-consent') === 'accepted'; } catch (_) {}
-      if (!consented && event !== 'product_viewed' && event !== 'product_added_to_cart') return;
+      // Demo: every event fires for everyone, no cookie consent needed.
       const num = (v) => { const n = Number(v); return isFinite(n) ? n : undefined; };
       switch (event){
         case '$pageview':
