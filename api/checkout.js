@@ -66,6 +66,14 @@ module.exports = async (req, res) => {
     ? body.ph_id.slice(0, 120)
     : null;
 
+  // Optional ad-attribution tags (utm_*) from the ad link, kept on the order so
+  // Stripe shows which campaign / ad set / ad a sale came from. Sanitised.
+  const utm = {};
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
+    const v = body && body.utm && body.utm[k];
+    utm[k] = typeof v === 'string' ? v.slice(0, 100) : '';
+  });
+
   // Optional handwritten-card message. Capped at 250 chars (the client caps it
   // too); only used if a card line is actually present and valid.
   const giftMessage = typeof (body && body.gift_message) === 'string'
@@ -232,6 +240,11 @@ module.exports = async (req, res) => {
         cart: cartSummary,
         item_count: String(clean.reduce((s, i) => s + i.qty, 0)),
         ph_id: phId || '',
+        utm_source: utm.utm_source,
+        utm_medium: utm.utm_medium,
+        utm_campaign: utm.utm_campaign,
+        utm_content: utm.utm_content,
+        utm_term: utm.utm_term,
         has_gift_card: hasCard ? 'true' : 'false',
         gift_message: hasCard ? giftMessage : '',
         promo_code: promo ? promo.code : '',

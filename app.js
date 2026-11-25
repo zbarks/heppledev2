@@ -18,6 +18,68 @@
   function capture(event, props){
     try { if (window.posthog && typeof posthog.capture === 'function') posthog.capture(event, props || {}); }
     catch (_) { /* analytics must never break the site */ }
+    metaPixelEvent(event, props || {});
+  }
+
+  // ---------------------------------------------
+  // META PIXEL — every capture() above is mirrored to Meta as a standard
+  // event. fbq only exists after the visitor accepts cookies (see
+  // initCookieConsent), so until then this is a silent no-op.
+  // ---------------------------------------------
+  const PIXEL_CURRENCY = 'GBP';
+  function metaPixelEvent(event, p){
+    try {
+      if (!window.__hepplePixelLoaded || typeof window.fbq !== 'function') return;
+      const num = (v) => { const n = Number(v); return isFinite(n) ? n : undefined; };
+      switch (event){
+        case '$pageview':
+          fbq('track', 'PageView');
+          break;
+        case 'product_viewed':
+          fbq('track', 'ViewContent', {
+            content_type: 'product', content_ids: [p.slug], content_name: p.name,
+            value: num(p.price), currency: PIXEL_CURRENCY,
+          });
+          break;
+        case 'product_added_to_cart':
+          fbq('track', 'AddToCart', {
+            content_type: 'product', content_ids: [p.slug], content_name: p.name,
+            value: (num(p.price) || 0) * (num(p.qty) || 1), currency: PIXEL_CURRENCY,
+          });
+          break;
+        case 'checkout_started':
+          fbq('track', 'InitiateCheckout', {
+            content_type: 'product',
+            content_ids: (p.items || []).map(i => i.slug),
+            num_items: num(p.item_count), value: num(p.cart_value), currency: PIXEL_CURRENCY,
+          });
+          break;
+        case 'purchase':
+          if (num(p.value) === undefined) break;
+          // eventID = Stripe session id, so a later server-side (CAPI) send can dedupe.
+          fbq('track', 'Purchase', { value: num(p.value), currency: p.currency || PIXEL_CURRENCY },
+              p.order_id ? { eventID: String(p.order_id) } : undefined);
+          break;
+      }
+    } catch (_) { /* never break the site */ }
+  }
+
+  // ---------------------------------------------
+  // AD ATTRIBUTION — remember the UTM tags on the ad link for the session and
+  // hand them to checkout, so the Stripe order shows which ad it came from.
+  // ---------------------------------------------
+  const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  (function saveUtm(){
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const found = {};
+      UTM_KEYS.forEach(k => { const v = q.get(k); if (v) found[k] = v.slice(0, 100); });
+      if (Object.keys(found).length) sessionStorage.setItem('hepple:utm', JSON.stringify(found));
+    } catch (_) {}
+  })();
+  function getUtm(){
+    try { return JSON.parse(sessionStorage.getItem('hepple:utm') || '{}') || {}; }
+    catch (_) { return {}; }
   }
   function phDistinctId(){
     try { if (window.posthog && typeof posthog.get_distinct_id === 'function') return posthog.get_distinct_id(); }
@@ -805,7 +867,7 @@
       const resp = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode }),
+        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode, utm: getUtm() }),
       });
       const data = await resp.json().catch(() => ({}));
       // Server backstop: the code was already redeemed by this visitor.
@@ -2654,7 +2716,19 @@
 
     if (status === 'success'){
       const sid = params.get('session_id') || null;
-      capture('purchase', { order_id: sid, source: 'client-return' });
+      // Value for the Meta Purchase event: ask the server for the real paid
+      // total; fall back to the cart total if that lookup fails.
+      const fallbackValue = cartTotal();
+      const sendPurchase = (value, currency) =>
+        capture('purchase', { order_id: sid, source: 'client-return', value, currency });
+      if (sid){
+        fetch('/api/order-summary?session_id=' + encodeURIComponent(sid))
+          .then(r => r.ok ? r.json() : null)
+          .then(j => sendPurchase(j && j.value != null ? j.value : fallbackValue, (j && j.currency) || PIXEL_CURRENCY))
+          .catch(() => sendPurchase(fallbackValue, PIXEL_CURRENCY));
+      } else {
+        sendPurchase(fallbackValue, PIXEL_CURRENCY);
+      }
       cart = []; saveCart(); clearPromo(); renderCart();
       showCheckoutConfirmation();
     } else if (status === 'cancel'){
@@ -2717,6 +2791,7 @@
 
     function apply(accepted){
       try {
+        if (accepted && typeof window.hepplePixelLoad === 'function') window.hepplePixelLoad();
         if (!window.posthog) return;
         if (accepted && typeof posthog.opt_in_capturing === 'function') posthog.opt_in_capturing();
         else if (!accepted && typeof posthog.opt_out_capturing === 'function') posthog.opt_out_capturing();
