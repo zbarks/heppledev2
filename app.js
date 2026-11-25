@@ -2789,12 +2789,10 @@
     if (!banner) return;
     const KEY = 'hepple:cookie-consent';
 
-    // DEV TEST ONLY: on Vercel's own *.vercel.app hosts (SSO-locked to the
-    // team, never the public hepplespirits.com domain) load the Meta Pixel
-    // without waiting for the cookie banner, so the pixel can be tested with
-    // developers. Real visitors on the custom domain stay fully consent-gated.
-    // REMOVE THIS BRANCH BEFORE ANY CODE REACHES PRODUCTION.
-    const DEV_TEST_PIXEL_BYPASS = /\.vercel\.app$/i.test(location.hostname);
+    // DEV TEST: Meta Pixel loads without waiting for the cookie banner while
+    // the site is closed to the public for developer testing.
+    // TO RESTORE CONSENT GATING: set this to false (or revert this commit).
+    const DEV_TEST_PIXEL_BYPASS = true;
     if (DEV_TEST_PIXEL_BYPASS && typeof window.hepplePixelLoad === 'function'){
       try { window.hepplePixelLoad(); capture('$pageview', { $current_url: location.href, route: getRoute() }); } catch (_) {}
     }
