@@ -29,12 +29,15 @@
   const PIXEL_CURRENCY = 'GBP';
   function metaPixelEvent(event, p){
     try {
-      if (!window.__hepplePixelLoaded || typeof window.fbq !== 'function') return;
+      if (typeof window.fbq !== 'function') return;
+      // Basket and sale events only for visitors who accepted the cookie banner.
+      let consented = false;
+      try { consented = localStorage.getItem('hepple:cookie-consent') === 'accepted'; } catch (_) {}
+      if (!consented) return;
       const num = (v) => { const n = Number(v); return isFinite(n) ? n : undefined; };
       switch (event){
         case '$pageview':
-          fbq('track', 'PageView');
-          break;
+          break; // PageView is already sent by the base code in index.html
         case 'product_viewed':
           fbq('track', 'ViewContent', {
             content_type: 'product', content_ids: [p.slug], content_name: p.name,
