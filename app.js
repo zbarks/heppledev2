@@ -2789,6 +2789,14 @@
     if (!banner) return;
     const KEY = 'hepple:cookie-consent';
 
+    // DEV TEST: Meta Pixel loads without waiting for the cookie banner while
+    // the site is closed to the public for developer testing.
+    // TO RESTORE CONSENT GATING: set this to false (or revert this commit).
+    const DEV_TEST_PIXEL_BYPASS = true;
+    if (DEV_TEST_PIXEL_BYPASS && typeof window.hepplePixelLoad === 'function'){
+      try { window.hepplePixelLoad(); capture('$pageview', { $current_url: location.href, route: getRoute() }); } catch (_) {}
+    }
+
     function apply(accepted){
       try {
         if (accepted && typeof window.hepplePixelLoad === 'function') window.hepplePixelLoad();

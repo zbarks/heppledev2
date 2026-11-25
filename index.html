@@ -154,20 +154,23 @@
   })();
 </script>
 
-<!-- META PIXEL (HeppleSpirits 2026 dec pixel 2688057484966430)
-     Loads ONLY after the visitor accepts cookies. initCookieConsent() in app.js
-     calls window.hepplePixelLoad(); events are sent from capture() in app.js. -->
+<!-- Meta Pixel Code -->
 <script>
-  window.__HEPPLE_META_PIXEL_ID__ = '2688057484966430';
-  window.hepplePixelLoad = function(){
-    try {
-      if (window.__hepplePixelLoaded) return;
-      window.__hepplePixelLoaded = true;
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', window.__HEPPLE_META_PIXEL_ID__);
-    } catch (_) { /* tracking must never break the site */ }
-  };
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2688057484966430');
+fbq('track', 'PageView');
 </script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2688057484966430&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
