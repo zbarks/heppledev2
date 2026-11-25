@@ -75,8 +75,29 @@
       const found = {};
       UTM_KEYS.forEach(k => { const v = q.get(k); if (v) found[k] = v.slice(0, 100); });
       if (Object.keys(found).length) sessionStorage.setItem('hepple:utm', JSON.stringify(found));
+      const fbclid = q.get('fbclid');
+      if (fbclid) sessionStorage.setItem('hepple:fbclid', JSON.stringify({ id: fbclid.slice(0, 200), ts: Date.now() }));
     } catch (_) {}
   })();
+  // Meta click id / browser id, so a server-side purchase can be matched to the
+  // ad click. fbc is Meta's own format: fb.1.<click time ms>.<fbclid>.
+  function getMetaIds(){
+    const out = { fbp: '', fbc: '' };
+    try {
+      const cookie = (n) => { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; };
+      out.fbp = cookie('_fbp');
+      out.fbc = cookie('_fbc');
+      if (!out.fbc){
+        const f = JSON.parse(sessionStorage.getItem('hepple:fbclid') || 'null');
+        if (f && f.id) out.fbc = 'fb.1.' + f.ts + '.' + f.id;
+      }
+    } catch (_) {}
+    return out;
+  }
+  function cookieConsentAccepted(){
+    try { return localStorage.getItem('hepple:cookie-consent') === 'accepted'; }
+    catch (_) { return false; }
+  }
   function getUtm(){
     try { return JSON.parse(sessionStorage.getItem('hepple:utm') || '{}') || {}; }
     catch (_) { return {}; }
@@ -867,7 +888,7 @@
       const resp = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode, utm: getUtm() }),
+        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode, utm: getUtm(), consent: cookieConsentAccepted(), fbp: getMetaIds().fbp, fbc: getMetaIds().fbc, event_source_url: location.href.split('#')[0] }),
       });
       const data = await resp.json().catch(() => ({}));
       // Server backstop: the code was already redeemed by this visitor.

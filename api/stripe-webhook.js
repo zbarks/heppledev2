@@ -19,6 +19,7 @@
 // =============================================================
 
 const { emailsEnabled, sendOrderConfirmation } = require('./_email');
+const { sendMetaPurchase } = require('./_meta-capi');
 
 // Vercel must NOT pre-parse the body or the signature check fails.
 module.exports.config = { api: { bodyParser: false } };
@@ -236,6 +237,8 @@ module.exports = async (req, res) => {
           return (s.amount_subtotal || 0) / 100;
         })()),
         capturePostHog(order),
+        // Server-side Purchase to Meta (consenting visitors only; no-op without a token).
+        sendMetaPurchase(s, order),
       ]);
       results.forEach((r, i) => {
         if (r.status === 'rejected') {

@@ -74,6 +74,19 @@ module.exports = async (req, res) => {
     utm[k] = typeof v === 'string' ? v.slice(0, 100) : '';
   });
 
+  // Meta Conversions API details. Only kept when the visitor accepted cookies;
+  // otherwise nothing about them is stored for advertising.
+  const capi = { consent: false };
+  if (body && body.consent === true) {
+    capi.consent = true;
+    const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    capi.ip = (fwd || String(req.headers['x-real-ip'] || '')).slice(0, 64);
+    capi.ua = String(req.headers['user-agent'] || '').slice(0, 300);
+    capi.fbp = typeof body.fbp === 'string' ? body.fbp.slice(0, 120) : '';
+    capi.fbc = typeof body.fbc === 'string' ? body.fbc.slice(0, 200) : '';
+    capi.url = typeof body.event_source_url === 'string' ? body.event_source_url.slice(0, 300) : '';
+  }
+
   // Optional handwritten-card message. Capped at 250 chars (the client caps it
   // too); only used if a card line is actually present and valid.
   const giftMessage = typeof (body && body.gift_message) === 'string'
@@ -245,6 +258,12 @@ module.exports = async (req, res) => {
         utm_campaign: utm.utm_campaign,
         utm_content: utm.utm_content,
         utm_term: utm.utm_term,
+        capi_consent: capi.consent ? 'true' : 'false',
+        capi_ip: capi.ip || '',
+        capi_ua: capi.ua || '',
+        capi_fbp: capi.fbp || '',
+        capi_fbc: capi.fbc || '',
+        capi_url: capi.url || '',
         has_gift_card: hasCard ? 'true' : 'false',
         gift_message: hasCard ? giftMessage : '',
         promo_code: promo ? promo.code : '',
