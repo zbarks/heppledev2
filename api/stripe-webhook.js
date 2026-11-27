@@ -57,6 +57,8 @@ function readRawBody(req) {
   });
 }
 
+const { markLeadPaid } = require('./_leads');
+
 async function recordToSupabase(order) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -236,6 +238,7 @@ module.exports = async (req, res) => {
           return (s.amount_subtotal || 0) / 100;
         })()),
         capturePostHog(order),
+        markLeadPaid(order.stripe_session_id),
       ]);
       results.forEach((r, i) => {
         if (r.status === 'rejected') {

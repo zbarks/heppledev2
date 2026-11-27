@@ -834,6 +834,48 @@
     });
   }
 
+  // ---- Email asked for in the cart before Stripe ----
+  // Remembered on this device so it is already filled in next time, and the
+  // field carries autocomplete="email" so the browser can autofill it too.
+  const EMAIL_KEY = 'hepple:email';
+  const OPTIN_KEY = 'hepple:optin';
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function cartEmailEl(){ return document.getElementById('cartEmail'); }
+  function cartOptinEl(){ return document.getElementById('cartOptin'); }
+  function prefillCartEmail(){
+    const el = cartEmailEl(); if (!el) return;
+    try {
+      if (!el.value) el.value = localStorage.getItem(EMAIL_KEY) || '';
+      const o = cartOptinEl(); if (o) o.checked = localStorage.getItem(OPTIN_KEY) === '1';
+    } catch (_) {}
+  }
+  function readCartEmail(){
+    const el = cartEmailEl();
+    const v = el ? el.value.trim().toLowerCase() : '';
+    return (v.length <= 254 && EMAIL_RE.test(v)) ? v : '';
+  }
+  prefillCartEmail();
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'cartEmail'){
+      e.target.classList.remove('is-invalid');
+      const v = readCartEmail();
+      try { if (v) localStorage.setItem(EMAIL_KEY, v); } catch (_) {}
+    }
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target && e.target.id === 'cartOptin'){
+      try { localStorage.setItem(OPTIN_KEY, e.target.checked ? '1' : '0'); } catch (_) {}
+    }
+  });
+  // Pressing Enter in the email box goes straight to checkout.
+  document.addEventListener('submit', (e) => {
+    if (e.target && e.target.id === 'cartEmailForm'){
+      e.preventDefault();
+      const b = document.querySelector('.cart-panel__checkout');
+      if (b) startCheckout(b);
+    }
+  });
+
   // ---- Stripe checkout: hand the cart to /api/checkout and redirect ----
   let _checkoutInFlight = false;
   async function startCheckout(btn){
@@ -847,6 +889,17 @@
       renderCart();
       return;
     }
+
+    // An email is needed before we hand over to Stripe (it opens pre-filled).
+    const email = readCartEmail();
+    if (!email){
+      const el = cartEmailEl();
+      if (el){ el.classList.add('is-invalid'); el.focus(); }
+      showToast('ENTER YOUR EMAIL TO CONTINUE');
+      return;
+    }
+    try { localStorage.setItem(EMAIL_KEY, email); } catch (_) {}
+    const optin = !!(cartOptinEl() && cartOptinEl().checked);
 
     const items = cart.map(i => ({ slug: i.slug, qty: i.qty }));
     const giftMessage = hasGiftCard() ? getGiftMessage().slice(0, GIFT_MSG_MAX) : '';
@@ -867,7 +920,7 @@
       const resp = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode, utm: getUtm() }),
+        body: JSON.stringify({ items, email, marketing_optin: optin, ph_id: phDistinctId(), gift_message: giftMessage, promo_code: promoCode, utm: getUtm() }),
       });
       const data = await resp.json().catch(() => ({}));
       // Server backstop: the code was already redeemed by this visitor.

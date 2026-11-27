@@ -2,7 +2,7 @@
 //  POST /api/checkout
 //  Builds a Stripe Checkout Session from the cart and returns its URL.
 //
-//  Request body:  { items: [{ slug, qty }, ...] }
+//  Request body:  { items: [{ slug, qty }, ...], email, marketing_optin }
 //  Response:      { url: "https://checkout.stripe.com/..." }
 //
 //  Env vars required (set in Vercel → Project → Settings → Environment):
@@ -14,6 +14,7 @@
 // =============================================================
 
 const { BY_SLUG, CURRENCY, SHIPPING, priceEnvKey, lookupPromo } = require('./_catalogue');
+const { cleanEmail, saveLead } = require('./_leads');
 
 function siteOrigin(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
@@ -59,6 +60,12 @@ module.exports = async (req, res) => {
   }
   const items = Array.isArray(body && body.items) ? body.items : [];
   if (!items.length) return res.status(400).json({ error: 'Cart is empty.' });
+
+  // Email typed in the cart before Stripe. Required, so the Stripe page opens
+  // with it already filled in and unfinished checkouts can be followed up.
+  const email = cleanEmail(body && body.email);
+  if (!email) return res.status(400).json({ error: 'Please enter a valid email address.' });
+  const marketingOptin = !!(body && body.marketing_optin === true);
 
   // Optional PostHog visitor id so the webhook can tie the purchase
   // back to the browsing session. Sanitised + length-capped.
@@ -232,6 +239,7 @@ module.exports = async (req, res) => {
       shipping_address_collection: { allowed_countries: ['GB'] },
       phone_number_collection: { enabled: true },
       billing_address_collection: 'auto',
+      customer_email: email,
       customer_creation: 'always',
       success_url: `${origin}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?checkout=cancel#/shop`,
@@ -247,6 +255,7 @@ module.exports = async (req, res) => {
         utm_term: utm.utm_term,
         has_gift_card: hasCard ? 'true' : 'false',
         gift_message: hasCard ? giftMessage : '',
+        marketing_optin: marketingOptin ? 'true' : 'false',
         promo_code: promo ? promo.code : '',
         promo_discount: promo ? promoDiscount.toFixed(2) : '',
         subtotal_before: promo ? subtotal.toFixed(2) : '',
@@ -267,6 +276,24 @@ module.exports = async (req, res) => {
     }
 
     const session = await stripe.checkout.sessions.create(params);
+
+    // Keep the email so unfinished checkouts can be followed up. Never blocks
+    // checkout: a failure here is logged and the visitor still goes to Stripe.
+    await saveLead({
+      email,
+      marketing_optin: marketingOptin,
+      stripe_session_id: session.id,
+      cart_summary: cartSummary,
+      cart_value: Math.round(discountedGoods * 100) / 100,
+      item_count: clean.reduce((s, i) => s + i.qty, 0),
+      promo_code: promo ? promo.code : null,
+      posthog_distinct_id: phId,
+      utm_source: utm.utm_source || null,
+      utm_medium: utm.utm_medium || null,
+      utm_campaign: utm.utm_campaign || null,
+      utm_content: utm.utm_content || null,
+      utm_term: utm.utm_term || null,
+    });
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (err) {
     console.error('[checkout] Stripe error:', err && err.message);

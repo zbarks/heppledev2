@@ -372,6 +372,11 @@ src="https://www.facebook.com/tr?id=2688057484966430&ev=PageView&noscript=1"
   <div class="cart-panel__foot" id="cartFoot" hidden>
     <div class="cart-promo" id="cartPromo"></div>
     <div class="cart-panel__summary" id="cartSummary"></div>
+    <form class="cart-email" id="cartEmailForm" action="#" method="post" autocomplete="on" novalidate>
+      <label class="cart-email__label" for="cartEmail">EMAIL FOR YOUR ORDER</label>
+      <input class="cart-email__input" id="cartEmail" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="YOUR EMAIL ADDRESS" required>
+      <label class="cart-email__optin"><input type="checkbox" id="cartOptin" name="marketing"> <span>Send me news and offers from Hepple</span></label>
+    </form>
     <button class="cart-panel__checkout">CHECKOUT</button>
     <p class="cart-panel__note" id="cartNote">SHIPPING CALCULATED AT CHECKOUT</p>
   </div>
